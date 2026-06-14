@@ -1,0 +1,76 @@
+# docker-compose.yml — KOMPLETAN SETUP: SQL Server + Ollama + ChromaDB
+#
+# Namjena: Pokretanje SVIH servisa odjednom.
+#          Za predavača ili napredne korisnike koji rade više projekata istovremeno.
+#
+# Pokretanje (iz ovog foldera):
+#   cd docker/full
+#   docker compose up -d
+#
+# Zaustavljanje:
+#   docker compose down
+#
+# Čišćenje (PAŽNJA: briše sve podatke i modele!):
+#   docker compose down -v
+
+version: '3.9'
+
+services:
+
+  # ── SQL Server ────────────────────────────────────────────────────────────
+  # Microsoft SQL Server 2022 Developer Edition (besplatna za razvoj)
+  # Port: 1433  |  Korisnik: sa  |  Lozinka: Training123!
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ai-trening-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Training123!"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Training123!" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  # ── Ollama ────────────────────────────────────────────────────────────────
+  # Lokalni LLM server — pokretanje AI modela na vašem računaru
+  # Port: 11434  |  Preuzimanje modela: docker exec ai-trening-ollama ollama pull llama3.2:1b
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-trening-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    # Za GPU podršku (zakomentarisano, aktivira se po potrebi):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # ── ChromaDB ──────────────────────────────────────────────────────────────
+  # Vektorska baza podataka — za RAG projekte i semantičko pretraživanje
+  # Port: 8000
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: ai-trening-chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      CHROMA_SERVER_AUTHN_CREDENTIALS: ""
+      ANONYMIZED_TELEMETRY: "False"
+
+volumes:
+  sqlserver_data:    # SQL Server podaci (tabele, baze)
+  ollama_models:     # Preuzeti AI modeli (može biti višestruki GB!)
+  chroma_data:       # ChromaDB vektori (embeddinzi)

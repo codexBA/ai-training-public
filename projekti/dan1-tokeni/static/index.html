@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="bs">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dan 1 — Token Vizualizator i Temperature Playground</title>
+
+  <!-- Fontovi -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Stil -->
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+  <div class="app-container">
+
+    <!-- ===== HEADER ===== -->
+    <header class="app-header">
+      <div class="day-badge">Dan 1</div>
+      <h1>Token Vizualizator i Temperature Playground</h1>
+      <p class="subtitle">Interaktivna demonstracija tokenizacije i utjecaja temperature na LLM odgovore</p>
+    </header>
+
+    <!-- ===== SEKCIJA 1: TOKEN VIZUALIZATOR ===== -->
+    <section class="section" id="token-section">
+      <h2 class="section-title">
+        <span class="icon">&#x1F9E9;</span> Token Vizualizator
+      </h2>
+      <p class="section-description">
+        Unesite tekst da vidite kako ga LLM "vidi" — podijeljen na tokene.
+        Svaki obojen blok predstavlja jedan token. Bosanski tekst obično
+        troši više tokena od engleskog.
+      </p>
+
+      <div class="notice">
+        Ovo je vizualna aproksimacija tokenizacije za demonstraciju u browseru.
+        Precizna tokenizacija radi se u Python notebooku s <strong>tiktoken</strong> bibliotekom.
+      </div>
+
+      <div class="input-group">
+        <label for="token-input">Tekst za tokenizaciju:</label>
+        <textarea id="token-input"
+          placeholder="Unesite tekst ovdje, npr: Sarajevo je glavni grad Bosne i Hercegovine. Grad ima bogatu historiju i kulturu.">Sarajevo je glavni grad Bosne i Hercegovine. Grad ima bogatu historiju i kulturu.</textarea>
+      </div>
+
+      <button class="btn btn-primary" id="btn-tokenize" onclick="tokenize()">
+        Analiziraj tokene
+      </button>
+
+      <div class="token-display" id="token-display">
+        <span style="color: var(--text-muted);">Kliknite "Analiziraj tokene" da vidite rezultat...</span>
+      </div>
+
+      <div class="token-stats" id="token-stats" style="display: none;">
+        <div class="stat-card">
+          <div class="stat-value" id="stat-token-count">0</div>
+          <div class="stat-label">Broj tokena</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-char-count">0</div>
+          <div class="stat-label">Broj znakova</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-ratio">0</div>
+          <div class="stat-label">Znakova po tokenu</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="stat-cost">$0.00</div>
+          <div class="stat-label">Cijena (DeepSeek input)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SEKCIJA 2: TEMPERATURE PLAYGROUND ===== -->
+    <section class="section" id="temperature-section">
+      <h2 class="section-title">
+        <span class="icon">&#x1F321;&#xFE0F;</span> Temperature Playground
+      </h2>
+      <p class="section-description">
+        Isti prompt se šalje na <strong>tri različite temperature</strong> paralelno.
+        Temperature=0 daje uvijek isti odgovor (deterministički),
+        dok Temperature=1.5 daje kreativne, nepredvidive odgovore.
+      </p>
+
+      <div class="input-group">
+        <label for="temp-prompt">Prompt (pitanje za AI):</label>
+        <textarea id="temp-prompt" rows="3"
+          placeholder="Npr: Objasni mi šta je programiranje jednom rečenicom.">Objasni mi šta je vještačka inteligencija jednom rečenicom.</textarea>
+      </div>
+
+      <div class="slider-group">
+        <label for="temp-slider">Srednja temperatura:</label>
+        <input type="range" id="temp-slider" min="0" max="2" step="0.1" value="0.7">
+        <span class="slider-value" id="temp-slider-value">0.7</span>
+      </div>
+
+      <button class="btn btn-primary" id="btn-temperature" onclick="temperatureDemo()">
+        Pokreni eksperiment
+      </button>
+
+      <div class="loading" id="temp-loading">
+        <div class="spinner"></div>
+        <span>Čekam odgovore od AI modela...</span>
+      </div>
+
+      <div class="error-message" id="temp-error"></div>
+
+      <div class="temperature-grid" id="temperature-results"></div>
+    </section>
+
+    <!-- ===== SEKCIJA 3: MODEL INFO ===== -->
+    <section class="section" id="model-section">
+      <h2 class="section-title">
+        <span class="icon">&#x1F4CA;</span> Usporedba modela
+      </h2>
+      <p class="section-description">
+        Pregled modela koje koristimo na obuci — cloud (DeepSeek) i lokalni (Ollama/Llama).
+      </p>
+
+      <div id="model-info-container">
+        <p style="color: var(--text-muted);">Učitavam informacije o modelima...</p>
+      </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="app-footer">
+      <p>Dan 1 — Token Vizualizator i Temperature Playground</p>
+      <p>
+        <a href="../docs/dan1.html">Dokumentacija Dana 1</a> &middot;
+        AI Trening &mdash; Advanced LLMs and AI Tools in IT
+      </p>
+      <p style="margin-top:8px; color:#8b949e; font-size:0.85rem;">
+        Autor: <strong>Erkan Islamovic</strong> | AI Trening &mdash; Advanced Application of LLMs and AI Tools in IT
+      </p>
+    </footer>
+
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+
+</html>

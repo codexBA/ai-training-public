@@ -1,0 +1,49 @@
+# docker-compose.yml — SAMO Ollama LLM server
+#
+# Namjena: Pokretanje isključivo Ollama servera.
+#          Koristi se na Dan 1 (tokeni, temperatura) i Dan 3 (Ollama projekat).
+#          Najlakši start — samo jedan kontejner, minimalni resursi.
+#
+# Pokretanje (iz ovog foldera):
+#   cd docker/ollama
+#   docker compose up -d
+#
+# Zaustavljanje:
+#   docker compose down
+#
+# Logovi:
+#   docker compose logs -f
+#
+# Nakon pokretanja, preuzmite model:
+#   docker exec ai-trening-ollama ollama pull llama3.2:1b
+
+version: '3.9'
+
+services:
+
+  # ── Ollama ────────────────────────────────────────────────────────────────
+  # Lokalni LLM server koji može pokretati različite AI modele.
+  # Ollama API je dostupan na: http://localhost:11434
+  # Testiranje: curl http://localhost:11434/api/tags
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-trening-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      # Modeli se čuvaju u volumenu — preživljavaju restart kontejnera!
+      # Jednom skinut model ne mora se ponovo preuzimati.
+      - ollama_models:/root/.ollama
+    # Za GPU podršku (zakomentarisano, aktivira se po potrebi):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+volumes:
+  ollama_models:
+    # Modeli se čuvaju ovdje. Mogu biti veliki (1B model ~700MB, 3B model ~2GB).
+    # NE koristite 'down -v' osim ako stvarno želite obrisati sve preuzete modele!

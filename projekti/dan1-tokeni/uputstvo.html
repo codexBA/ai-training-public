@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html lang="bs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uputstvo - Dan 1: Token Vizualizator &amp; Temperature Playground — Detaljno Uputstvo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --primary: #3b82f6;
+            --secondary: #1e293b;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --code-bg: #09090b;
+            --fun-fact: #8b5cf6;
+            --challenge: #f97316;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            margin: 0;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--secondary);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+
+        p,
+        li {
+            font-size: 1.1em;
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 6px solid;
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .alert-info {
+            border-color: var(--primary);
+        }
+
+        .alert-success {
+            border-color: var(--accent);
+        }
+
+        .alert-warning {
+            border-color: var(--warning);
+        }
+
+        .alert-danger {
+            border-color: var(--danger);
+        }
+
+        .alert-fun {
+            border-color: var(--fun-fact);
+        }
+
+        .alert-challenge {
+            border-color: var(--challenge);
+        }
+
+        .alert h4 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+        }
+
+        pre {
+            background: var(--code-bg);
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 1.05em;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        code {
+            font-family: Consolas, 'Courier New', monospace;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 7px;
+            border-radius: 5px;
+            color: #93c5fd;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e2e8f0;
+        }
+
+        .step {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #334155;
+            transition: transform 0.2s;
+        }
+
+        .step:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+        }
+
+        .step-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 35px;
+            height: 35px;
+            text-align: center;
+            line-height: 35px;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .step h2 {
+            margin-top: 0;
+            color: #bfdbfe;
+            display: flex;
+            align-items: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            border: 1px solid #334155;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            color: var(--primary);
+        }
+
+        .badge {
+            background: var(--primary);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .expected-output {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--accent);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .expected-output::before {
+            content: "Očekivani output:";
+            display: block;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+        }
+
+        .checklist li {
+            padding: 5px 0;
+        }
+
+        .checklist li::before {
+            content: "✓ ";
+            color: var(--accent);
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ===== BACK NAVIGATION ===== -->
+    <nav style="
+        background: #0f172a;
+        border-bottom: 1px solid #1e293b;
+        padding: 10px 20px;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+    ">
+        <a href="../../docs/index.html" style="color: #4ade80; text-decoration: none; display: flex; align-items: center; gap: 6px;">
+            ← AI Trening Dokumentacija
+        </a>
+        <span style="color: #334155;">›</span>
+        <a href="../../docs/dan1.html" style="color: #60a5fa; text-decoration: none;">
+            Dan 1 — Teorija
+        </a>
+        <span style="color: #334155;">›</span>
+        <span style="color: #94a3b8;">Projekat — Uputstvo</span>
+    </nav>
+
+    <div class="container">
+        <h1>Dan 1: Token Vizualizator &amp; Temperature Playground</h1>
+
+        <!-- ===== UVOD ===== -->
+        <p>
+            Dobrodošli na prvi dan vašeg AI putovanja! Danas ćete napraviti nešto što većina ljudi
+            nikada ne vidi — pogledat ćete <strong>kako AI zaista vidi tekst</strong>. Umjesto da
+            čitate riječi kao mi, AI tekst "siječe" na komade zvane <strong>tokeni</strong>. Vi ćete
+            danas vidjeti te tokene, obojene u različite boje, i razumjeti zašto je bosanski tekst
+            "skuplji" od engleskog za AI obradu.
+        </p>
+        <p>
+            Osim toga, eksperimentisaćete s <strong>temperaturom</strong> — parametrom koji kontroliše
+            koliko je AI "kreativan". Vidjet ćete kako isti AI model može dati potpuno drugačije
+            odgovore samo promjenom jednog broja.
+        </p>
+        <p>
+            Ovaj vodič je napisan izuzetno detaljno kako biste mogli pratiti korak po korak,
+            čak i ako nikada ranije niste programirali i čak i ako niste bili na predavanju.
+        </p>
+
+        <div class="alert alert-info">
+            <h4>Šta ćete naučiti</h4>
+            <ul>
+                <li>Kako AI modeli vide tekst (tokeni umjesto riječi)</li>
+                <li>Zašto bosanski tekst troši više tokena (i košta više) od engleskog</li>
+                <li>Kako temperatura kontroliše kreativnost AI odgovora</li>
+                <li>Kako izračunati koliko košta jedan API poziv</li>
+                <li>Kako se prebaciti između cloud AI-a (DeepSeek) i lokalnog AI-a (Ollama)</li>
+                <li>Kako pokrenuti web aplikaciju i Jupyter notebook</li>
+            </ul>
+        </div>
+
+        <div class="alert alert-success">
+            <h4>Šta ćete napraviti</h4>
+            <p>Web aplikaciju s dva dijela:</p>
+            <ul>
+                <li><strong>Token Vizualizator</strong> — unesete tekst, AI ga razbije na tokene i prikaže obojene
+                    blokove.
+                    Vidite tačno kako model "čita" vaš tekst.</li>
+                <li><strong>Temperature Playground</strong> — unesete pitanje, aplikacija ga pošalje AI-u na 3 različite
+                    temperature (0.0, 0.7, 1.5) i prikaže 3 potpuno različita odgovora jedno pored drugog.</li>
+            </ul>
+            <p>Dodatno: 2 CLI programa za terminal i 1 Jupyter notebook za interaktivno učenje.</p>
+        </div>
+
+        <div class="alert alert-fun">
+            <h4>Zanimljivost: Zašto su tokeni važni?</h4>
+            <p>
+                Svaki put kada koristite ChatGPT, DeepSeek ili bilo koji AI, plaćate po broju tokena.
+                Cijela serija Harry Potter (svih 7 knjiga) ima oko <strong>1.1 milion tokena</strong> — čitanje
+                tog teksta kroz GPT-4 bi koštalo oko $2.75. Jedan prosječan email? Oko 270 tokena, ili manje od 0.01
+                centa.
+                Na ovom treningu ćete potrošiti ukupno manje od $1 na API pozive — jeftinije od jedne kafe.
+            </p>
+        </div>
+
+        <!-- ===== KORAK 1 ===== -->
+        <div class="step">
+            <h2><span class="step-number">1</span> Pronalazak projekta (Terminal osnove)</h2>
+
+            <h3>Šta je terminal?</h3>
+            <p>
+                Terminal je program u koji kucate komande umjesto da klikate mišem. Zamislite da
+                razgovarate s računarom putem teksta — vi pišete komandu, on odgovara rezultatom.
+                Svaki programer koristi terminal svaki dan, i vi ćete ga voljeti kad se naviknete.
+            </p>
+
+            <h3>Kako otvoriti terminal u VS Code-u</h3>
+            <ol>
+                <li>Otvorite <strong>VS Code</strong></li>
+                <li>Idite na <strong>File → Open Folder</strong> i otvorite folder <code>AI-Training</code> (cijeli
+                    projekat)</li>
+                <li>Pritisnite <kbd>Ctrl</kbd> + <kbd>`</kbd> (tipka iznad Tab-a, lijevo od broja 1) — otvoriće se
+                    terminal na dnu ekrana</li>
+            </ol>
+
+            <h3>Navigacija do projekta</h3>
+            <p>
+                Svi fajlovi za Dan 1 nalaze se u folderu <code>projekti/dan1-tokeni</code>.
+                Komanda <code>cd</code> znači <em>"Change Directory"</em> — kažete računaru "idi u ovaj folder":
+            </p>
+            <pre><code>cd projekti/dan1-tokeni</code></pre>
+
+            <h3>Provjera da ste na pravom mjestu</h3>
+            <p>Ukucajte <code>dir</code> (ili <code>ls</code> na Mac/Linux) da vidite sadržaj foldera:</p>
+            <pre><code>dir</code></pre>
+
+            <div class="expected-output">
+                <pre><code>    Directory: X:\Projects\GitHub\AI-Training\projekti\dan1-tokeni
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----                                              cli
+d----                                              notebooks
+d----                                              static
+-a---                                              .env.example
+-a---                                              docker-compose.yml
+-a---                                              Dockerfile
+-a---                                              main.py
+-a---                                              requirements.txt
+-a---                                              uputstvo.html</code></pre>
+            </div>
+            <p>
+                Ako vidite <code>main.py</code> i <code>static</code> folder — na pravom ste mjestu!
+                Ako vidite nešto drugo, vjerovatno niste u pravom folderu. Pokušajte ponovo s <code>cd</code>.
+            </p>
+        </div>
+
+        <!-- ===== KORAK 2 ===== -->
+        <div class="step">
+            <h2><span class="step-number">2</span> Konfiguracija (.env fajl)</h2>
+
+            <h3>Šta je API ključ?</h3>
+            <p>
+                API ključ je kao <strong>lozinka za računarski program</strong>. Kada vaša aplikacija želi
+                komunicirati s DeepSeek-om (AI model u oblaku), mora se identifikovati — baš kao što
+                trebate lozinku da uđete u email. API ključ izgleda otprilike ovako:
+                <code>sk-abc123def456xyz789...</code> — dugačak tekst koji samo vi imate.
+            </p>
+
+            <h3>Zašto .env fajl?</h3>
+            <p>
+                API ključeve <strong>nikada</strong> ne pišemo direktno u kod jer bi ih neko mogao vidjeti
+                (npr. na GitHub-u). Umjesto toga, čuvamo ih u posebnom fajlu zvanom <code>.env</code>
+                (od "environment" — okruženje). Ovaj fajl nikada ne objavljujemo javno.
+            </p>
+
+            <h3>Kreiranje .env fajla</h3>
+            <p>U projektu postoji šablon <code>.env.example</code>. Kopirajte ga:</p>
+            <pre><code>cp .env.example .env</code></pre>
+            <p>Na Windows PowerShell, ako <code>cp</code> ne radi, koristite:</p>
+            <pre><code>copy .env.example .env</code></pre>
+
+            <h3>Podešavanje ključa</h3>
+            <p>Otvorite novi <code>.env</code> fajl u VS Code-u (kliknite na njega s lijeve strane). Vidjet ćete:</p>
+            <pre><code>DEEPSEEK_API_KEY=sk-vas-kljuc-ovdje
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL_SMALL=llama3.2:1b
+APP_PORT=8001</code></pre>
+
+            <p><strong>Šta uraditi:</strong></p>
+            <ul>
+                <li><strong>Ako imate API ključ</strong> (od predavača ili sa platform.deepseek.com) → zamijenite
+                    <code>sk-vas-kljuc-ovdje</code> pravim ključem
+                </li>
+                <li><strong>Ako nemate ključ</strong> → nema veze! Aplikacija automatski koristi lokalni
+                    <strong>Ollama</strong> model. Odgovori će biti sporiji i manje kvalitetni, ali sve radi.
+                </li>
+            </ul>
+
+            <div class="alert alert-fun">
+                <h4>Zanimljivost: Koliko košta DeepSeek API?</h4>
+                <p>
+                    DeepSeek naplaćuje oko <strong>$0.14 za milion ulaznih tokena</strong> i $0.28 za milion izlaznih.
+                    Za poređenje: OpenAI GPT-4o naplaćuje $2.50 za milion ulaznih tokena — to je skoro
+                    <strong>18 puta skuplje</strong>. Cijeli ovaj trening (svih 7 dana) će potrošiti manje od $1 ukupno.
+                </p>
+            </div>
+        </div>
+
+        <!-- ===== KORAK 2B: OLLAMA MODELI ===== -->
+        <div class="step">
+            <h2><span class="step-number">2b</span> Ollama modeli — šta su, zašto postoje i kako ih koristiti</h2>
+
+            <p>
+                U vašem <code>.env</code> fajlu postoje dvije naizgled misteriozne varijable:
+                <code>OLLAMA_MODEL_SMALL=llama3.2:1b</code> i <code>OLLAMA_MODEL_MEDIUM=llama3.2:3b</code>.
+                Ova sekcija precizno objašnjava šta su, kako aplikacija bira između njih,
+                da li mogu raditi istovremeno, i kako ih promijeniti.
+            </p>
+
+            <h3>Šta je Ollama i zašto postoji?</h3>
+            <p>
+                <strong>Ollama je program koji vam omogućava da pokrenete AI modele na svom računaru</strong> —
+                bez interneta, bez plaćanja, bez slanja podataka negdje drugdje.
+                Zamislite ga kao <em>"Docker za AI modele"</em>: jedan server koji može preuzimati,
+                pokretati i upravljati različitim AI modelima.
+            </p>
+            <p>
+                Na ovom projektu, Ollama je <em>rezervna opcija (fallback)</em> — ako imate DeepSeek API ključ,
+                aplikacija ga koristi. Ako nemate ključ (ili nema interneta), aplikacija se automatski
+                prebaci na Ollamu i koristi AI model koji radi lokalno na vašem računaru.
+            </p>
+
+            <div class="alert alert-info">
+                <h4>Analogija: Ollama = "garaža", modeli = "automobili"</h4>
+                <p>
+                    Garaža (Ollama) je uvijek na istom mjestu: <code>http://localhost:11434</code>.
+                    Modeli (llama3.2:1b, llama3.2:3b...) su kao automobili — možete imati više
+                    u garaži, ali koristite onaj koji vam treba u datom trenutku.
+                    Promjena modela = "izvaditi drugi auto iz garaže". Garaža se ne mijenja.
+                </p>
+            </div>
+
+            <h3>Šta su OLLAMA_MODEL_SMALL i OLLAMA_MODEL_MEDIUM?</h3>
+            <p>
+                Ove dvije varijable su samo <strong>tekstualne oznake</strong> za nazive AI modela.
+                Same po sebi ne rade ništa — vrijednost dobivaju tek kada ih Python kod pročita.
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Varijabla u .env</th>
+                        <th>Podrazumijevana vrijednost</th>
+                        <th>Veličina na disku</th>
+                        <th>RAM koji troši</th>
+                        <th>Namjena</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>OLLAMA_MODEL_SMALL</code></td>
+                        <td><code>llama3.2:1b</code></td>
+                        <td>~700 MB</td>
+                        <td>~2 GB RAM</td>
+                        <td>Brzi odgovori, testiranje, radi na starijim laptopovima</td>
+                    </tr>
+                    <tr>
+                        <td><code>OLLAMA_MODEL_MEDIUM</code></td>
+                        <td><code>llama3.2:3b</code></td>
+                        <td>~2 GB</td>
+                        <td>~4 GB RAM</td>
+                        <td>Bolji kvalitet odgovora, nešto sporiji, treba 8+ GB RAM</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Kako aplikacija koristi ove varijable — pogled u kod</h3>
+            <p>
+                Evo tačnog mjesta u <code>main.py</code> gdje se varijabla čita.
+                Pogledajte funkciju <code>get_llm_client()</code>:
+            </p>
+            <pre><code># Iz main.py — funkcija get_llm_client()
+
+# Prioritet 1: DeepSeek API (cloud)
+if deepseek_key and deepseek_key.startswith("sk-"):
+    return AsyncOpenAI(api_key=deepseek_key, base_url="https://api.deepseek.com"), "deepseek-chat"
+
+# Prioritet 2: Ollama lokalno (fallback)
+ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+model = os.getenv("OLLAMA_MODEL_SMALL", "llama3.2:1b")
+#                  ↑ čita iz .env fajla    ↑ default ako varijabla ne postoji
+return AsyncOpenAI(api_key="ollama", base_url=f"{ollama_url}/v1"), model</code></pre>
+
+            <p>
+                Vidite: aplikacija uvijek čita <code>OLLAMA_MODEL_SMALL</code> kada koristi Ollamu.
+                <code>OLLAMA_MODEL_MEDIUM</code> je u <code>.env</code> fajlu dostupan za
+                <strong>buduće projekte</strong> ili za slučaj kada predavač odluči da prebaci aplikaciju
+                na bolji model — bez mijenjanja ijedne linije Python koda.
+            </p>
+
+            <h3>Kada aplikacija koristi koji model?</h3>
+
+            <div class="alert alert-success">
+                <h4>Tačan redoslijed odlučivanja (prioritet)</h4>
+                <ol>
+                    <li>
+                        <strong>DeepSeek API</strong> — koristi se ako u <code>.env</code> fajlu postoji
+                        <code>DEEPSEEK_API_KEY</code> koji počinje s <code>sk-</code> i nije zakomentarisan.
+                        Ovo je cloud model, brz i pametan, ali šalje podatke na server u Kini.
+                    </li>
+                    <li>
+                        <strong>Ollama (SMALL model)</strong> — koristi se ako DeepSeek nije dostupan.
+                        Aplikacija provjeri da li Ollama radi na <code>localhost:11434</code>, i ako radi,
+                        uzme model iz varijable <code>OLLAMA_MODEL_SMALL</code>.
+                    </li>
+                    <li>
+                        <strong>Greška</strong> — ako ni DeepSeek ni Ollama nisu dostupni, aplikacija
+                        vraća poruku: <em>"Ni DeepSeek API ni Ollama nisu dostupni!"</em>
+                    </li>
+                </ol>
+            </div>
+
+            <h3>Mogu li dva Ollama modela raditi istovremeno?</h3>
+            <p>
+                <strong>Tehnički: Da. Praktično: Samo ako imate dovoljno RAM-a.</strong>
+            </p>
+            <p>
+                Kada aplikacija pozove model, Ollama ga učita u RAM računara. On tamo ostaje
+                otprilike 5 minuta od zadnjeg zahtjeva. Ako u tom periodu pozovete drugi model,
+                Ollama može oba držati u memoriji — ali to ovisi o RAM-u:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>RAM računara</th>
+                        <th>Može li istovremeno?</th>
+                        <th>Šta se dešava</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>4 GB</td>
+                        <td>❌ Ne</td>
+                        <td>Samo jedan model. Drugi se učita tek kad se prvi istisne iz memorije.</td>
+                    </tr>
+                    <tr>
+                        <td>8 GB</td>
+                        <td>⚠️ Teško</td>
+                        <td>Moguće za dva SMALL modela, ali računar može postati spor.</td>
+                    </tr>
+                    <tr>
+                        <td>16 GB+</td>
+                        <td>✅ Da</td>
+                        <td>SMALL + MEDIUM istovremeno funkcionišu bez problema.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert alert-warning">
+                <h4>Važno: zahtjevi su sekvencijalni, ne paralelni</h4>
+                <p>
+                    Čak i ako su oba modela učitana u RAM, Ollama ih ne obrađuje paralelno.
+                    Svaki zahtjev čeka red. Ovo je u redu za edukaciju (jedan student, jedan zahtjev
+                    u datom trenutku), ali nije pogodno za produkcijsku primjenu s više korisnika.
+                </p>
+            </div>
+
+            <h3>Kako preuzeti Ollama modele (mora se uraditi jednom)</h3>
+            <p>
+                Ollama server mora biti pokrenut (Docker kontejner), i model mora biti preuzet
+                <strong>prije</strong> nego aplikacija pokuša ga koristiti. Preuzimanje se radi jednom —
+                model se čuva u Docker volumenu i preživljava restarte.
+            </p>
+            <pre><code># Korak 1: Pokrenite Ollama kontejner
+cd docker/ollama
+docker compose up -d
+
+# Korak 2: Preuzmite SMALL model (llama3.2:1b — ~700 MB, traje 2-5 min)
+docker exec ai-trening-ollama ollama pull llama3.2:1b
+
+# Korak 3 (opcionalno): Preuzmite MEDIUM model (llama3.2:3b — ~2 GB)
+docker exec ai-trening-ollama ollama pull llama3.2:3b
+
+# Provjera — lista preuzetih modela
+docker exec ai-trening-ollama ollama list
+
+# Provjera — koji modeli su TRENUTNO učitani u RAM
+docker exec ai-trening-ollama ollama ps</code></pre>
+
+            <div class="expected-output">
+                <pre><code># Očekivani output komande: ollama list
+NAME             ID              SIZE      MODIFIED
+llama3.2:1b      baf6a787fdff    1.3 GB    2 minutes ago
+llama3.2:3b      a80c4f17acd5    2.0 GB    1 hour ago</code></pre>
+            </div>
+
+            <h3>Kako prebaciti aplikaciju na drugi model</h3>
+            <p>
+                Ne trebate mijenjati ni jednu liniju Python koda. Samo promijenite <code>.env</code> fajl
+                i restartujte server:
+            </p>
+            <pre><code># U .env fajlu promijenite:
+OLLAMA_MODEL_SMALL=llama3.2:3b   # koristite 3B umjesto 1B
+
+# Ili promijenite na potpuno drugačiji model (koji ste prethodno preuzeli):
+OLLAMA_MODEL_SMALL=mistral:7b</code></pre>
+
+            <p>Nakon promjene:</p>
+            <ol>
+                <li>Sačuvajte <code>.env</code> fajl</li>
+                <li>Zaustavite server: <kbd>Ctrl</kbd>+<kbd>C</kbd> u terminalu gdje radi uvicorn</li>
+                <li>Pokrenite server ponovo: <code>python -m uvicorn main:app --reload --port 8001</code></li>
+                <li>U log porukama vidjet ćete koji model se sad koristi</li>
+            </ol>
+
+            <div class="alert alert-warning">
+                <h4>Česta greška: .env promijenjen, server nije restartovan</h4>
+                <p>
+                    <code>.env</code> fajl se čita <strong>samo pri pokretanju aplikacije</strong>.
+                    Ako promijenite fajl dok server radi — promjena NEĆE stupiti na snagu.
+                    Uvijek restartujte server nakon promjene <code>.env</code>!
+                </p>
+            </div>
+
+            <h3>Provjera koji model aplikacija koristi (u terminalu)</h3>
+            <p>
+                Kada pokrenete server, pogledajte prve linije ispisa u terminalu.
+                Tamo ćete vidjeti koji AI provider je aktivan:
+            </p>
+            <div class="expected-output">
+                <pre><code># Ako koristi DeepSeek:
+INFO:     LLM provider: DeepSeek (deepseek-chat)
+
+# Ako koristi Ollamu:
+INFO:     LLM provider: Ollama (llama3.2:1b)</code></pre>
+            </div>
+            <p>
+                Ako ne vidite ove poruke, provjerite <code>main.py</code> — možda aplikacija nema
+                explicit logging na startu. U svakom slučaju, možete provjeriti koji model je aktivan
+                pozivom endpointa: <code>http://localhost:8001/api/model-info</code>
+            </p>
+
+            <div class="alert alert-success">
+                <h4>✓ Razumijete Ollamu — kontrolna lista</h4>
+                <ul class="checklist">
+                    <li>Znam da je Ollama lokalni AI server koji radi na portu 11434</li>
+                    <li>Znam da OLLAMA_MODEL_SMALL i MEDIUM su samo nazivi modela u .env fajlu</li>
+                    <li>Znam da aplikacija uvijek koristi DeepSeek ako ima API ključ, a Ollamu kao fallback</li>
+                    <li>Znam da se model mijenja promjenom .env fajla + restartom servera (ne promjenom koda)</li>
+                    <li>Znam da model mora biti preuzet PRIJE korištenja (ollama pull)</li>
+                    <li>Znam da se modeli čuvaju u Docker volumenu i preživljavaju restarte</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- ===== KORAK 3 ===== -->
+        <div class="step">
+            <h2><span class="step-number">3</span> Pokretanje aplikacije</h2>
+            <p>Imamo dva načina da pokrenemo aplikaciju. Odaberite koji vam je lakši.</p>
+
+            <h3>Opcija A: Korištenje Docker-a <span class="badge">Najlakše</span></h3>
+            <p>
+                Docker je alat koji u sebi sadrži čitav mini-računar (zove se <em>kontejner</em>).
+                Ako koristimo Docker, ne moramo brinuti o tome da li imamo pravu verziju Pythona —
+                Docker obavi sve za nas.
+            </p>
+            <pre><code>docker-compose up --build</code></pre>
+
+            <p>Sačekajte 30-60 sekundi. Vidjet ćete puno teksta u terminalu. Čekajte dok ne vidite:</p>
+            <div class="expected-output">
+                <pre><code>dan1-tokeni-app-1  | INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+dan1-tokeni-app-1  | INFO:     Started reloader process</code></pre>
+            </div>
+            <p>Kada vidite ovu poruku — server je spreman! Ne zatvarajte terminal.</p>
+
+            <h3>Opcija B: Pokretanje lokalno (bez Dockera)</h3>
+            <p>
+                Ako ne koristite Docker, pokrećemo aplikaciju direktno. Koristimo "virtualno okruženje"
+                (venv) — zamislite ga kao posebnu kutiju u koju ćemo instalirati Python biblioteke,
+                tako da ne "zagadimo" ostatak računara.
+            </p>
+
+            <h4>Korak B1: Aktivacija virtualnog okruženja</h4>
+            <p>Napravite virtualno okruženje (samo prvi put):</p>
+            <pre><code>python -m venv venv</code></pre>
+            <p>Aktivirajte ga:</p>
+            <pre><code>.\venv\Scripts\Activate.ps1</code></pre>
+            <div class="expected-output">
+                <pre><code>(venv) PS X:\Projects\GitHub\AI-Training\projekti\dan1-tokeni></code></pre>
+            </div>
+            <p>Vidite <code>(venv)</code> na početku linije? To znači da je virtualno okruženje aktivno.</p>
+
+            <div class="alert alert-warning">
+                <h4>Ako dobijete grešku o "running scripts is disabled"</h4>
+                <p>Pokrenite ovu komandu jednom i probajte ponovo:</p>
+                <pre><code>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</code></pre>
+            </div>
+
+            <h4>Korak B2: Instalacija biblioteka (samo prvi put)</h4>
+            <p>
+                Ovo trebate uraditi <strong>samo jednom</strong> — kada prvi put pokrenete projekat, ili
+                ako ste obrisali i ponovo kreirali <code>venv</code>:
+            </p>
+            <pre><code>pip install -r requirements.txt</code></pre>
+            <div class="expected-output">
+                <pre><code>Successfully installed fastapi-0.115.0 uvicorn-0.30.0 openai-1.50.0 tiktoken-0.13.0 ...</code></pre>
+            </div>
+            <div class="alert alert-warning">
+                <h4>Windows: Greška pri instalaciji tiktoken (No Rust compiler)</h4>
+                <p>
+                    Stara verzija <code>tiktoken==0.7.0</code> ne radi na Python 3.13 bez Rust kompajlera.
+                    Rješenje je koristiti noviju verziju. U <code>requirements.txt</code> promjenite liniju:
+                </p>
+                <pre><code># Staro:
+tiktoken==0.7.0
+
+# Novo:
+tiktoken>=0.8.0</code></pre>
+                <p>Zatim ponovo pokrenite: <code>pip install -r requirements.txt</code></p>
+            </div>
+
+            <h4>Korak B3: Pokretanje servera</h4>
+            <pre><code>python -m uvicorn main:app --reload --port 8001</code></pre>
+            <div class="expected-output">
+                <pre><code>INFO:     Uvicorn running on http://127.0.0.1:8001 (Press CTRL+C to quit)
+INFO:     Started reloader process [12345]
+INFO:     Started server process [12346]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.</code></pre>
+            </div>
+            <p><strong>Server je spreman!</strong> Ne zatvarajte ovaj terminal — on mora ostati otvoren dok koristite
+                aplikaciju.</p>
+
+            <div class="alert alert-info">
+                <h4>Zašto <code>python -m uvicorn</code> a ne samo <code>uvicorn</code>?</h4>
+                <p>
+                    Komanda <code>uvicorn</code> bez prefiksa može pokrenuti <em>globalnu</em> verziju
+                    instaliranu na sistemu — a ne onu u vašem <code>venv</code>-u. Korištenjem
+                    <code>python -m uvicorn</code> garantujete da se koristi tačno ona verzija
+                    koja je instalirana u vašem virtuelnom okruženju.
+                </p>
+            </div>
+        </div>
+
+        <!-- ===== KORAK 4 — CLI TESTIRANJE ===== -->
+        <div class="step">
+            <h2><span class="step-number">4</span> CLI testiranje — Prvo testirajte iz terminala</h2>
+            <p>
+                Prije nego otvorite browser, testirajmo aplikaciju iz terminala.
+                CLI (Command Line Interface) alati su način na koji programeri <strong>svakodnevno
+                    provjeravaju da li sve radi</strong> — brže, direktnije i bez potrebe za web stranicom.
+            </p>
+
+            <div class="alert alert-info">
+                <h4>Zašto CLI prije browsera?</h4>
+                <p>
+                    Ako CLI radi — znate da su biblioteke ispravno instalirane, .env je dobro podešen,
+                    i logika aplikacije funkcioniše. Tek onda ima smisla otvarati web klijent.
+                    Ovo je profesionalni pristup: <strong>testirajte od jednostavnog prema složenom</strong>.
+                </p>
+            </div>
+
+            <p>
+                <strong>Važno:</strong> Za CLI programe otvorite <strong>novi terminal</strong> — web server
+                mora ostati upaljen u prvom terminalu. U VS Code-u kliknite na <kbd>+</kbd> pored
+                terminala, ili pritisnite <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>`</kbd>.
+            </p>
+            <p>U novom terminalu, aktivirajte venv i idite u projektni folder:</p>
+            <pre><code>cd projekti\dan1-tokeni
+.\venv\Scripts\Activate.ps1</code></pre>
+
+            <h3>CLI Program 1: Token Analizator (radi offline — bez API ključa!)</h3>
+            <p>
+                Ovaj program koristi <code>tiktoken</code> biblioteku direktno na vašem računaru.
+                Ne treba mu internet, ne treba mu API ključ. Savršen za prvi test jer
+                eliminira sve vanjske zavisnosti.
+            </p>
+            <pre><code>python cli/tokenizer_cli.py</code></pre>
+
+            <div class="expected-output">
+                <pre><code>============================================================
+  TOKEN ANALIZATOR
+  Precizna tokenizacija s tiktoken bibliotekom
+  Encoding: cl100k_base (GPT-4, DeepSeek)
+============================================================
+
+  Komande:
+    q         — Izlaz iz programa
+    uporedi   — Usporedba bosanskog i engleskog
+    &lt;tekst&gt;   — Analiziraj uneseni tekst
+
+Unesite tekst: </code></pre>
+            </div>
+
+            <h4>Test 1: Analizirajte bosanski tekst</h4>
+            <p>Program čeka vaš unos. Ukucajte:</p>
+            <pre><code>Sarajevo je glavni grad Bosne i Hercegovine</code></pre>
+            <div class="expected-output">
+                <pre><code>============================================================
+  Tekst:    "Sarajevo je glavni grad Bosne i Hercegovine"
+  Znakovi:  44
+  Tokeni:   13
+  Omjer:    3.38 znakova/token
+============================================================
+
+  Token lista:
+    [ 1] 'Sar'                 (ID: 41844)
+    [ 2] 'ajevo'               (ID: 14115)
+    [ 3] ' je'                 (ID: 503)
+    [ 4] ' glavni'             (ID: 37854)
+    [ 5] ' grad'               (ID: 8152)
+    [ 6] ' Bosne'              (ID: 89560)
+    [ 7] ' i'                  (ID: 602)
+    [ 8] ' Herceg'             (ID: 62397)
+    [ 9] 'ovine'               (ID: 349)
+    ...
+
+  Procijenjena cijena (DeepSeek V3 input):
+    Jedan poziv:  $0.0000018
+    1000 poziva:  $0.0018</code></pre>
+            </div>
+            <p>
+                Vidite kako "Sarajevo" nije jedan token nego dva: "Sar" i "ajevo". To je BPE
+                (Byte Pair Encoding) algoritam na djelu — AI ne radi s riječima, nego s fragmentima.
+            </p>
+
+            <h4>Test 2: Usporedba bosanskog i engleskog</h4>
+            <p>Ukucajte komandu:</p>
+            <pre><code>uporedi</code></pre>
+            <div class="expected-output">
+                <pre><code>============================================================
+  USPOREDBA: Bosanski vs Engleski
+============================================================
+  Tekst                                          BS   EN  Razlika
+  --------------------------------------------- ---- ---- --------
+  Sarajevo je glavni grad Bosne i Hercego...      13   10       +3
+  Dobro jutro, kako ste danas?                     9    7       +2
+  Ministarstvo finansija objavljuje godisnji...   15    9       +6
+
+  Zaključak: Bosanski tekst troši ~1.5-2x više tokena od engleskog.
+  To znači veće troškove API poziva za sadržaj na bosanskom jeziku.</code></pre>
+            </div>
+            <p>
+                Ovo je ključna lekcija Dana 1: bosanski tekst <strong>košta više tokena</strong>.
+                Ako pravite AI aplikaciju za BiH institucije, računajte s ~30–60% višim troškovima
+                nego što bi bio isti sadržaj na engleskom.
+            </p>
+
+            <h4>Test 3: Analizirajte vlastiti tekst</h4>
+            <p>Probajte unijeti nekoliko različitih tekstova:</p>
+            <ul>
+                <li>Vaše ime i prezime — koliko tokena?</li>
+                <li>Neko tehničko ime: <code>SELECT * FROM users WHERE id = 1</code></li>
+                <li>Email adresu: <code>info@mojainstutucija.ba</code></li>
+                <li>Datum: <code>12. juna 2026. godine</code></li>
+            </ul>
+            <p>Kada završite s Token Analizatorom, izađite komandom <code>q</code>.</p>
+
+            <h3>CLI Program 2: Temperature Eksperiment (zahtijeva API ili Ollama)</h3>
+            <p>
+                Ovaj program šalje isti prompt na API sa tri različite temperature (0.0, 0.7, 1.5)
+                i prikazuje razlike. Zahtijeva ili <strong>DeepSeek API ključ</strong> u
+                <code>.env</code> fajlu ili pokrenuti <strong>Ollama</strong> server.
+            </p>
+
+            <div class="alert alert-warning">
+                <h4>Ako nemate API ključ ni Ollamu</h4>
+                <p>
+                    Preskočite ovaj program za sada i nastavite na Korak 5 (web klijent).
+                    Temperature eksperiment ćete moći testirati i kroz web sučelje —
+                    ali CLI verzija daje detaljnije informacije o tokenima i trajanju.
+                </p>
+            </div>
+
+            <pre><code>python cli/temperature_cli.py</code></pre>
+            <div class="expected-output">
+                <pre><code>============================================================
+  TEMPERATURE EKSPERIMENT
+  Ispitajte kako temperatura utjece na odgovore LLM-a
+============================================================
+  Model: DeepSeek V3 (cloud)
+
+  Komande:
+    q                    — Izlaz
+    uporedi              — Isti prompt na t=0.0, 0.7, 1.5
+    &lt;prompt&gt;             — Unos prompta (slijedi odabir temperature)
+
+Prompt: </code></pre>
+            </div>
+
+            <h4>Test: Usporedba temperatura</h4>
+            <p>Ukucajte:</p>
+            <pre><code>uporedi</code></pre>
+            <p>Kad program zatraži prompt, unesite npr.:</p>
+            <pre><code>Sta je programiranje?</code></pre>
+            <div class="expected-output">
+                <pre><code>============================================================
+  USPOREDBA TEMPERATURA
+  Prompt: "Sta je programiranje?"
+============================================================
+
+  t=0.0: Programiranje je proces pisanja instrukcija za računar u obliku koda...
+         [in=28 out=45 | 1243ms]
+
+  t=0.7: Programiranje je vještina i art kreiranja softvera — pisanje preciznih...
+         [in=28 out=52 | 1389ms]
+
+  t=1.5: Programiranje! To je čarobni jezik kojim razgovaramo s mašinama...
+         [in=28 out=58 | 1521ms]
+
+  Primjetite: t=0.0 daje isti odgovor svaki put,
+  dok t=1.5 daje razlicite, kreativnije varijacije.</code></pre>
+            </div>
+            <p>
+                Primijetite: temperatura 0.0 je "suhoparno" tačna, 1.5 je kreativnija ali manje
+                predvidljiva. Tokeni i trajanje su vidljivi — to su podaci koje web klijent
+                prikazuje grafički, ali ovdje ih vidite "sirovo".
+            </p>
+            <p>Izađite komandom <code>q</code>.</p>
+
+            <div class="alert alert-success">
+                <h4>✓ CLI testiranje završeno!</h4>
+                <p>
+                    Ako su oba CLI programa radila — sve je ispravno instalirano i konfigurisano.
+                    Sada možete sa sigurnošću otvoriti web klijent i znati da backend funkcioniše.
+                </p>
+            </div>
+        </div>
+
+        <!-- ===== KORAK 5 ===== -->
+        <div class="step">
+            <h2><span class="step-number">5</span> Testiranje web klijenta u browseru</h2>
+            <p>
+                Server je pokrenut, CLI radi — sada otvorite browser (Chrome, Edge, Firefox)
+                i ukucajte u URL traku:
+            </p>
+            <pre><code>http://localhost:8001</code></pre>
+            <p>Trebate vidjeti prelijepu web stranicu podijeljenu u dva dijela.</p>
+
+            <h3>Dio 1: Token Vizualizator — Grafički prikaz</h3>
+            <ol>
+                <li>U polje za unos teksta upišite: <strong>Sarajevo je glavni grad BiH</strong></li>
+                <li>Kliknite dugme <strong>Analiziraj tokene</strong></li>
+                <li>Pogledajte rezultat ispod: tekst je "isječen" na male <strong>obojene blokove</strong> — to su
+                    tokeni!</li>
+            </ol>
+            <p>
+                Ovo je isti rezultat koji ste vidjeli u terminalu — ali ovdje svaki token dobija
+                svoju <strong>jedinstvenu boju</strong>. Vizualizacija pomaže da brzo uočite
+                gdje AI pravi "rezove" u tekstu.
+            </p>
+        </div>
+
+        <!-- ===== IZAZOV 1 ===== -->
+        <div class="alert alert-challenge">
+            <h4>Izazov 1: Engleski vs Bosanski</h4>
+            <p>Probajte unijeti ove parove i zapišite koliko tokena ima svaki:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Engleski tekst</th>
+                        <th>Bosanski tekst</th>
+                        <th>Vaš rezultat (EN)</th>
+                        <th>Vaš rezultat (BS)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"Hello world"</td>
+                        <td>"Pozdrav svijete"</td>
+                        <td>___</td>
+                        <td>___</td>
+                    </tr>
+                    <tr>
+                        <td>"Artificial intelligence"</td>
+                        <td>"Vještačka inteligencija"</td>
+                        <td>___</td>
+                        <td>___</td>
+                    </tr>
+                    <tr>
+                        <td>"The weather is nice today"</td>
+                        <td>"Vrijeme je danas lijepo"</td>
+                        <td>___</td>
+                        <td>___</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+                <strong>Zapažanje:</strong> Bosanski tekst gotovo uvijek ima više tokena od engleskog za istu
+                informaciju.
+                Razlog: tokenizator (BPE algoritam) je treniran pretežno na engleskom tekstu, pa engleske riječi
+                efikasnije kodira. Bosanski tekst košta ~30-50% više tokena. Ovo je važno za budžetiranje API troškova!
+            </p>
+        </div>
+
+        <!-- ===== IZAZOV 2 ===== -->
+        <div class="alert alert-challenge">
+            <h4>Izazov 2: Kod vs Proza</h4>
+            <p>Probajte tokenizirati programski kod:</p>
+            <ul>
+                <li><code>print("Hello, World!")</code></li>
+                <li><code>SELECT * FROM users WHERE id = 1</code></li>
+                <li><code>def calculate_tax(income, rate):</code></li>
+            </ul>
+            <p>
+                <strong>Zapažanje:</strong> Ključne riječi programskih jezika (print, SELECT, FROM, def) su obično
+                po 1 token jer su izuzetno česte u trening podacima. AI je treniran na ogromnoj količini koda!
+            </p>
+        </div>
+
+        <!-- ===== IZAZOV 3 ===== -->
+        <div class="alert alert-challenge">
+            <h4>Izazov 3: Brojevi, JMBG i specijalni znakovi</h4>
+            <p>Probajte ove specijalne slučajeve:</p>
+            <ul>
+                <li><code>JMBG: 0101990170001</code> — Kako AI "vidi" JMBG?</li>
+                <li><code>erkan@example.com</code> — Koliko tokena ima email adresa?</li>
+                <li><code>2024-12-25T14:30:00Z</code> — A datum u ISO formatu?</li>
+            </ul>
+            <p>
+                <strong>Zapažanje:</strong> Brojevi se obično dijele u grupe od 1-3 cifre po tokenu.
+                Specijalni znakovi (@, :, /, .) su obično po 1 token svaki. JMBG od 13 cifara može biti
+                5-6 tokena — relativno "skupo" za tako malo informacija.
+            </p>
+        </div>
+
+        <!-- ===== TEMPERATURA ===== -->
+        <div class="step">
+            <h2><span class="step-number">6</span> Temperature Playground (web) — Eksperiment kreativnosti</h2>
+            <p>Sada pređite na drugi dio web aplikacije — <strong>Temperature Playground</strong>.</p>
+
+            <div class="alert alert-info">
+                <h4>CLI vs Web usporedba</h4>
+                <p>
+                    Već ste vidjeli temperature eksperiment u terminalu (CLI Program 2).
+                    Web verzija daje iste rezultate, ali ih prikazuje <strong>u tri kolone
+                        paralelno</strong> i vizualno ističe razlike. Koristite ono što vam više
+                    odgovara — oboje pozivaju isti backend.
+                </p>
+            </div>
+
+            <h3>Osnovni test</h3>
+            <ol>
+                <li>Upišite prompt: <strong>Šta je programiranje?</strong></li>
+                <li>Kliknite <strong>Pokreni eksperiment</strong></li>
+                <li>Sačekajte par sekundi — aplikacija šalje ISTI prompt na 3 različite temperature</li>
+            </ol>
+            <p>Vidjet ćete tri odgovora jedan pored drugog:</p>
+            <ul>
+                <li><strong>Temperatura 0.0:</strong> Robotski, precizan, "školski" odgovor. Isti svaki put.</li>
+                <li><strong>Temperatura 0.7:</strong> Izbalansiran, prirodan odgovor (kao ChatGPT u normalnom modu).
+                </li>
+                <li><strong>Temperatura 1.5:</strong> Kreativan do ludila — ponekad fascinantan, ponekad potpuno
+                    besmislen!</li>
+            </ul>
+        </div>
+
+        <!-- ===== IZAZOV 4 ===== -->
+        <div class="alert alert-challenge">
+            <h4>Izazov 4: Temperatura za različite zadatke</h4>
+            <p>Testirajte ove promptove i posmatrajte kako temperatura utiče na svaki:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Prompt</th>
+                        <th>Očekivanje za t=0.0</th>
+                        <th>Očekivanje za t=1.5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"Koliko je 15 + 27?"</td>
+                        <td>Tačan odgovor: 42</td>
+                        <td>Možda tačno, možda ne — nepouzdano za matematiku!</td>
+                    </tr>
+                    <tr>
+                        <td>"Napiši kratku priču o robotu u Sarajevu"</td>
+                        <td>Suhoparno, predvidljivo</td>
+                        <td>Kreativno, originalno, ponekad čudno</td>
+                    </tr>
+                    <tr>
+                        <td>"Napiši Python funkciju za zbrajanje dva broja"</td>
+                        <td>Standardno, korektno rješenje</td>
+                        <td>Možda kreativan pristup, ali potencijalno neispravan</td>
+                    </tr>
+                    <tr>
+                        <td>"Objasni šta je GDPR u jednoj rečenici"</td>
+                        <td>Precizna, kratka definicija</td>
+                        <td>Možda poetična, ali manje precizna</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p>
+                <strong>Zaključak:</strong> Za faktičke zadatke (matematika, kod, ekstrakcija podataka) → koristite
+                nisku temperaturu (0.0–0.3).
+                Za kreativne zadatke (priče, marketing, brainstorming) → koristite višu temperaturu (0.7–1.0).
+                Temperaturu iznad 1.0 izbjegavajte u produkciji.
+            </p>
+        </div>
+
+        <!-- ===== IZAZOV 5 ===== -->
+        <div class="alert alert-challenge">
+            <h4>Izazov 5: Eksperiment ponovljivosti</h4>
+            <p>
+                Pošaljite isti prompt <strong>3 puta</strong> na temperaturi 0.0. Da li dobijate isti odgovor
+                svaki put? Sada uradite isto na temperaturi 1.0. Koliko se odgovori razlikuju?
+            </p>
+            <p>
+                <strong>Lekcija:</strong> Temperatura 0.0 = <strong>deterministički</strong> (isti input = isti output).
+                Ovo je ključno za aplikacije gdje trebate ponovljive rezultate (npr. ekstrakcija podataka iz faktura).
+            </p>
+        </div>
+
+        <!-- ===== KORAK 7 ===== -->
+        <div class="step">
+            <h2><span class="step-number">7</span> Šta radi web API — pregled pozadine</h2>
+            <p>
+                Vidjeli ste i CLI i web verziju. Sada razumijemo kako sve to funkcioniše iznutra.
+                Oba klijenta šalju zahtjeve na <strong>isti backend</strong> (<code>main.py</code>).
+            </p>
+
+            <div class="alert alert-fun">
+                <h4>Zanimljivost: Zašto CLI u produkciji?</h4>
+                <p>
+                    Većina pravih AI aplikacija u produkciji nema web interfejs. Rade kao pozadinski servisi,
+                    automatske skripte ili API-ji koje pozivaju drugi programi. CLI alati su način na koji
+                    programeri svakodnevno testiraju i koriste AI — brže od browsera, bez vizualnog šuma.
+                </p>
+            </div>
+
+            <h3>FastAPI dokumentacija — interaktivni API tester</h3>
+            <p>Svaki FastAPI server automatski generiše dokumentaciju. Otvorite u browseru:</p>
+            <pre><code>http://localhost:8001/docs</code></pre>
+            <p>
+                Vidjet ćete <strong>Swagger UI</strong> — interaktivnu stranicu gdje možete
+                direktno testirati API endpointe bez pisanja koda. Probajte <code>POST /api/temperature-demo</code>
+                i pošaljite vlastiti prompt!
+            </p>
+        </div>
+
+        <!-- ===== KORAK 8 ===== -->
+        <div class="step">
+            <h2><span class="step-number">8</span> Jupyter Notebook — Interaktivno učenje</h2>
+            <p>
+                Jupyter Notebook je posebna vrsta fajla — zamislite svesku u kojoj možete pisati
+                tekst I pokretati kod. Svaki dio (zvani "ćelija") se pokreće zasebno, i rezultat
+                vidite odmah ispod njega. Savršeno za učenje i eksperimentisanje.
+            </p>
+
+            <h3>Kako otvoriti notebook</h3>
+            <ol>
+                <li>U VS Code-u, kliknite na folder <code>notebooks</code> s lijeve strane</li>
+                <li>Kliknite na fajl <code>dan1_tokeni.ipynb</code></li>
+                <li>U gornjem desnom uglu kliknite <strong>"Select Kernel"</strong></li>
+                <li>Odaberite <strong>Python Environments → venv</strong></li>
+            </ol>
+
+            <h3>Prolaz kroz ćelije</h3>
+            <p>Kliknite na mali "Play" (▶) kružić pored svake ćelije, od vrha prema dnu:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ćelija</th>
+                        <th>Šta radi</th>
+                        <th>Šta ćete vidjeti</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Instalira biblioteke (tiktoken, openai)</td>
+                        <td>Poruka o uspješnoj instalaciji</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Uvozi biblioteke i priprema tokenizator</td>
+                        <td>Nema vidljivog outputa — to je normalno</td>
+                    </tr>
+                    <tr>
+                        <td>3-4</td>
+                        <td>Tokenizira tekst, prikazuje detaljan izvještaj</td>
+                        <td>Tabela tokena s ID-evima i tekstom</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td>Kontekst prozor — koliko teksta stane u model</td>
+                        <td>Tabela s kapacitetom različitih modela</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td>API pricing — kalkulacija cijena</td>
+                        <td>Tabela cijena za DeepSeek vs OpenAI</td>
+                    </tr>
+                    <tr>
+                        <td>7-8</td>
+                        <td>LLM klijent + temperature eksperiment</td>
+                        <td>3 odgovora na različitim temperaturama</td>
+                    </tr>
+                    <tr>
+                        <td>9</td>
+                        <td>Domaći zadaci za vježbu</td>
+                        <td>Upute za samostalni rad</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert alert-warning">
+                <h4>Česta greška u Notebooku</h4>
+                <p>
+                    Ako dobijete grešku <code>ModuleNotFoundError: No module named 'tiktoken'</code>, to znači
+                    da niste odabrali pravi Kernel. Kliknite "Select Kernel" u gornjem desnom uglu i odaberite
+                    <code>venv</code> (ne "Python 3.x" globalni).
+                </p>
+            </div>
+        </div>
+
+        <!-- ===== KORAK 8 ===== -->
+        <div class="step">
+            <h2><span class="step-number">9</span> DeepSeek vs Ollama — Usporedba</h2>
+            <p>
+                Jedan od ključnih koncepata ovog treninga je razlika između cloud i lokalnog AI modela.
+                U ovom projektu imate priliku to vidjeti na djelu.
+            </p>
+
+            <h3>DeepSeek (Cloud) — Brz i pametan</h3>
+            <ol>
+                <li>Otvorite <code>.env</code> fajl</li>
+                <li>Pobrinite se da linija <code>DEEPSEEK_API_KEY=sk-vas-pravi-kljuc</code> postoji i nije
+                    zakomentarisana</li>
+                <li>Restartujte server (Ctrl+C pa ponovo pokrenite uvicorn ili docker-compose)</li>
+                <li>U terminalu servera vidjet ćete poruku poput: <code>LLM provider: DeepSeek (deepseek-chat)</code>
+                </li>
+            </ol>
+
+            <h3>Ollama (Lokalno) — Privatan i besplatan</h3>
+            <ol>
+                <li>Otvorite <code>.env</code> fajl</li>
+                <li>Stavite <code>#</code> ispred linije za ključ: <code>#DEEPSEEK_API_KEY=sk-vas-pravi-kljuc</code>
+                </li>
+                <li>Spasite fajl i restartujte server</li>
+                <li>U terminalu ćete vidjeti: <code>LLM provider: Ollama (llama3.2:1b)</code></li>
+            </ol>
+
+            <h3>Šta usporediti</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspekt</th>
+                        <th>DeepSeek (Cloud)</th>
+                        <th>Ollama (Lokalno)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Brzina odgovora</td>
+                        <td>1-3 sekunde</td>
+                        <td>5-30 sekundi (zavisi od CPU)</td>
+                    </tr>
+                    <tr>
+                        <td>Kvalitet na bosanskom</td>
+                        <td>Odličan</td>
+                        <td>Osrednji (1B model)</td>
+                    </tr>
+                    <tr>
+                        <td>Kvalitet temperature exp.</td>
+                        <td>Jasna razlika između 0.0, 0.7, 1.5</td>
+                        <td>Manje izražena razlika</td>
+                    </tr>
+                    <tr>
+                        <td>Cijena</td>
+                        <td>~$0.14 / milion tokena</td>
+                        <td>Besplatno</td>
+                    </tr>
+                    <tr>
+                        <td>Privatnost</td>
+                        <td>Podaci idu na cloud</td>
+                        <td>Podaci ostaju kod vas</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert alert-fun">
+                <h4>Zanimljivost: Razlika u veličini</h4>
+                <p>
+                    DeepSeek V3 model ima <strong>671 milijardu parametara</strong>. Ollama Llama 3.2:1b ima
+                    samo <strong>1.3 milijarde</strong>. To je razlika od <strong>500 puta</strong> — kao da
+                    poredite enciklopediju od 500 tomova sa jednim džepnim rječnikom.
+                    A opet, za mnoge jednostavne zadatke, taj "rječnik" je sasvim dovoljan!
+                </p>
+            </div>
+        </div>
+
+        <!-- ===== KAKO RADI ISPOD HAUBE ===== -->
+        <div class="step">
+            <h2><span class="step-number">10</span> Kako ovo radi ispod haube</h2>
+            <p>
+                Znate koristiti aplikaciju — ali šta se zapravo dešava kada kliknete "Analiziraj tokene"?
+                Evo toka podataka, korak po korak:
+            </p>
+
+            <h3>Token Vizualizator — tok podataka</h3>
+            <pre><code>Vi kucate tekst u browser
+        ↓
+Browser (JavaScript) šalje tekst na server
+        ↓
+Server (Python FastAPI) prima tekst
+        ↓
+Server koristi "tiktoken" biblioteku da razbije tekst na tokene
+        ↓
+Server vraća listu tokena nazad browseru
+        ↓
+Browser prikazuje tokene kao obojene blokove</code></pre>
+            <p>
+                Ključna stvar: tokenizacija se dešava <strong>lokalno na serveru</strong> — ne poziva nikakav
+                AI model. Biblioteka <code>tiktoken</code> (od OpenAI-ja) radi offline i instantno.
+            </p>
+
+            <h3>Temperature Playground — tok podataka</h3>
+            <pre><code>Vi kucate prompt u browser
+        ↓
+Browser šalje prompt na server
+        ↓
+Server šalje ISTI prompt na AI model 3 PUTA:
+  → jednom s temperature=0.0
+  → jednom s temperature=0.7
+  → jednom s temperature=1.5
+  (sva 3 poziva idu paralelno — async/await)
+        ↓
+Server prima 3 različita odgovora
+        ↓
+Server vraća sva 3 odgovora browseru
+        ↓
+Browser prikazuje ih jedan pored drugog</code></pre>
+        </div>
+
+        <!-- ===== ŠTA SMO NAUČILI ===== -->
+        <h2>Šta smo naučili — Kontrolna lista</h2>
+        <p>Ako možete staviti kvačicu pored svakog od ovih, Dan 1 je uspješan:</p>
+        <ul class="checklist">
+            <li>Tokeni nisu riječi — to su podriječi koje AI koristi kao osnovne jedinice teksta</li>
+            <li>Bosanski tekst košta ~30-50% više tokena od engleskog za istu informaciju</li>
+            <li>Temperatura 0.0 = isti odgovor svaki put (deterministički), 1.5 = kreativni haos</li>
+            <li>Za faktičke zadatke koristite nisku temperaturu, za kreativne višu</li>
+            <li>Cloud AI (DeepSeek) = brži i pametniji, Lokalni AI (Ollama) = privatan i besplatan</li>
+            <li>API ključevi se čuvaju u .env fajlu, nikada u kodu</li>
+            <li>Znam pokrenuti web server, otvoriti aplikaciju u browseru i koristiti CLI programe</li>
+            <li>Znam otvoriti i pokrenuti Jupyter notebook</li>
+        </ul>
+
+        <!-- ===== TROUBLESHOOTING ===== -->
+        <h2>Rješavanje problema (Troubleshooting)</h2>
+
+        <div class="alert alert-warning">
+            <h4>"Port 8001 already in use"</h4>
+            <p>
+                Aplikacija je već pokrenuta u drugom terminalu. Zatvorite stare terminale ili
+                pritisnite <kbd>Ctrl</kbd>+<kbd>C</kbd> u terminalu gdje server radi.
+                Ako i dalje ne radi, na Windows-u pokrenite:
+            </p>
+            <pre><code>netstat -ano | findstr :8001</code></pre>
+            <p>Nađite PID broj (zadnja kolona) i ugasite proces:</p>
+            <pre><code>taskkill /PID BROJ /F</code></pre>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>"RuntimeError: Ni DeepSeek API ni Ollama nisu dostupni"</h4>
+            <p>
+                Niste unijeli API ključ u <code>.env</code> fajl I lokalni Ollama nije pokrenut.
+                Rješenje: ili dodajte pravi ključ, ili pokrenite Ollama server
+                (<code>docker-compose -f ../../docker-compose.yml up ollama</code>).
+            </p>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>"ModuleNotFoundError: No module named 'tiktoken'"</h4>
+            <p>
+                Virtualno okruženje (venv) nije aktivno. Aktivirajte ga:
+                <code>.\venv\Scripts\Activate.ps1</code>. Provjerite da vidite <code>(venv)</code>
+                na početku linije u terminalu.
+            </p>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>Bijela stranica u browseru / "This site can't be reached"</h4>
+            <p>
+                Server nije pokrenut ili koristite pogrešan URL. Provjerite da je server aktivan u
+                terminalu i da idete na <code>http://localhost:8001</code> (ne na https, ne na drugi port).
+            </p>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>Odgovor na temperaturu traje predugo (30+ sekundi)</h4>
+            <p>
+                Ako koristite Ollama, lokalni model može biti spor na CPU-u — to je normalno.
+                DeepSeek cloud odgovara za 1-3 sekunde. Ako želite brže odgovore, prebacite se
+                na DeepSeek (dodajte API ključ u .env).
+            </p>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>"Docker daemon is not running"</h4>
+            <p>
+                Docker Desktop nije pokrenut. Otvorite Docker Desktop aplikaciju, sačekajte da se
+                pokrene (zelena ikona u system tray-u), i probajte ponovo.
+            </p>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>Token vizualizator ne prikazuje ništa</h4>
+            <p>
+                Vjerovatno ste ostavili polje prazno ili unijeli samo razmake.
+                Unesite barem jednu riječ i kliknite dugme ponovo.
+            </p>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>Notebook ćelija javlja grešku pri pokretanju</h4>
+            <p>
+                Najčešći razlog: niste odabrali pravi Kernel. Kliknite "Select Kernel" u gornjem
+                desnom uglu VS Code-a i odaberite <code>venv</code>. Ako ne vidite venv, pokrenite
+                terminalu: <code>python -m ipykernel install --user --name=venv</code>.
+            </p>
+        </div>
+
+        <!-- ===== MINI-VJEŽBE ===== -->
+        <h2>Bonus izazovi za one koji žele više</h2>
+
+        <div class="alert alert-challenge">
+            <h4>Izazov A: Pronađite najdužu bosansku riječ koja je 1 token</h4>
+            <p>
+                Koristite Token Vizualizator da testirate razne riječi. Možete li pronaći bosansku
+                riječ od 6+ slova koja je samo 1 token? (Hint: pokušajte s riječima koje se koriste
+                i u engleskom, poput tehničkih termina.)
+            </p>
+        </div>
+
+        <div class="alert alert-challenge">
+            <h4>Izazov B: Izračunajte cijenu obrade svih emailova</h4>
+            <p>
+                Zamislite da vaša institucija prima 50 emailova dnevno, svaki prosječno 200 riječi.
+                Koliko bi koštalo da AI pročita (tokenizira) sve emailove za mjesec dana koristeći DeepSeek?
+                (Hint: 200 riječi ≈ 270 tokena, DeepSeek košta $0.14/1M tokena)
+            </p>
+        </div>
+
+        <div class="alert alert-challenge">
+            <h4>Izazov C: Temperatura za SQL</h4>
+            <p>
+                U Temperature Playground, unesite: "Napiši SQL upit koji vraća sve korisnike starije od 30 godina".
+                Koja temperatura daje najispravniji SQL? Probajte 0.0, 0.3, 0.7, i 1.5. Zapišite rezultate.
+            </p>
+        </div>
+
+        <div class="alert alert-challenge">
+            <h4>Izazov D: Emoji tokeni</h4>
+            <p>
+                Koliko tokena zauzima jedan emoji? Probajte: 😀, 🇧🇦, 👨‍💻.
+                Rezultat vas može iznenaditi — neki emoji su čak 3-4 tokena!
+            </p>
+        </div>
+
+    </div>
+</body>
+
+</html>

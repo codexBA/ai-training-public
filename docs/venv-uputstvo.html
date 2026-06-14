@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Virtual Environment (venv) — Vodič</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a; /* Slate 900 */
+            --text-color: #e2e8f0; /* Slate 200 */
+            --primary-color: #10b981; /* Emerald 500 */
+            --secondary-color: #1e293b; /* Slate 800 */
+            --accent-color: #3b82f6; /* Blue 500 */
+            --code-bg: #020617; /* Slate 950 */
+            --border-color: #334155; /* Slate 700 */
+            --danger-color: #ef4444; /* Red 500 */
+            --warning-color: #f59e0b; /* Amber 500 */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 5rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.1) 0%, rgba(0,0,0,0) 70%);
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #34d399, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: white;
+            margin: 3rem 0 1.5rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #cbd5e1;
+            margin: 2rem 0 1rem 0;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            font-size: 1.05rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .card {
+            background-color: var(--secondary-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Kodni blokovi */
+        pre {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.2rem;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            margin: 1.5rem 0;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #a5b4fc;
+        }
+
+        p code, li code {
+            background-color: var(--secondary-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: #fb7185;
+            font-size: 0.9em;
+        }
+
+        /* Tabele */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: rgba(16, 185, 129, 0.1);
+            color: #6ee7b7;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Liste */
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Alert kutije */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .alert-info {
+            border-color: var(--accent-color);
+        }
+
+        .alert-warning {
+            border-color: var(--warning-color);
+        }
+        
+        .alert-success {
+            border-color: var(--primary-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.6rem; }
+            .container { padding: 0 1rem; }
+            header { padding: 3rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Python Virtual Environment (venv)</h1>
+        <p style="font-size: 1.2rem; color: #94a3b8;">Šta je to, zašto je neophodno i kako se pravilno koristi na Windows-u.</p>
+    </header>
+
+    <div class="container">
+
+        <!-- SEKCIJA 1: ŠTA JE TO -->
+        <section>
+            <h2>1. Šta je to "Virtual Environment"?</h2>
+            
+            <p>Zamislimo da ste vi majstor koji popravlja automobile. Imate ogromnu radionicu u kojoj se nalazi jedan veliki zajednički sanduk sa alatom (to je vaš glavni instalirani <strong>Python</strong> na računaru).</p>
+
+            <p>Danas radite na popravci starog automobila (<em>Projekat A</em>) za koji vam treba specifičan francuski ključ veličine 10. Sutra radite na potpuno novom, modernom automobilu (<em>Projekat B</em>) koji zahtijeva identičan ključ, ali potpuno drugačijeg oblika i veličine 15.</p>
+
+            <p>Ako oba ključa bacite u onaj jedan ogromni zajednički sanduk sa alatom — nastaće totalni haos! Svaki put kad posegnete za alatom, izvući ćete pogrešan i nećete moći popraviti auto.</p>
+
+            <p><strong>Virtual Environment (venv) rješava taj problem.</strong></p>
+
+            <p>Umjesto da sve alate (Python biblioteke) trpate na jedno mjesto, `venv` vam omogućava da za svaki automobil (projekat) kupite <strong>mali, odvojeni sandučić sa alatom</strong> koji stoji tik pored tog automobila. U njega stavite samo one alate koji vam trebaju za taj specifični auto. Kada završite popravku, taj mali sanduk zatvorite i idete do drugog automobila sa njegovim posebnim sandukom.</p>
+
+        </section>
+
+        <!-- SEKCIJA 2: PREDNOSTI -->
+        <section>
+            <h2>2. Da li ga treba koristiti i zašto?</h2>
+
+            <div class="alert alert-success">
+                <strong>Kratak odgovor: DA! OBAVEZNO!</strong> U profesionalnom programiranju, nikada, ali baš nikada ne instaliramo pakete direktno u glavni Python na računaru.
+            </div>
+
+            <p>Glavne prednosti korištenja virtuelnih okruženja su:</p>
+
+            <ul>
+                <li><strong>Sprečavanje konflikta verzija ("Dependency Hell"):</strong> Vaš stari projekat iz 2023. godine možda koristi biblioteku <code>openai==0.28</code>, dok novi projekat iz ove godine zahtijeva <code>openai==1.50</code>. Nemoguće je imati obje verzije instalirane na istom mjestu. Sa <code>venv</code>-om, oba projekta žive u harmoniji i rade bez problema.</li>
+                <li><strong>Održavanje čistoće sistema:</strong> Vaš glavni Python ostaje savršeno čist i neotpakovan, bez stotina bespotrebnih biblioteka koje vam nikada više neće trebati.</li>
+                <li><strong>Lako dijeljenje koda:</strong> Kada u vašem <code>venv</code> sandučiću imate samo alate za taj jedan projekat, lako možete popisati koje ste alate koristili (kreirati <code>requirements.txt</code>). Kad taj fajl pošaljete kolegi, on na jedan klik instalira identičan "sandučić" kod sebe i sve mu radi iz prve!</li>
+            </ul>
+        </section>
+
+        <!-- SEKCIJA 3: DA LI IDE ODVOJENO ZA SVAKI PROJEKAT -->
+        <section>
+            <h2>3. Da li se kreira odvojeno za svaki projekat?</h2>
+
+            <p><strong>Apsolutno DA.</strong> Svaki projekat mora imati svoj vlastiti <code>venv</code> folder unutar samog projekta. </p>
+
+            <p>Kada radite edukaciju i prelazite sa <em>Dana 1</em> na <em>Dan 2</em>, vi napuštate jedan "automobil" i odlazite drugom. U folderu za <em>Dan 2</em> kreirat ćete potpuno novo okruženje i u njega instalirati zavisnosti specifične za taj dan.</p>
+
+            <div class="card">
+                <h3>Da li venv ide na GitHub?</h3>
+                <p><strong>NIKADA.</strong> Folder <code>venv</code> sadrži stotine megabajta koda od samog Pythona i biblioteka. Mi ga nikada ne šaljemo na internet (dodajemo ga u <code>.gitignore</code> fajl). Mi šaljemo samo mali tekstualni fajl <code>requirements.txt</code> (spisak alata). Druga osoba preuzme naš kod, kreira Prazan <code>venv</code> kod sebe i onda pusti Python da skine alate sa spiska.</p>
+            </div>
+        </section>
+
+        <!-- SEKCIJA 4: KAKO SE KORISTI (KOMANDE) -->
+        <section>
+            <h2>4. Kako se koristi? (Korak po korak za Windows)</h2>
+            
+            <p>Proces rada sa virtuelnim okruženjem uvijek ima 4 ista koraka:</p>
+
+            <h3>Korak 1: Kreiranje okruženja (Radi se samo jednom po projektu)</h3>
+            <p>Otvorite terminal (PowerShell) i pozicionirajte se u folder vašeg projekta (npr. <code>cd projekti/dan1</code>). Zatim kucajte:</p>
+            <pre><code>python -m venv venv</code></pre>
+            <p><em>Objašnjenje: Ovo govori Pythonu da pokrene svoj ugrađeni modul za virtual environments (`-m venv`) i da kreira folder koji će se zvati "venv" (posljednja riječ u komandi).</em> U vašem folderu će se sada magično pojaviti folder nazvan <code>venv</code>.</p>
+
+            <h3>Korak 2: Aktivacija okruženja (Radi se svaki put kad otvorite terminal)</h3>
+            <p>Sada morate reći vašem terminalu: <em>"Hej, od sada pa nadalje, koristi moj odvojeni sandučić sa alatom, a ne onaj glavni!"</em>. To se zove aktivacija.</p>
+            <pre><code>.\venv\Scripts\Activate.ps1</code></pre>
+            <p>Nakon ovoga, na samom početku linije u terminalu pojavit će se zeleni natpis <strong>(venv)</strong>. To je znak da ste uspješno "ušli" u svoje izolirano okruženje!</p>
+
+            <div class="alert alert-warning">
+                <strong>Česta greška na Windowsima!</strong>
+                <p>Ako prilikom aktivacije dobijete crvenu grešku <em>"cannot be loaded because running scripts is disabled on this system"</em>, to znači da vam Windows zabranjuje pokretanje skripti radi sigurnosti. Upišite ovo jednom u terminal da to dozvolite:</p>
+                <code>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</code>
+                <p>I zatim ponovite komandu za aktivaciju iz Koraka 2.</p>
+            </div>
+
+            <h3>Korak 3: Instalacija paketa</h3>
+            <p>Sada kada ste aktivirali <code>venv</code> (vidite onaj zeleni natpis), svaki put kada iskoristite <code>pip install</code>, ti paketi neće ići u vaš cijeli Windows sistem, već isključivo u onaj skriveni folder <code>venv</code> u vašem projektu!</p>
+            <pre><code># Primjer pojedinačne instalacije
+pip install openai
+
+# Ili još bolje, instalacija svih potrebnih paketa sa spiska
+pip install -r requirements.txt</code></pre>
+
+            <h3>Korak 4: Deaktivacija (Završili ste s radom)</h3>
+            <p>Kada završite rad na tom projektu i želite preći na nešto drugo (ili samo želite izaći iz izoliranog okruženja), jednostavno u terminal ukucajte:</p>
+            <pre><code>deactivate</code></pre>
+            <p>Zeleni natpis <strong>(venv)</strong> će nestati, i ponovo koristite globalni Python vašeg računara.</p>
+
+        <!-- SEKCIJA 5: KOMPLETAN WORKFLOW -->
+        <section>
+            <h2>5. Kompletan Workflow od nule do pokretanja projekta</h2>
+
+            <p>Evo <strong>tačnih koraka</strong> koje trebate uraditi svaki put, bez izuzetaka:</p>
+
+            <div class="card">
+                <h3>📋 Cheat Sheet — Svaki novi projekat (jednom)</h3>
+                <pre><code># 1. Pozicionirajte se u folder projekta
+cd projekti\dan1-tokeni
+
+# 2. Kreirajte virtualno okruženje
+python -m venv venv
+
+# 3. Aktivirajte ga
+.\venv\Scripts\Activate.ps1
+
+# 4. Instalirajte biblioteke (jednom!)
+pip install -r requirements.txt
+
+# 5. Pokrenite server
+python -m uvicorn main:app --reload --port 8001</code></pre>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Svaki sljedeći put (venv već postoji)</h3>
+                <pre><code># 1. Pozicionirajte se u folder projekta
+cd projekti\dan1-tokeni
+
+# 2. Aktivirajte venv
+.\venv\Scripts\Activate.ps1
+
+# 3. Pokrenite server (paketi su već instalirani)
+python -m uvicorn main:app --reload --port 8001</code></pre>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>Zašto <code>python -m uvicorn</code> a ne samo <code>uvicorn</code>?</strong>
+                <p>
+                    Ako na vašem računaru postoji i globalno instaliran <code>uvicorn</code> (npr. u 
+                    <code>AppData\Roaming\Python</code>), komanda <code>uvicorn</code> bez prefiksa
+                    može pokrenuti tu globalnu verziju — koja nije u vašem venv-u i može imati
+                    drugačije zavisnosti. Korištenjem <code>python -m uvicorn</code> garantujete
+                    da se uvijek koristi verzija unutar vašeg virtuelnog okruženja.
+                </p>
+            </div>
+        </section>
+
+        <!-- SEKCIJA 6: BRISANJE I RESET VENV-A -->
+        <section>
+            <h2>6. Brisanje i reset virtualnog okruženja</h2>
+
+            <p>
+                Ponekad ćete htjeti potpuno obrisati <code>venv</code> i krenuti ispočetka —
+                na primjer, ako instalacija nije prošla kako treba, ili ako želite testirati
+                proces od nule.
+            </p>
+
+            <div class="alert alert-warning">
+                <strong>Važno:</strong> Prije brisanja obavezno <strong>deaktivirajte</strong>
+                virtualno okruženje. Ne možete obrisati aktivan venv.
+            </div>
+
+            <h3>Korak 1: Deaktivacija (ako je venv trenutno aktivan)</h3>
+            <p>Ako vidite <code>(venv)</code> na početku terminala, ukucajte:</p>
+            <pre><code>deactivate</code></pre>
+            <p>Natpis <code>(venv)</code> nestaje — sad ste van virtualnog okruženja.</p>
+
+            <h3>Korak 2: Brisanje venv foldera</h3>
+            <p>Na Windows PowerShell-u:</p>
+            <pre><code># Potpuno brisanje foldera venv i svega unutar njega
+Remove-Item -Recurse -Force .\venv</code></pre>
+
+            <div class="alert alert-info">
+                <strong>Alternativa na Linux/Mac:</strong> <code>rm -rf venv/</code>
+            </div>
+
+            <h3>Korak 3: Kreiranje novog čistog venv-a</h3>
+            <pre><code># Ponovo kreirajte venv
+python -m venv venv
+
+# Aktivirajte ga
+.\venv\Scripts\Activate.ps1
+
+# Instalirajte pakete ponovo
+pip install -r requirements.txt</code></pre>
+
+            <p>Gotovo! Imate potpuno novo, čisto virtuelno okruženje.</p>
+        </section>
+
+        <!-- SEKCIJA 7: WINDOWS PROBLEMI -->
+        <section>
+            <h2>7. Česti problemi na Windowsu i rješenja</h2>
+
+            <div class="card">
+                <h3>⚠️ Greška: UnicodeDecodeError pri pip install</h3>
+                <p>
+                    <strong>Simptom:</strong> <code>UnicodeDecodeError: 'charmap' codec can't decode byte 0x8d</code>
+                </p>
+                <p>
+                    <strong>Uzrok:</strong> Komentari u <code>requirements.txt</code> sadrže naša slova
+                    (č, ć, š, đ, ž). Windows po defaultu čita fajlove u <code>cp1252</code> kodiranju
+                    koje ne podržava te znakove.
+                </p>
+                <p><strong>Rješenje:</strong> Zamijenite dijakritičke znakove u komentarima fajla <code>requirements.txt</code>:</p>
+                <pre><code># Staro (ne radi na Windows):
+# uvicorn = ASGI server — pokreće FastAPI aplikaciju
+
+# Novo (radi svuda):
+# uvicorn = ASGI server - pokretanje FastAPI aplikacije</code></pre>
+            </div>
+
+            <div class="card">
+                <h3>⚠️ Greška: tiktoken "No Rust compiler" na Python 3.13</h3>
+                <p>
+                    <strong>Simptom:</strong> <code>error: can't find Rust compiler</code> pri instalaciji paketa
+                </p>
+                <p>
+                    <strong>Uzrok:</strong> Stara verzija <code>tiktoken==0.7.0</code> nema pre-kompajlirane
+                    binarne fajlove (wheels) za Python 3.13 na Windows-u, pa pokušava kompajlirati
+                    izvorni kod u Rustu — za što je potreban instaliran Rust kompajler.
+                </p>
+                <p><strong>Rješenje:</strong> Koristite noviju verziju koja ima gotove wheels:</p>
+                <pre><code># U requirements.txt promijenite:
+# tiktoken==0.7.0   ← ovo ne radi na Python 3.13
+tiktoken>=0.8.0     # ← ovo ima gotove binarne fajlove</code></pre>
+                <p>Instalirana verzija će biti <code>tiktoken-0.13.0</code> ili novija — potpuno kompatibilna.</p>
+            </div>
+
+            <div class="card">
+                <h3>⚠️ Greška: ModuleNotFoundError pri pokretanju uvicorna</h3>
+                <p>
+                    <strong>Simptom:</strong> <code>ModuleNotFoundError: No module named 'websockets.legacy'</code>
+                    ili slično
+                </p>
+                <p>
+                    <strong>Uzrok:</strong> Pokrenuta je globalna verzija <code>uvicorn</code>-a umjesto
+                    one iz venv-a. Globalni uvicorn može biti incompatibilan s trenutnim okruženjem.
+                </p>
+                <p><strong>Rješenje A (preporučeno):</strong> Uvijek koristite:</p>
+                <pre><code>python -m uvicorn main:app --reload --port 8001</code></pre>
+                <p><strong>Rješenje B:</strong> Eksplicitno koristite Python iz venv-a:</p>
+                <pre><code>.\venv\Scripts\python.exe -m uvicorn main:app --reload --port 8001</code></pre>
+            </div>
+
+            <div class="card">
+                <h3>⚠️ Greška: venv nije instaliran u venv-u (No module named uvicorn)</h3>
+                <p>
+                    <strong>Simptom:</strong> Nakon aktivacije venv-a, <code>python -m uvicorn</code>
+                    javlja "No module named uvicorn"
+                </p>
+                <p>
+                    <strong>Uzrok:</strong> Biblioteke nikada nisu instalirane unutar venv-a.
+                    Vjerojatno ste kreirali venv ali preskočili korak sa <code>pip install</code>.
+                </p>
+                <p><strong>Rješenje:</strong></p>
+                <pre><code># Aktivirajte venv
+.\venv\Scripts\Activate.ps1
+
+# Instalirajte biblioteke
+pip install -r requirements.txt
+
+# Sada pokrenite
+python -m uvicorn main:app --reload --port 8001</code></pre>
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+# docker-compose.yml — Ollama + ChromaDB (BEZ SQL Servera)
+#
+# Namjena: Za korisnike koji već imaju lokalno instaliran SQL Server na portu 1433.
+#          Pokreće Ollamu i ChromaDB.
+#
+# Pokretanje (iz ovog foldera):
+#   cd docker/no-sql
+#   docker compose up -d
+#
+# Zaustavljanje:
+#   docker compose down
+
+version: '3.9'
+
+services:
+
+  # ── Ollama ────────────────────────────────────────────────────────────────
+  # Lokalni LLM server — pokretanje AI modela na vašem računaru
+  # Port: 11434
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-trening-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    # Za GPU podršku (zakomentarisano, aktivira se po potrebi):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices:
+    #         - driver: nvidia
+    #           count: 1
+    #           capabilities: [gpu]
+
+  # ── ChromaDB ──────────────────────────────────────────────────────────────
+  # Vektorska baza podataka — za RAG projekte
+  # Port: 8000
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: ai-trening-chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      - chroma_data:/chroma/chroma
+    environment:
+      CHROMA_SERVER_AUTHN_CREDENTIALS: ""
+      ANONYMIZED_TELEMETRY: "False"
+
+volumes:
+  ollama_models:     # Preuzeti AI modeli (može biti višestruki GB!)
+  chroma_data:       # ChromaDB vektori (embeddinzi)

@@ -1,0 +1,13 @@
+# fastapi = Web framework - kreira HTTP API endpointe
+fastapi==0.115.0
+# uvicorn = ASGI server - pokrece FastAPI aplikaciju
+uvicorn==0.30.0
+# openai = OpenAI SDK - radi i s DeepSeek i Ollama API-jem
+openai>=1.84.0
+# httpx = Async HTTP klijent - za provjeru Ollama dostupnosti
+# python-dotenv = Cita .env fajl - sprjecava hardkodiranje lozinki
+python-dotenv==1.0.0
+# tiktoken = OpenAI tokenizator - za precizno brojanje tokena u notebooku
+tiktoken>=0.8.0
+
+

@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Mini Uputstvo — AI Trening</title>
+    <meta name="description" content="Sve sto trebate znati o Pythonu za AI projekte: venv, pip, biblioteke, API pozivi i projektni obrasci.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface2: #0f1f33;
+            --border: #334155;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+            --primary: #6366f1;
+            --primary-glow: rgba(99, 102, 241, 0.15);
+            --accent: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.12);
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --info: #3b82f6;
+            --code-bg: #020617;
+            --yellow: #fbbf24;
+            --purple: #a855f7;
+            --pink: #ec4899;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 5rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.2) 0%, transparent 60%);
+        }
+
+        .header-badge {
+            display: inline-block;
+            background: var(--primary-glow);
+            border: 1px solid rgba(99,102,241,0.4);
+            color: #a5b4fc;
+            padding: 0.3rem 1rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #c7d2fe 0%, #a5b4fc 40%, #818cf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .header-sub {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+
+        .toc-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            position: relative;
+        }
+
+        .toc-pill {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+            padding: 0.4rem 0.9rem;
+            border-radius: 100px;
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .toc-pill:hover {
+            border-color: var(--primary);
+            color: #a5b4fc;
+            background: var(--primary-glow);
+        }
+
+        /* ===== LAYOUT ===== */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem 5rem;
+        }
+
+        /* ===== SEKCIJE ===== */
+        section {
+            margin-top: 4rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        h2 .icon {
+            font-size: 1.5rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin: 2rem 0 0.75rem;
+        }
+
+        p { margin-bottom: 1rem; color: var(--text); }
+
+        a { color: #a5b4fc; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        /* ===== KOD ===== */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem 1.5rem;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+            position: relative;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88rem;
+            color: #a5b4fc;
+        }
+
+        p code, li code {
+            background: rgba(99,102,241,0.1);
+            border: 1px solid rgba(99,102,241,0.2);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            color: #c4b5fd;
+            font-size: 0.88em;
+        }
+
+        .comment { color: #64748b; }
+        .kw { color: #c084fc; }
+        .str { color: #86efac; }
+        .fn { color: #67e8f9; }
+        .num { color: #fbbf24; }
+        .var { color: #e2e8f0; }
+
+        /* ===== KARTICE ===== */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card h3 { margin-top: 0; }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .lib-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.25rem;
+            border-left: 4px solid var(--primary);
+            transition: border-color 0.2s;
+        }
+        .lib-card:hover { border-left-color: var(--accent); }
+        .lib-card .lib-name {
+            font-family: 'JetBrains Mono', monospace;
+            color: #a5b4fc;
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+        .lib-card .lib-desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .lib-card .lib-use {
+            font-size: 0.82rem;
+            color: var(--accent);
+            font-style: italic;
+        }
+
+        /* ===== ALERTOVI ===== */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            border-left: 4px solid;
+            background: rgba(255,255,255,0.03);
+        }
+        .alert strong { display: block; margin-bottom: 0.25rem; }
+        .alert-info { border-color: var(--info); }
+        .alert-warning { border-color: var(--warning); }
+        .alert-success { border-color: var(--accent); }
+        .alert-danger { border-color: var(--danger); }
+
+        /* ===== TABELE ===== */
+        .table-wrap { overflow-x: auto; margin: 1rem 0 1.5rem; }
+        table { width: 100%; border-collapse: collapse; min-width: 500px; }
+        th, td { padding: 0.85rem 1rem; border: 1px solid var(--border); text-align: left; }
+        th { background: rgba(99,102,241,0.08); color: #a5b4fc; font-weight: 600; font-size: 0.9rem; }
+        tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+        /* ===== LISTE ===== */
+        ul, ol { margin-left: 1.5rem; margin-bottom: 1rem; }
+        li { margin-bottom: 0.4rem; }
+
+        /* ===== DIAGRAM ===== */
+        .diagram {
+            background: var(--code-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.82rem;
+            color: #94a3b8;
+            white-space: pre;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+            line-height: 1.5;
+        }
+
+        /* ===== STEP FLOW ===== */
+        .steps {
+            counter-reset: step;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin: 1rem 0 1.5rem;
+        }
+        .step {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1rem 1.25rem 1rem 4rem;
+            position: relative;
+        }
+        .step::before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            left: 1.1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 2rem;
+            height: 2rem;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .step p { margin-bottom: 0.5rem; }
+        .step p:last-child { margin-bottom: 0; }
+
+        /* ===== HIGHLIGHT BOX ===== */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(168,85,247,0.1));
+            border: 1px solid rgba(99,102,241,0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .highlight-box .title {
+            font-weight: 700;
+            color: #a5b4fc;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            header { padding: 3rem 1rem 2rem; }
+            .card-grid { grid-template-columns: 1fr; }
+            pre { font-size: 0.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-badge">AI Trening — Referentni vodič</div>
+        <h1>Python Mini Uputstvo</h1>
+        <p class="header-sub">Sve što trebate znati da biste se snašli u projektima — od virtualnih okruženja do prvog API poziva.</p>
+        <div class="toc-pills">
+            <a href="#okruzenje" class="toc-pill">🗂️ Okruženje (venv)</a>
+            <a href="#pip" class="toc-pill">📦 pip i paketi</a>
+            <a href="#biblioteke" class="toc-pill">📚 Ključne biblioteke</a>
+            <a href="#api-poziv" class="toc-pill">🔌 API pozivi</a>
+            <a href="#env-fajl" class="toc-pill">🔑 .env fajl</a>
+            <a href="#asyncio" class="toc-pill">⚡ Async</a>
+            <a href="#fastapi" class="toc-pill">🚀 FastAPI</a>
+            <a href="#pokretanje" class="toc-pill">▶️ Pokretanje</a>
+            <a href="#troubleshooting" class="toc-pill">🛠️ Troubleshooting</a>
+        </div>
+    </header>
+
+    <div class="container">
+
+        <!-- ===== 1: VIRTUALNO OKRUŽENJE ===== -->
+        <section id="okruzenje">
+            <h2><span class="icon">🗂️</span> Virtualno okruženje (venv)</h2>
+
+            <p>
+                Svaki Python projekat bi trebao imati <strong>vlastito virtuelno okruženje</strong> —
+                izolirani folder koji sadrži samo biblioteke potrebne za taj projekat. Bez njega,
+                sve instalacije idu globalno na sistem i nastaje "dependency hell".
+            </p>
+
+            <div class="card">
+                <h3>📋 Kompletni workflow — od nule do pokretanja</h3>
+                <pre><code><span class="comment"># Korak 1: Idite u folder projekta</span>
+cd projekti\dan1-tokeni
+
+<span class="comment"># Korak 2: Kreirajte venv (samo jednom po projektu)</span>
+python -m venv venv
+
+<span class="comment"># Korak 3: Aktivirajte venv (svaki put kad otvorite terminal)</span>
+.\venv\Scripts\Activate.ps1
+
+<span class="comment"># Korak 4: Instalirajte biblioteke iz requirements.txt (samo jednom)</span>
+pip install -r requirements.txt
+
+<span class="comment"># Korak 5: Pokrenite server</span>
+python -m uvicorn main:app --reload --port 8001</code></pre>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>🔁 Svaki sljedeći put (venv već postoji):</strong>
+                Samo aktivirajte i pokrenite — koraci 1, 3 i 5. Nema potrebe ponavljati kreiranje ni instalaciju.
+            </div>
+
+            <h3>Brisanje i reset venv-a</h3>
+            <p>Ako želite krenuti ispočetka ili instalacija nije uspjela:</p>
+            <pre><code><span class="comment"># Deaktivirajte trenutni venv (ako je aktivan)</span>
+deactivate
+
+<span class="comment"># Obrišite venv folder (Windows PowerShell)</span>
+Remove-Item -Recurse -Force .\venv
+
+<span class="comment"># Kreirajte novi i ponovo instalirajte</span>
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt</code></pre>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ venv ne ide na GitHub!</strong>
+                Folder <code>venv/</code> sadrži stotine MB koda. Nikada ga ne commitujte — on je u
+                <code>.gitignore</code>. Šaljite samo <code>requirements.txt</code>.
+            </div>
+        </section>
+
+
+        <!-- ===== 2: PIP ===== -->
+        <section id="pip">
+            <h2><span class="icon">📦</span> pip — upravljač paketima</h2>
+
+            <p>
+                <code>pip</code> je alat koji instalira Python biblioteke sa interneta (PyPI).
+                Uvijek koristite <code>pip</code> <em>unutar aktiviranog venv-a</em>.
+            </p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Komanda</th><th>Šta radi</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>pip install paket</code></td><td>Instalira jedan paket</td></tr>
+                        <tr><td><code>pip install -r requirements.txt</code></td><td>Instalira sve pakete sa liste</td></tr>
+                        <tr><td><code>pip list</code></td><td>Prikazuje sve instalirane pakete</td></tr>
+                        <tr><td><code>pip show paket</code></td><td>Detalji o jednom paketu (verzija, lokacija)</td></tr>
+                        <tr><td><code>pip uninstall paket</code></td><td>Uklanja paket</td></tr>
+                        <tr><td><code>pip freeze > requirements.txt</code></td><td>Izvozi sve instalirane pakete u fajl</td></tr>
+                        <tr><td><code>python -m pip install --upgrade pip</code></td><td>Ažurira pip na najnoviju verziju</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>requirements.txt — lista zavisnosti</h3>
+            <p>
+                Ovo je tekstualni fajl koji popisuje sve pakete i njihove verzije.
+                Možete koristiti <code>==</code> za tačnu verziju ili <code>>=</code> za minimalnu:
+            </p>
+            <pre><code><span class="comment"># Tačna verzija — garantuje reproduktibilnost</span>
+fastapi==0.115.0
+uvicorn==0.30.0
+
+<span class="comment"># Minimalna verzija — dozvoljava novije verzije</span>
+openai>=1.50.0
+tiktoken>=0.8.0   <span class="comment"># >=0.8.0 jer 0.7.0 ne radi na Python 3.13</span></code></pre>
+
+            <div class="alert alert-warning">
+                <strong>⚠️ Windows + naša slova u komentarima:</strong>
+                Ako komentari u <code>requirements.txt</code> sadrže č, ć, š, đ, ž —
+                <code>pip</code> može javiti <code>UnicodeDecodeError</code>.
+                Rješenje: koristite samo ASCII znakove u komentarima (zamijenite č→c, ć→c, itd.)
+            </div>
+        </section>
+
+
+        <!-- ===== 3: BIBLIOTEKE ===== -->
+        <section id="biblioteke">
+            <h2><span class="icon">📚</span> Ključne biblioteke u projektima</h2>
+
+            <p>Ove biblioteke se ponavljaju kroz sve dane obuke. Naučite što svaka radi.</p>
+
+            <div class="card-grid">
+                <div class="lib-card">
+                    <div class="lib-name">fastapi</div>
+                    <div class="lib-desc">Moderni Python web framework za kreiranje REST API-ja. Automatska validacija, dokumentacija, asinhrone rute.</div>
+                    <div class="lib-use">Koristi se za: backend server svakog projekta</div>
+                </div>
+                <div class="lib-card">
+                    <div class="lib-name">uvicorn</div>
+                    <div class="lib-desc">ASGI web server koji pokreće FastAPI aplikaciju. Podržava async/await i automatsko učitavanje promjena (--reload).</div>
+                    <div class="lib-use">Koristi se za: pokretanje servera u razvoju</div>
+                </div>
+                <div class="lib-card">
+                    <div class="lib-name">openai</div>
+                    <div class="lib-desc">Oficijalni OpenAI Python SDK. Radi i s DeepSeek API-jem i Ollama serverom jer koriste isti OpenAI-kompatibilni format.</div>
+                    <div class="lib-use">Koristi se za: sve API pozive prema LLM-ovima</div>
+                </div>
+                <div class="lib-card">
+                    <div class="lib-name">python-dotenv</div>
+                    <div class="lib-desc">Čita <code>.env</code> fajl i učitava varijable u Python okruženje. Ključno za čuvanje API ključeva van koda.</div>
+                    <div class="lib-use">Koristi se za: sigurno upravljanje API ključevima</div>
+                </div>
+                <div class="lib-card">
+                    <div class="lib-name">httpx</div>
+                    <div class="lib-desc">Async HTTP klijent. Koristi se za provjeru dostupnosti lokalnog Ollama servera i slanje HTTP zahtjeva.</div>
+                    <div class="lib-use">Koristi se za: provjera Ollama dostupnosti</div>
+                </div>
+                <div class="lib-card">
+                    <div class="lib-name">tiktoken</div>
+                    <div class="lib-desc">OpenAI-ev tokenizator. Tačno broji tokene na isti način kao i GPT modeli, radi potpuno offline.</div>
+                    <div class="lib-use">Koristi se za: Dan 1 CLI tokenizer</div>
+                </div>
+                <div class="lib-card">
+                    <div class="lib-name">pydantic</div>
+                    <div class="lib-desc">Validacija podataka pomoću Python type hints. FastAPI ga koristi automatski za validaciju request/response tijela.</div>
+                    <div class="lib-use">Instalira se automatski uz FastAPI</div>
+                </div>
+                <div class="lib-card">
+                    <div class="lib-name">asyncio</div>
+                    <div class="lib-desc">Standardna Python biblioteka za asinhrone operacije. Omogućava paralelne API pozive bez blokiranja.</div>
+                    <div class="lib-use">Ugrađena u Python — nema instalacije</div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- ===== 4: API POZIV ===== -->
+        <section id="api-poziv">
+            <h2><span class="icon">🔌</span> API pozivi prema LLM-ovima</h2>
+
+            <p>
+                Svi projekti koriste <strong>OpenAI SDK</strong> za komunikaciju s AI modelima.
+                Isti kod radi i za DeepSeek (cloud) i za Ollama (lokalno) — razlikuju se samo
+                <code>api_key</code> i <code>base_url</code>.
+            </p>
+
+            <h3>Minimalni primjer — sinhroni poziv</h3>
+            <pre><code><span class="kw">from</span> openai <span class="kw">import</span> OpenAI
+<span class="kw">import</span> os
+<span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+
+load_dotenv()  <span class="comment"># Ucitava .env fajl</span>
+
+<span class="comment"># Kreiranje klijenta</span>
+klijent = OpenAI(
+    api_key=os.getenv(<span class="str">"DEEPSEEK_API_KEY"</span>),
+    base_url=<span class="str">"https://api.deepseek.com"</span>
+)
+
+<span class="comment"># Slanje zahtjeva</span>
+odgovor = klijent.chat.completions.create(
+    model=<span class="str">"deepseek-chat"</span>,
+    messages=[
+        {<span class="str">"role"</span>: <span class="str">"system"</span>, <span class="str">"content"</span>: <span class="str">"Odgovaraj kratko na bosanskom."</span>},
+        {<span class="str">"role"</span>: <span class="str">"user"</span>,   <span class="str">"content"</span>: <span class="str">"Sta je tokenizacija?"</span>}
+    ],
+    temperature=<span class="num">0.7</span>,
+    max_tokens=<span class="num">200</span>
+)
+
+<span class="comment"># Citanje odgovora</span>
+tekst = odgovor.choices[<span class="num">0</span>].message.content
+print(tekst)</code></pre>
+
+            <h3>Asinhroni poziv (koristi se u FastAPI)</h3>
+            <pre><code><span class="kw">from</span> openai <span class="kw">import</span> AsyncOpenAI
+<span class="kw">import</span> asyncio
+
+klijent = AsyncOpenAI(
+    api_key=<span class="str">"your-key"</span>,
+    base_url=<span class="str">"https://api.deepseek.com"</span>
+)
+
+<span class="kw">async def</span> <span class="fn">pitaj_ai</span>(prompt: str) -> str:
+    odgovor = <span class="kw">await</span> klijent.chat.completions.create(
+        model=<span class="str">"deepseek-chat"</span>,
+        messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: prompt}],
+        temperature=<span class="num">0.7</span>
+    )
+    <span class="kw">return</span> odgovor.choices[<span class="num">0</span>].message.content
+
+<span class="comment"># Pokretanje async funkcije</span>
+tekst = asyncio.run(pitaj_ai(<span class="str">"Objasni tokenizaciju"</span>))</code></pre>
+
+            <h3>Struktura messages[] polja</h3>
+            <p>
+                Svaki API poziv sadrži polje <code>messages</code> — listu poruka u konverzaciji.
+                Svaka poruka ima <code>role</code> i <code>content</code>:
+            </p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Role</th><th>Ko je to?</th><th>Primjena</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>system</code></td>
+                            <td>Instrukcija za AI — njegova "ličnost" i pravila</td>
+                            <td>Definisanje tona, jezika, formata odgovora</td>
+                        </tr>
+                        <tr>
+                            <td><code>user</code></td>
+                            <td>Pitanje ili tekst koji korisnik šalje</td>
+                            <td>Konkretan zadatak ili pitanje</td>
+                        </tr>
+                        <tr>
+                            <td><code>assistant</code></td>
+                            <td>Prethodni AI odgovor (za multi-turn chat)</td>
+                            <td>Historija razgovora u chat aplikacijama</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Ključni parametri API poziva</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Parametar</th><th>Tip</th><th>Opis</th><th>Preporučena vrijednost</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>model</code></td>
+                            <td>string</td>
+                            <td>Ime modela koji se koristi</td>
+                            <td><code>deepseek-chat</code>, <code>llama3.2:1b</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>temperature</code></td>
+                            <td>float 0.0–2.0</td>
+                            <td>Kreativnost: 0.0=deterministički, 1.5=haotičan</td>
+                            <td>0.0 (fakti), 0.7 (chat), 1.0 (kreativno)</td>
+                        </tr>
+                        <tr>
+                            <td><code>max_tokens</code></td>
+                            <td>int</td>
+                            <td>Maksimalna dužina odgovora u tokenima</td>
+                            <td>150–500 za kratke odgovore</td>
+                        </tr>
+                        <tr>
+                            <td><code>messages</code></td>
+                            <td>list[dict]</td>
+                            <td>Historija konverzacije</td>
+                            <td>Uvijek uključite system prompt</td>
+                        </tr>
+                        <tr>
+                            <td><code>stream</code></td>
+                            <td>bool</td>
+                            <td>Streaming odgovor token po token</td>
+                            <td>False za API, True za chat UI</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Čitanje odgovora i statistike</h3>
+            <pre><code>odgovor = klijent.chat.completions.create(...)
+
+<span class="comment"># Tekst odgovora</span>
+tekst = odgovor.choices[<span class="num">0</span>].message.content
+
+<span class="comment"># Statistika tokena</span>
+input_tokeni  = odgovor.usage.prompt_tokens
+output_tokeni = odgovor.usage.completion_tokens
+ukupno        = odgovor.usage.total_tokens
+
+<span class="comment"># Razlog zaustavljanja generisanja</span>
+razlog = odgovor.choices[<span class="num">0</span>].finish_reason  <span class="comment"># 'stop', 'length', itd.</span></code></pre>
+
+            <h3>Fallback: DeepSeek → Ollama</h3>
+            <p>Ovaj obrazac se ponavlja u svakom projektu — automatski prelazi na lokalni model ako nema API ključa:</p>
+            <pre><code><span class="kw">def</span> <span class="fn">get_llm_client</span>():
+    <span class="str">"""Vraca klijent i model. Prioritet: DeepSeek -> Ollama."""</span>
+    <span class="kw">import</span> httpx
+
+    deepseek_key = os.getenv(<span class="str">"DEEPSEEK_API_KEY"</span>, <span class="str">""</span>)
+
+    <span class="comment"># Pokusaj 1: DeepSeek cloud API</span>
+    <span class="kw">if</span> deepseek_key <span class="kw">and</span> deepseek_key.startswith(<span class="str">"sk-"</span>):
+        <span class="kw">return</span> AsyncOpenAI(
+            api_key=deepseek_key,
+            base_url=<span class="str">"https://api.deepseek.com"</span>
+        ), <span class="str">"deepseek-chat"</span>
+
+    <span class="comment"># Pokusaj 2: Ollama lokalno</span>
+    ollama_url = os.getenv(<span class="str">"OLLAMA_BASE_URL"</span>, <span class="str">"http://localhost:11434"</span>)
+    <span class="kw">try</span>:
+        httpx.get(f<span class="str">"{ollama_url}/api/tags"</span>, timeout=<span class="num">2.0</span>)
+        model = os.getenv(<span class="str">"OLLAMA_MODEL_SMALL"</span>, <span class="str">"llama3.2:1b"</span>)
+        <span class="kw">return</span> AsyncOpenAI(api_key=<span class="str">"ollama"</span>, base_url=f<span class="str">"{ollama_url}/v1"</span>), model
+    <span class="kw">except</span>:
+        <span class="kw">raise</span> RuntimeError(<span class="str">"Ni DeepSeek ni Ollama nisu dostupni!"</span>)</code></pre>
+        </section>
+
+
+        <!-- ===== 5: ENV FAJL ===== -->
+        <section id="env-fajl">
+            <h2><span class="icon">🔑</span> .env fajl — sigurno čuvanje ključeva</h2>
+
+            <p>
+                API ključevi se <strong>nikada</strong> ne pišu direktno u kod. Čuvaju se u posebnom
+                fajlu <code>.env</code> koji je dodан u <code>.gitignore</code>.
+            </p>
+
+            <div class="card">
+                <h3>Primjer .env fajla</h3>
+                <pre><code><span class="comment"># .env — NE COMMITOVATI U GIT!</span>
+<span class="var">DEEPSEEK_API_KEY</span>=sk-vaš-pravi-ključ-ovdje
+<span class="var">OLLAMA_BASE_URL</span>=http://localhost:11434
+<span class="var">OLLAMA_MODEL_SMALL</span>=llama3.2:1b
+<span class="var">APP_PORT</span>=8001</code></pre>
+            </div>
+
+            <h3>Korištenje u Python kodu</h3>
+            <pre><code><span class="kw">from</span> dotenv <span class="kw">import</span> load_dotenv
+<span class="kw">import</span> os
+
+<span class="comment"># Ucitajte .env fajl (pozovite jednom na pocetku)</span>
+load_dotenv()
+
+<span class="comment"># Citajte varijable</span>
+api_key = os.getenv(<span class="str">"DEEPSEEK_API_KEY"</span>, <span class="str">""</span>)         <span class="comment"># "" je default ako ne postoji</span>
+port    = int(os.getenv(<span class="str">"APP_PORT"</span>, <span class="str">"8001"</span>))          <span class="comment"># konverzija u int</span></code></pre>
+
+            <div class="alert alert-danger">
+                <strong>🚨 Sigurnosna pravila:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li>Nikada ne commitujte <code>.env</code> fajl u git</li>
+                    <li>Nikada ne šaljite API ključeve emailom ili Slackom</li>
+                    <li>Ako ključ procuri — odmah ga revokirajte na DeepSeek portalu</li>
+                    <li>Koristite <code>.env.example</code> kao šablon (bez pravih ključeva)</li>
+                </ul>
+            </div>
+        </section>
+
+
+        <!-- ===== 6: ASYNCIO ===== -->
+        <section id="asyncio">
+            <h2><span class="icon">⚡</span> Async/Await — paralelni API pozivi</h2>
+
+            <p>
+                Asinhrone funkcije omogućavaju da čekate na više API poziva <em>istovremeno</em>
+                umjesto jedan po jedan. To čini aplikacije znatno bržim.
+            </p>
+
+            <h3>Zašto async?</h3>
+            <div class="diagram">Bez async (sekvencionalno):              Sa asyncio.gather() (paralelno):
+─────────────────────────────────       ─────────────────────────────────
+Poziv 1: ████████ (2s)                  Poziv 1: ████████
+Poziv 2:         ████████ (2s)          Poziv 2: ████████
+Poziv 3:                 ████████ (2s)  Poziv 3: ████████
+                                        ──────────────────
+Ukupno: 6 sekundi ❌                    Ukupno: ~2 sekunde ✅</div>
+
+            <h3>asyncio.gather() — pokretanje paralelnih zadataka</h3>
+            <pre><code><span class="kw">import</span> asyncio
+
+<span class="kw">async def</span> <span class="fn">jedan_poziv</span>(temperatura: float) -> str:
+    odgovor = <span class="kw">await</span> klijent.chat.completions.create(
+        model=<span class="str">"deepseek-chat"</span>,
+        messages=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Sta je AI?"</span>}],
+        temperature=temperatura
+    )
+    <span class="kw">return</span> odgovor.choices[<span class="num">0</span>].message.content
+
+<span class="kw">async def</span> <span class="fn">tri_temperature</span>():
+    <span class="comment"># Pokrece SVA tri poziva ISTOVREMENO</span>
+    rezultati = <span class="kw">await</span> asyncio.gather(
+        jedan_poziv(<span class="num">0.0</span>),
+        jedan_poziv(<span class="num">0.7</span>),
+        jedan_poziv(<span class="num">1.5</span>),
+    )
+    <span class="kw">return</span> rezultati  <span class="comment"># lista od 3 odgovora</span></code></pre>
+
+            <div class="alert alert-info">
+                <strong>ℹ️ FastAPI je već async:</strong>
+                Kada definirate endpoint kao <code>async def</code>, FastAPI automatski
+                rukuje event loop-om. Samo koristite <code>await</code> unutar rute.
+            </div>
+        </section>
+
+
+        <!-- ===== 7: FASTAPI OSNOVE ===== -->
+        <section id="fastapi">
+            <h2><span class="icon">🚀</span> FastAPI — osnove</h2>
+
+            <p>FastAPI je Python web framework koji automatski generiše dokumentaciju, validira podatke i podržava async.</p>
+
+            <h3>Tipična struktura FastAPI aplikacije</h3>
+            <pre><code><span class="kw">from</span> fastapi <span class="kw">import</span> FastAPI
+<span class="kw">from</span> fastapi.staticfiles <span class="kw">import</span> StaticFiles
+<span class="kw">from</span> fastapi.responses <span class="kw">import</span> FileResponse
+<span class="kw">from</span> pydantic <span class="kw">import</span> BaseModel
+
+app = FastAPI(title=<span class="str">"Moja AI Aplikacija"</span>)
+
+<span class="comment"># Servisiranje statickih fajlova (HTML, CSS, JS)</span>
+app.mount(<span class="str">"/static"</span>, StaticFiles(directory=<span class="str">"static"</span>), name=<span class="str">"static"</span>)
+
+<span class="comment"># Pydantic model za validaciju request body</span>
+<span class="kw">class</span> <span class="fn">ZahtjevModel</span>(BaseModel):
+    prompt: str
+    temperatura: float = <span class="num">0.7</span>
+
+<span class="comment"># GET endpoint — jednostavno citanje</span>
+@app.get(<span class="str">"/api/info"</span>)
+<span class="kw">async def</span> <span class="fn">info</span>():
+    <span class="kw">return</span> {<span class="str">"verzija"</span>: <span class="str">"1.0"</span>, <span class="str">"model"</span>: <span class="str">"deepseek-chat"</span>}
+
+<span class="comment"># POST endpoint — prima JSON body</span>
+@app.post(<span class="str">"/api/generiraj"</span>)
+<span class="kw">async def</span> <span class="fn">generiraj</span>(zahtjev: ZahtjevModel):
+    <span class="comment"># zahtjev.prompt i zahtjev.temperatura su automatski validirani</span>
+    <span class="kw">return</span> {<span class="str">"odgovor"</span>: <span class="str">"..."</span>}
+
+<span class="comment"># Glavna stranica</span>
+@app.get(<span class="str">"/"</span>)
+<span class="kw">async def</span> <span class="fn">root</span>():
+    <span class="kw">return</span> FileResponse(<span class="str">"static/index.html"</span>)</code></pre>
+
+            <h3>Automatska dokumentacija</h3>
+            <p>
+                FastAPI automatski generiše interaktivnu API dokumentaciju. Kada server radi,
+                otvorite u browseru:
+            </p>
+            <ul>
+                <li><code>http://localhost:8001/docs</code> — Swagger UI (interaktivno testiranje)</li>
+                <li><code>http://localhost:8001/redoc</code> — ReDoc (lijepa dokumentacija)</li>
+            </ul>
+        </section>
+
+
+        <!-- ===== 8: POKRETANJE ===== -->
+        <section id="pokretanje">
+            <h2><span class="icon">▶️</span> Pokretanje projekta</h2>
+
+            <div class="highlight-box">
+                <div class="title">✅ Pravilna komanda za pokretanje (uvijek ovo koristite)</div>
+                <pre style="margin: 0.5rem 0 0;"><code>python -m uvicorn main:app --reload --port 8001</code></pre>
+            </div>
+
+            <p>Objašnjenje parametara:</p>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Parametar</th><th>Šta radi</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><code>python -m uvicorn</code></td><td>Koristite Python iz venv-a (ne globalni)</td></tr>
+                        <tr><td><code>main:app</code></td><td>Fajl <code>main.py</code>, varijabla <code>app</code> (FastAPI instanca)</td></tr>
+                        <tr><td><code>--reload</code></td><td>Automatski restart kad promijenite kod (samo u razvoju)</td></tr>
+                        <tr><td><code>--port 8001</code></td><td>Port na kom server sluša (svaki dan ima drugačiji)</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Portovi po danima</h3>
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr><th>Projekt</th><th>Port</th><th>URL</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>dan1-tokeni</td><td>8001</td><td><code>http://localhost:8001</code></td></tr>
+                        <tr><td>dan2-film-chat</td><td>8002</td><td><code>http://localhost:8002</code></td></tr>
+                        <tr><td>dan3-ollama</td><td>8003</td><td><code>http://localhost:8003</code></td></tr>
+                        <tr><td>dan4-prognoza</td><td>8004</td><td><code>http://localhost:8004</code></td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Zaustavljanje servera</h3>
+            <p>Pritisnite <strong>Ctrl+C</strong> u terminalu gdje server radi.</p>
+
+            <h3>Ako je port zauzet</h3>
+            <pre><code><span class="comment"># Pronađite koji proces koristi port 8001</span>
+netstat -ano | findstr :8001
+
+<span class="comment"># Ugasite taj proces (zamijenite BROJ pravim PID-om)</span>
+taskkill /PID BROJ /F
+
+<span class="comment"># Ili jednostavno koristite drugi port</span>
+python -m uvicorn main:app --reload --port 8010</code></pre>
+        </section>
+
+
+        <!-- ===== 9: TROUBLESHOOTING ===== -->
+        <section id="troubleshooting">
+            <h2><span class="icon">🛠️</span> Troubleshooting — česti problemi</h2>
+
+            <div class="card">
+                <h3>❌ UnicodeDecodeError pri pip install</h3>
+                <p><strong>Simptom:</strong> <code>'charmap' codec can't decode byte 0x8d</code></p>
+                <p><strong>Uzrok:</strong> Dijakritički znakovi (č, ć...) u komentarima <code>requirements.txt</code></p>
+                <p><strong>Rješenje:</strong> Koristite samo ASCII znakove u komentarima fajla.</p>
+            </div>
+
+            <div class="card">
+                <h3>❌ error: can't find Rust compiler (tiktoken)</h3>
+                <p><strong>Simptom:</strong> Greška pri instalaciji tiktoken-a</p>
+                <p><strong>Uzrok:</strong> <code>tiktoken==0.7.0</code> nema pre-built wheels za Python 3.13</p>
+                <p><strong>Rješenje:</strong> U <code>requirements.txt</code> promijenite na <code>tiktoken>=0.8.0</code></p>
+            </div>
+
+            <div class="card">
+                <h3>❌ ModuleNotFoundError: No module named 'websockets.legacy'</h3>
+                <p><strong>Simptom:</strong> Server se ne pokreće, javlja grešku za websockets</p>
+                <p><strong>Uzrok:</strong> Pokrenuta globalna verzija uvicorna umjesto one u venv-u</p>
+                <p><strong>Rješenje:</strong> Koristite <code>python -m uvicorn</code> umjesto samo <code>uvicorn</code></p>
+            </div>
+
+            <div class="card">
+                <h3>❌ ModuleNotFoundError: No module named 'fastapi' (ili drugi paket)</h3>
+                <p><strong>Simptom:</strong> Python ne pronalazi instalirani paket</p>
+                <p><strong>Uzrok:</strong> Venv nije aktiviran, ili paketi nikada nisu instalirani</p>
+                <p><strong>Rješenje:</strong></p>
+                <pre><code><span class="comment"># Provjerite je li venv aktivan (vidite li (venv) u promptu?)</span>
+.\venv\Scripts\Activate.ps1
+
+<span class="comment"># Instalirajte pakete</span>
+pip install -r requirements.txt
+
+<span class="comment"># Provjerite instalaciju</span>
+pip list</code></pre>
+            </div>
+
+            <div class="card">
+                <h3>❌ RuntimeError: Ni DeepSeek API ni Ollama nisu dostupni</h3>
+                <p><strong>Uzrok:</strong> Nema ni API ključa ni pokretanog Ollama servera</p>
+                <p><strong>Rješenje A:</strong> Dodajte <code>DEEPSEEK_API_KEY=sk-...</code> u <code>.env</code></p>
+                <p><strong>Rješenje B:</strong> Pokrenite Ollama: <code>docker-compose up ollama</code></p>
+            </div>
+
+            <div class="card">
+                <h3>❌ Bijela stranica ili "This site can't be reached"</h3>
+                <p><strong>Uzrok:</strong> Server nije pokrenut ili koristite pogrešan URL/port</p>
+                <p><strong>Rješenje:</strong> Pokrenite server i idite na <code>http://localhost:8001</code> (ne https!)</p>
+            </div>
+        </section>
+
+    </div>
+
+</body>
+</html>

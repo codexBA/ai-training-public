@@ -1,0 +1,20 @@
+# docker-compose.yml — Dan 1: Token Vizualizator
+# Pokretanje: docker-compose up --build
+# Zaustavljanje: docker-compose down
+
+version: '3.9'
+
+services:
+  # FastAPI aplikacija za Dan 1
+  dan1-tokeni:
+    build: .
+    container_name: ai-trening-dan1
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    volumes:
+      # Mountamo kod za live reload tokom razvoja
+      - .:/app
+    environment:
+      - APP_ENV=development

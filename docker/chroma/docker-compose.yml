@@ -1,0 +1,41 @@
+# docker-compose.yml — SAMO ChromaDB vektorska baza
+#
+# Namjena: Pokretanje isključivo ChromaDB servera.
+#          Koristi se za RAG (Retrieval Augmented Generation) projekte,
+#          semantičko pretraživanje i rad s embeddingzima.
+#
+# Pokretanje (iz ovog foldera):
+#   cd docker/chroma
+#   docker compose up -d
+#
+# Zaustavljanje:
+#   docker compose down
+#
+# ChromaDB API dostupan na: http://localhost:8000
+# Testiranje: curl http://localhost:8000/api/v1/heartbeat
+
+version: '3.9'
+
+services:
+
+  # ── ChromaDB ──────────────────────────────────────────────────────────────
+  # Vektorska baza podataka otvorenog koda.
+  # Umjesto reda i kolona (kao SQL), čuva matematičke vektore koji
+  # predstavljaju "značenje" teksta, slika itd.
+  # Koristi se da AI može "pretražiti po smislu" — ne po ključnoj riječi.
+  chromadb:
+    image: chromadb/chroma:latest
+    container_name: ai-trening-chromadb
+    ports:
+      - "8000:8000"
+    volumes:
+      # Vektori (embeddinzi) se čuvaju ovdje — preživljavaju restart!
+      - chroma_data:/chroma/chroma
+    environment:
+      CHROMA_SERVER_AUTHN_CREDENTIALS: ""   # Bez autentikacije (za razvoj)
+      ANONYMIZED_TELEMETRY: "False"         # Ne šaljemo podatke o korištenju
+
+volumes:
+  chroma_data:
+    # Vektori i kolekcije ChromaDB baze.
+    # NE koristite 'down -v' osim ako stvarno želite obrisati sve vektore!

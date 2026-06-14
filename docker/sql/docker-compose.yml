@@ -1,0 +1,48 @@
+# docker-compose.yml — SAMO Microsoft SQL Server
+#
+# Namjena: Pokretanje isključivo SQL Server-a.
+#          Koristi se za dane s bazama podataka.
+#          Idealno kada ne trebate AI modele, samo relacijsku bazu.
+#
+# Pokretanje (iz ovog foldera):
+#   cd docker/sql
+#   docker compose up -d
+#
+# Zaustavljanje:
+#   docker compose down
+#
+# Povezivanje na bazu:
+#   Server:   localhost,1433
+#   Korisnik: sa
+#   Lozinka:  Training123!
+
+version: '3.9'
+
+services:
+
+  # ── SQL Server ────────────────────────────────────────────────────────────
+  # Microsoft SQL Server 2022 Developer Edition.
+  # Developer Edition je besplatna za razvoj i testiranje,
+  # ali se NE smije koristiti u produkciji.
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: ai-trening-sqlserver
+    environment:
+      ACCEPT_EULA: "Y"            # Prihvatanje licence (obavezno)
+      SA_PASSWORD: "Training123!" # Lozinka za 'sa' (system administrator) nalog
+      MSSQL_PID: "Developer"      # Tip licence
+    ports:
+      - "1433:1433"               # Standardni SQL Server port
+    volumes:
+      # Podaci baze se čuvaju ovdje — preživljavaju restart!
+      - sqlserver_data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P "Training123!" -Q "SELECT 1" || exit 1
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sqlserver_data:
+    # Podaci SQL Server baze (tabele, stored procedure, podaci).
+    # NE koristite 'down -v' osim ako stvarno želite obrisati sve podatke iz baze!

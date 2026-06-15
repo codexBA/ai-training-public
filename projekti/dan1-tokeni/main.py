@@ -123,8 +123,8 @@ async def temperature_demo(zahtjev: TemperatureRequest):
             messages=[
                 {
                     "role": "system",
-                    #"content": "Odgovaraj kratko, maksimalno 3 rečenice. Odgovaraj na bosanskom jeziku."
-                    "content": "Reply shortly, maximum 3 sentences. Reply in English."
+                    "content": "Odgovaraj kratko, maksimalno 3 rečenice. Odgovaraj na bosanskom, srpskom ili hrvatskom jeziku."
+                    #"content": "Reply shortly, maximum 3 sentences. Reply in English."
                 },
                 {
                     "role": "user",

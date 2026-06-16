@@ -10,3 +10,5 @@ openai>=1.84.0
 # Python dotenv - cita .env fajl - sprijecava hardkodiranje lozinki
 python-dotenv==1.0.0
 
+# requests - HTTP klijent za testiranje
+requests>=2.32.5

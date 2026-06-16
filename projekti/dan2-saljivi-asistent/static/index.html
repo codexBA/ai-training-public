@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="bs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Šaljivi Asistent — Dan 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            margin-bottom: 30px;
+            font-size: 1.05em;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .app {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 750px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-label {
+            font-size: 0.85em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .persona-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .persona-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.95em;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .persona-btn:hover {
+            border-color: var(--primary);
+            color: var(--text);
+        }
+
+        .persona-btn.active {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .persona-desc {
+            font-size: 0.9em;
+            color: var(--text-dim);
+            margin-bottom: 20px;
+            font-style: italic;
+            min-height: 1.4em;
+        }
+
+        .temp-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding: 12px 16px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .temp-row label {
+            font-size: 0.9em;
+            color: var(--text-dim);
+            white-space: nowrap;
+        }
+
+        .temp-row input[type="range"] {
+            flex: 1;
+            accent-color: var(--warning);
+        }
+
+        .temp-value {
+            font-weight: 700;
+            color: var(--warning);
+            font-size: 1.1em;
+            min-width: 36px;
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .chat-area {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .chat-area.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .msg {
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .msg:last-child {
+            margin-bottom: 0;
+        }
+
+        .msg-user {
+            text-align: right;
+        }
+
+        .msg-user .bubble {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 10px 16px;
+            border-radius: 14px 14px 4px 14px;
+            max-width: 80%;
+            text-align: left;
+        }
+
+        .msg-assistant .bubble {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 10px 16px;
+            border-radius: 14px 14px 14px 4px;
+            max-width: 85%;
+        }
+
+        .msg-label {
+            font-size: 0.75em;
+            color: var(--text-dim);
+            margin-bottom: 3px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-row input {
+            flex: 1;
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-family: inherit;
+            font-size: 1em;
+        }
+
+        .input-row input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .input-row button {
+            padding: 14px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .input-row button:hover {
+            background: #2563eb;
+        }
+
+        .input-row button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+        }
+
+        .meta {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 0.85em;
+            color: var(--text-dim);
+        }
+
+        .info-box {
+            margin-top: 20px;
+            padding: 14px 18px;
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid var(--warning);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9em;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .info-box strong {
+            color: var(--warning);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .app {
+                padding: 20px;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="badge">Dan 2 — Šaljivi Asistent</div>
+    <h1>Šaljivi Asistent</h1>
+    <p class="subtitle">Isprobajte kako system prompt potpuno mijenja ponašanje AI modela</p>
+
+    <div class="app">
+        <div class="section-label">Odaberite personu</div>
+        <div class="persona-grid" id="persona-grid"></div>
+        <div class="persona-desc" id="persona-desc">Odaberite personu za početak...</div>
+
+        <div class="temp-row">
+            <label>Temperatura:</label>
+            <input type="range" id="temp-slider" min="0" max="1.5" step="0.1" value="0.7">
+            <span class="temp-value" id="temp-value">0.7</span>
+        </div>
+
+        <div class="chat-area empty" id="chat-area">
+            Odaberite personu, unesite pitanje i kliknite "Pošalji"...
+        </div>
+
+        <div class="input-row">
+            <input type="text" id="msg-input" placeholder="Unesite poruku..." disabled>
+            <button id="btn-send" disabled>Pošalji</button>
+        </div>
+
+        <div class="meta" id="meta"></div>
+
+        <div class="info-box">
+            <strong>Napomena:</strong> Svaki poziv šalje samo 2 poruke (system + user) — <strong>nema
+                historije</strong>.
+            Model ne "pamti" prethodni razgovor. Ovo je ključna razlika u odnosu na dan2-film-chat.
+        </div>
+    </div>
+
+    <script>
+        let selectedPersona = null;
+        let persone = {};
+
+        const personaGrid = document.getElementById('persona-grid');
+        const personaDesc = document.getElementById('persona-desc');
+        const chatArea = document.getElementById('chat-area');
+        const msgInput = document.getElementById('msg-input');
+        const btnSend = document.getElementById('btn-send');
+        const tempSlider = document.getElementById('temp-slider');
+        const tempValue = document.getElementById('temp-value');
+        const meta = document.getElementById('meta');
+
+        tempSlider.addEventListener('input', () => {
+            tempValue.textContent = parseFloat(tempSlider.value).toFixed(1);
+        });
+
+        async function loadPersone() {
+            const res = await fetch('/api/persone');
+            persone = await res.json();
+
+            Object.entries(persone).forEach(([key, data]) => {
+                const btn = document.createElement('button');
+                btn.className = 'persona-btn';
+                btn.textContent = data.ime;
+                btn.dataset.key = key;
+                btn.addEventListener('click', () => selectPersona(key, btn));
+                personaGrid.appendChild(btn);
+            });
+
+            const firstKey = Object.keys(persone)[0];
+            if (firstKey) {
+                selectPersona(firstKey, personaGrid.querySelector('.persona-btn'));
+            }
+        }
+
+        function selectPersona(key, btn) {
+            document.querySelectorAll('.persona-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedPersona = key;
+            personaDesc.textContent = persone[key].opis;
+            msgInput.disabled = false;
+            btnSend.disabled = false;
+            msgInput.focus();
+        }
+
+        function addMessage(role, text, label) {
+            if (chatArea.classList.contains('empty')) {
+                chatArea.classList.remove('empty');
+                chatArea.innerHTML = '';
+            }
+            const div = document.createElement('div');
+            div.className = `msg msg-${role}`;
+            div.innerHTML = `<div class="msg-label">${escapeHtml(label)}</div><div class="bubble">${escapeHtml(text)}</div>`;
+            chatArea.appendChild(div);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function escapeHtml(text) {
+            const d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
+        async function send() {
+            const poruka = msgInput.value.trim();
+            if (!poruka || !selectedPersona) return;
+
+            addMessage('user', poruka, 'Vi');
+            msgInput.value = '';
+            btnSend.disabled = true;
+            btnSend.textContent = 'Čekam...';
+
+            const start = Date.now();
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        poruka,
+                        persona: selectedPersona,
+                        temperatura: parseFloat(tempSlider.value)
+                    })
+                });
+                if (!res.ok) throw new Error(`Greška: ${res.status}`);
+                const data = await res.json();
+                const duration = ((Date.now() - start) / 1000).toFixed(1);
+
+                addMessage('assistant', data.odgovor, data.persona_ime);
+                meta.textContent = `Model: ${data.model} | Vrijeme: ${duration}s | Temperatura: ${tempSlider.value}`;
+            } catch (err) {
+                addMessage('assistant', `Greška: ${err.message}`, 'Sistem');
+            } finally {
+                btnSend.disabled = false;
+                btnSend.textContent = 'Pošalji';
+                msgInput.focus();
+            }
+        }
+
+        btnSend.addEventListener('click', send);
+        msgInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !btnSend.disabled) send();
+        });
+
+        loadPersone();
+    </script>
+</body>
+
+</html>

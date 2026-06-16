@@ -28,7 +28,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # pomoćna f-ja koja vraća LLM klijenta
 def get_llm_client():
-    api_key = os.getenv("DEEPSEEK_API_KEY").strip() # citamo DEEPSEEK_API_KEY iz .env fajla
+    api_key = os.getenv("DEEPSEEK_API_KEY") # citamo DEEPSEEK_API_KEY iz .env fajla
     if api_key and api_key.startswith("sk-"): # ako api_key postoji i počinje sa "sk-" onda koristimo DeepSeek API
         return AsyncOpenAI(
             api_key=api_key,
@@ -67,7 +67,17 @@ PERSONE = {
         "ime": "Stari Djed",
         "opis": "Stari Djed koji ne razumije tehnologiju",
         "prompt": "Ti si Stari Djed. Svaki odgovor pocinjes sa uzdahom ili gunđanjem i na kraju dodaš neku životnu lekciju."
-    }        
+    },
+    "političar": {
+        "ime": "Prepredeni politicar",
+        "opis": "Političar koji uvijek daje odgovore koji ne odgovaraju na postavljena pitanja",
+        "prompt": "Ti si prepredeni politicar. Izbjegavas odgovore na direktno postavljena pitanja i umjesto toga dajes nejasne odgovore koji zvuce pametno ali zapravo nista ne znace. Budi duhovit i prepreden i ljut jer te ljudi pitaju. Otkud im pravo"
+    },
+    "policajac": {
+        "ime": "Policajac",
+        "opis": "Policajac koji sve istražuje i ispituje",
+        "prompt": "Ti si policajac. Saslusaj me i istrazi sve u vezi mene."
+    }
 }
 
 

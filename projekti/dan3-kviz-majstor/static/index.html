@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="bs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kviz Majstor — Dan 2</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: #334155;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            margin-bottom: 30px;
+            font-size: 1.05em;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .game {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 750px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .score-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
+
+        .score-bar span {
+            font-size: 1.05em;
+        }
+
+        .score-value {
+            color: var(--accent);
+            font-weight: 700;
+            font-size: 1.3em;
+        }
+
+        .question-card {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 24px;
+            margin-bottom: 15px;
+            min-height: 80px;
+            line-height: 1.7;
+            font-size: 1.1em;
+        }
+
+        .question-card.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .meta-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tag {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+
+        .tag-category {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+        }
+
+        .tag-difficulty {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-family: inherit;
+            font-size: 1.05em;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        input[type="text"]:disabled {
+            opacity: 0.5;
+        }
+
+        .btn-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        button.action-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-family: inherit;
+        }
+
+        .btn-generate {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-generate:hover {
+            background: #2563eb;
+        }
+
+        .btn-check {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #059669;
+        }
+
+        button:disabled {
+            background: #475569 !important;
+            cursor: not-allowed;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .result-score {
+            font-size: 2.5em;
+            font-weight: 700;
+        }
+
+        .result-label {
+            font-size: 1.1em;
+        }
+
+        .result-detail {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        .result-detail label {
+            display: block;
+            color: var(--text-dim);
+            font-size: 0.8em;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .result-detail p {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .result-detail p:last-child {
+            margin-bottom: 0;
+        }
+
+        .json-preview {
+            margin-top: 12px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 14px;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            color: var(--accent);
+        }
+
+        .json-label {
+            font-size: 0.8em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .score-high {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid var(--accent);
+        }
+
+        .score-mid {
+            background: rgba(245, 158, 11, 0.15);
+            border: 1px solid var(--warning);
+        }
+
+        .score-low {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid var(--danger);
+        }
+
+        .status {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 0.85em;
+            color: var(--text-dim);
+        }
+
+        .status.error {
+            color: var(--danger);
+        }
+
+        .info-box {
+            margin-top: 20px;
+            padding: 14px 18px;
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9em;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .info-box strong {
+            color: var(--accent);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .game {
+                padding: 20px;
+            }
+
+            .btn-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="badge">Dan 2 — Mini-projekat B</div>
+    <h1>Kviz Majstor</h1>
+    <p class="subtitle">AI čita pitanja iz JSON fajla i ocjenjuje vaše odgovore strukturiranim JSON-om</p>
+
+    <div class="game">
+        <div class="score-bar">
+            <span>Pitanje: <strong id="round-num">0</strong> / <strong id="total-q">0</strong></span>
+            <span>Tačnih: <strong id="correct-count">0</strong></span>
+            <span>Bodovi: <span class="score-value" id="total-score">0</span></span>
+        </div>
+
+        <div class="question-card empty" id="question-card">
+            Kliknite "Novo pitanje" da započnete kviz...
+        </div>
+
+        <div class="meta-row" id="meta-row" style="display:none;">
+            <span class="tag tag-category" id="tag-category"></span>
+            <span class="tag tag-difficulty" id="tag-difficulty"></span>
+        </div>
+
+        <input type="text" id="answer-input" placeholder="Unesite vaš odgovor..." disabled>
+
+        <div class="btn-row">
+            <button class="action-btn btn-generate" id="btn-question">Novo pitanje</button>
+            <button class="action-btn btn-check" id="btn-check" disabled>Odgovori</button>
+        </div>
+
+        <div class="result" id="result">
+            <div class="result-header">
+                <div class="result-score" id="result-score"></div>
+                <div>
+                    <div class="result-label" id="result-label"></div>
+                </div>
+            </div>
+            <div class="result-detail">
+                <label>Tačan odgovor</label>
+                <p id="result-answer"></p>
+                <label>AI komentar</label>
+                <p id="result-comment"></p>
+            </div>
+            <div class="json-label">Strukturirani JSON odgovor (response_format)</div>
+            <div class="json-preview" id="json-preview"></div>
+        </div>
+
+        <div class="status" id="status"></div>
+
+        <div class="info-box">
+            <strong>Ključni koncept:</strong> AI odgovor dolazi kao <strong>strukturirani JSON</strong> zahvaljujući
+            <code>response_format={"type": "json_object"}</code> i <strong>Pydantic</strong> validaciji
+            (<code>bodovi: int = Field(ge=0, le=10)</code>).
+        </div>
+    </div>
+
+    <script>
+        let currentQuestionId = null;
+        let roundNum = 0;
+        let totalScore = 0;
+        let correctCount = 0;
+
+        const questionCard = document.getElementById('question-card');
+        const metaRow = document.getElementById('meta-row');
+        const tagCategory = document.getElementById('tag-category');
+        const tagDifficulty = document.getElementById('tag-difficulty');
+        const answerInput = document.getElementById('answer-input');
+        const btnQuestion = document.getElementById('btn-question');
+        const btnCheck = document.getElementById('btn-check');
+        const result = document.getElementById('result');
+        const status = document.getElementById('status');
+
+        btnQuestion.addEventListener('click', async () => {
+            btnQuestion.disabled = true;
+            btnQuestion.textContent = 'Učitavam...';
+            btnCheck.disabled = true;
+            result.classList.remove('show');
+            answerInput.value = '';
+            answerInput.disabled = true;
+            status.textContent = '';
+            status.className = 'status';
+
+            try {
+                const res = await fetch('/api/pitanje');
+                if (!res.ok) throw new Error(`Greška: ${res.status}`);
+                const data = await res.json();
+
+                currentQuestionId = data.id;
+                roundNum++;
+                document.getElementById('round-num').textContent = roundNum;
+
+                questionCard.className = 'question-card';
+                questionCard.textContent = data.pitanje;
+
+                tagCategory.textContent = data.kategorija.charAt(0).toUpperCase() + data.kategorija.slice(1);
+                const stars = '★'.repeat(data.tezina) + '☆'.repeat(3 - data.tezina);
+                tagDifficulty.textContent = stars;
+                metaRow.style.display = 'flex';
+
+                answerInput.disabled = false;
+                answerInput.focus();
+                btnCheck.disabled = false;
+            } catch (err) {
+                questionCard.textContent = `Greška: ${err.message}`;
+                status.className = 'status error';
+            } finally {
+                btnQuestion.disabled = false;
+                btnQuestion.textContent = 'Novo pitanje';
+            }
+        });
+
+        btnCheck.addEventListener('click', async () => {
+            const answer = answerInput.value.trim();
+            if (!answer || currentQuestionId === null) return;
+
+            btnCheck.disabled = true;
+            btnCheck.textContent = 'AI ocjenjuje...';
+
+            try {
+                const res = await fetch('/api/provjeri', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        pitanje_id: currentQuestionId,
+                        odgovor_studenta: answer
+                    })
+                });
+                if (!res.ok) throw new Error(`Greška: ${res.status}`);
+                const data = await res.json();
+
+                totalScore += data.bodovi;
+                if (data.tacno) correctCount++;
+                document.getElementById('total-score').textContent = totalScore;
+                document.getElementById('correct-count').textContent = correctCount;
+                document.getElementById('total-q').textContent = roundNum;
+
+                document.getElementById('result-score').textContent = `${data.bodovi}/10`;
+                document.getElementById('result-label').textContent = data.tacno ? 'Tačno!' : 'Netačno';
+                document.getElementById('result-answer').textContent = data.tacan_odgovor;
+                document.getElementById('result-comment').textContent = data.komentar;
+
+                document.getElementById('json-preview').textContent = JSON.stringify(data, null, 2);
+
+                result.className = 'result show ' +
+                    (data.bodovi >= 7 ? 'score-high' : data.bodovi >= 4 ? 'score-mid' : 'score-low');
+
+                currentQuestionId = null;
+                answerInput.disabled = true;
+            } catch (err) {
+                status.textContent = `Greška: ${err.message}`;
+                status.className = 'status error';
+            } finally {
+                btnCheck.disabled = true;
+                btnCheck.textContent = 'Odgovori';
+            }
+        });
+
+        answerInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !btnCheck.disabled) btnCheck.click();
+        });
+    </script>
+</body>
+
+</html>

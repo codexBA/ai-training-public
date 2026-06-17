@@ -56,8 +56,8 @@ postavljena_pitanja: dict[int, dict] = {}
 
 @app.get("/")
 async def root():
-    # return FileResponse("static/index.html")
-    return {"poruka": "Dobro dosao u kviz majstor"}
+    return FileResponse("static/index.html")
+    #return {"poruka": "Dobro dosao u kviz majstor"}
 
 # endpoint koji vraca kategoriej pitanje
 @app.get("/api/kategorije")
@@ -94,7 +94,8 @@ async def provjeri(req: OdgovorRequest):
     system_prompt = (
         "Ti si kviz-sudija. Uporedi odgovor studenta sa tacnim odgovorom.\n"
         "Prihvati sinonime i slicne odogvore a zanemari gratmaticke greske u pisanju.\n\n"
-        "Obrazlozi i komentarisi odgovor bez obzira bio tacan ili ne. Prosiri svoj komentar sa informacijama koje su vezane za pitanje i koje su zanimljive.  \n\n"
+        "Obrazlozi i komentarisi odgovor bez obzira bio tacan ili ne. Prosiri svoj komentar sa informacijama koje su vezane za pitanje i koje su zanimljive. \n\n"
+        "Budi grub i nepristojan ako odgovor nije tacan. Ako je tacan, uvijek izrazi sumnju u odgovor i reci da je to vjerovatno tacan odgovor ali budi sarkastican. \n\n"
         "Ogranici odgovor na 3 - 4 recenice.  \n\n"
         f"Pitanje: {pitanje_data['pitanje']}\n"
         f"Tacan odgovor: {pitanje_data['tacan_odgovor']}\n"

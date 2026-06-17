@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Šta je Ollama?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --text-color: #e2e8f0;
+            --primary: #3b82f6;
+            --secondary: #1e293b;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --code-bg: #09090b;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 30px 15px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--secondary);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+        h1, h2, h3 {
+            color: #ffffff;
+            margin-top: 1.5em;
+            font-weight: 600;
+        }
+        h1 {
+            font-size: 2.5em;
+            text-align: center;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 15px;
+            margin-top: 0;
+        }
+        p, li {
+            font-size: 1.1em;
+        }
+        .alert {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border-left: 6px solid;
+            background: rgba(255,255,255,0.03);
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+        }
+        .alert-info { border-color: var(--primary); }
+        .alert-success { border-color: var(--accent); }
+        .alert-warning { border-color: var(--warning); }
+        pre {
+            background: var(--code-bg);
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 1.05em;
+            border: 1px solid #334155;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+        }
+        code {
+            font-family: Consolas, 'Courier New', monospace;
+            background: rgba(255,255,255,0.1);
+            padding: 3px 7px;
+            border-radius: 5px;
+            color: #93c5fd;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: #e2e8f0;
+        }
+        .card {
+            background: rgba(0,0,0,0.2);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border: 1px solid #334155;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .comparison-table th, .comparison-table td {
+            padding: 15px;
+            border: 1px solid #334155;
+            text-align: left;
+        }
+        .comparison-table th {
+            background: rgba(0,0,0,0.3);
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Šta je Ollama?</h1>
+        <p>Vjerovatno ste čuli za ChatGPT, Claude, DeepSeek i slične AI alate. Oni su <strong>Cloud modeli</strong>. To znači da se mozak umjetne inteligencije nalazi na nekom ogromnom serveru u Americi ili Kini. Kada im pošaljete pitanje, to pitanje putuje preko interneta, server ga obrađuje, i vraća vam odgovor.</p>
+        
+        <p>Ali, šta ako...</p>
+        <ul>
+            <li>Nemate pristup internetu?</li>
+            <li>Radite u banci ili bolnici i <strong>ne smijete</strong> slati povjerljive podatke klijenata van kompanije?</li>
+            <li>Ne želite plaćati mjesečnu pretplatu za AI?</li>
+        </ul>
+
+        <div class="alert alert-success">
+            <h4>🚀 Ovdje na scenu stupa Ollama!</h4>
+            <p><strong>Ollama</strong> je besplatan alat koji vam omogućava da preuzmete pametne AI modele (koje su napravile kompanije poput Facebook-a/Meta-e ili Google-a) i pokrenete ih <strong>direktno na svom vlastitom kompjuteru</strong>.</p>
+        </div>
+
+        <div class="card">
+            <h2>Kako Ollama radi?</h2>
+            <p>Zamislite Ollamu kao video igricu. Kada instalirate igricu, ona koristi vaš procesor (CPU) i grafičku karticu (GPU) da bi radila. Isto tako, kada instalirate Ollamu i preuzmete neki model (na primjer, model <code>llama3.2:1b</code>), ona koristi snagu <strong>vašeg računara</strong> da bi "razmišljala" i odgovarala na pitanja.</p>
+            <p>Nijedan podatak koji pošaljete Ollami ne napušta vaš kompjuter. Vi imate apsolutnu kontrolu!</p>
+        </div>
+
+        <div class="card">
+            <h2>Cloud modeli (DeepSeek) vs. Lokalni modeli (Ollama)</h2>
+            <table class="comparison-table">
+                <tr>
+                    <th>Karakteristika</th>
+                    <th>Cloud AI (DeepSeek, ChatGPT)</th>
+                    <th>Lokalni AI (Ollama)</th>
+                </tr>
+                <tr>
+                    <td><strong>Privatnost podataka</strong></td>
+                    <td>Podaci idu preko interneta (nisu sigurni za tajne podatke)</td>
+                    <td>100% lokalno na računaru (bezbjedno)</td>
+                </tr>
+                <tr>
+                    <td><strong>Pristup Internetu</strong></td>
+                    <td>Obavezan internet</td>
+                    <td>Radi savršeno i bez interneta</td>
+                </tr>
+                <tr>
+                    <td><strong>Cijena</strong></td>
+                    <td>Plaća se po "tokenu" (mjesečno trošenje novca)</td>
+                    <td>Potpuno besplatno zauvijek</td>
+                </tr>
+                <tr>
+                    <td><strong>Brzina rada</strong></td>
+                    <td>Zavisi od brzine interneta, ali generalno jako brzo</td>
+                    <td>Zavisi od <strong>jačine vašeg kompjutera</strong></td>
+                </tr>
+                <tr>
+                    <td><strong>Kvalitet odgovora</strong></td>
+                    <td>Vrhunski (pametniji modeli jer serveri imaju hiljade grafičkih kartica)</td>
+                    <td>Zavisi od veličine modela koji vaš PC može podnijeti (često prave greške u kodiranju ili teškim zadacima)</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="alert alert-warning">
+            <h4>⚠️ Najveći izazov kod Ollame: Vaš Kompjuter</h4>
+            <p>Umjetna inteligencija je "teška". Da biste pokrenuli zaista pametan model na svom računaru, potrebno vam je puno RAM memorije (16 GB ili 32 GB) i po mogućnosti jako dobra grafička kartica (poput Nvidia RTX). Ako imate slabiji kompjuter, moći ćete pokrenuti samo vrlo "male" modele (poput Llama 1B modela), koji su brzi, ali često pogrešno razumiju upute ili daju čudne odgovore.</p>
+        </div>
+
+        <div class="card">
+            <h2>Kako mi koristimo oboje na treningu?</h2>
+            <p>U našim projektima napravili smo sistem da možete isprobati oba svijeta!</p>
+            <ul>
+                <li><strong>Glavni (Primary):</strong> Ako u vaš fajl sa podešavanjima (<code>.env</code>) unesete ključ za <code>DEEPSEEK_API_KEY</code>, aplikacija će komunicirati s internetom i davati vam vrhunske, pametne odgovore velikom brzinom.</li>
+                <li><strong>Rezervni (Fallback / Ollama):</strong> Ako jednostavno <strong>izbrišete</strong> taj ključ iz fajla (ili stavite znak <code>#</code> ispred njega da ga zakomentarišete), aplikacija će automatski reći: <em>"Aha, nemam pristup internetu, koristim Ollamu sa lokalnog kompjutera!"</em>. Zatim će odgovore generisati vaša mašina.</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+</html>

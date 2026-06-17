@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Docker Uputstvo — Vodič za početnike</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a; /* Slate 900 */
+            --text-color: #e2e8f0; /* Slate 200 */
+            --primary-color: #3b82f6; /* Blue 500 */
+            --secondary-color: #1e293b; /* Slate 800 */
+            --accent-color: #10b981; /* Emerald 500 */
+            --code-bg: #020617; /* Slate 950 */
+            --border-color: #334155; /* Slate 700 */
+            --danger-color: #ef4444; /* Red 500 */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding-bottom: 5rem;
+        }
+
+        header {
+            background: linear-gradient(135deg, rgba(30, 41, 59, 0.8) 0%, rgba(15, 23, 42, 0.8) 100%);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 4rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: 50%;
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(0,0,0,0) 70%);
+            transform: translateX(-50%);
+            z-index: -1;
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: white;
+            margin: 3rem 0 1.5rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            color: #cbd5e1;
+            margin: 2rem 0 1rem 0;
+        }
+
+        p {
+            margin-bottom: 1.2rem;
+            font-size: 1.05rem;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .card {
+            background-color: var(--secondary-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .highlight {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        /* Kodni blokovi */
+        pre {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            padding: 1.2rem;
+            overflow-x: auto;
+            border: 1px solid var(--border-color);
+            margin: 1.5rem 0;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #a5b4fc;
+        }
+
+        p code, li code {
+            background-color: var(--secondary-color);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            color: #fb7185;
+            font-size: 0.9em;
+        }
+
+        /* Tabele */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+            background-color: var(--secondary-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background-color: rgba(59, 130, 246, 0.1);
+            color: #93c5fd;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Liste */
+        ul, ol {
+            margin-left: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Alert kutije */
+        .alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .alert-info {
+            border-color: var(--primary-color);
+        }
+
+        .alert-warning {
+            border-color: #f59e0b; /* Amber 500 */
+        }
+        
+        .alert-danger {
+            border-color: var(--danger-color);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.6rem; }
+            .container { padding: 0 1rem; }
+            header { padding: 3rem 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Docker za Windows Početnike</h1>
+        <p style="font-size: 1.2rem; color: #94a3b8;">Kompletan vodič: od objašnjenja pojmova do naprednih komandi.</p>
+    </header>
+
+    <div class="container">
+
+        <!-- SEKCIJA 1: ŠTA JE DOCKER -->
+        <section>
+            <h2>1. Šta je zapravo Docker?</h2>
+            
+            <p>Zamislimo kako se roba nekada prevozila brodovima: u vrećama, kutijama raznih oblika, buradima... Bilo je nevjerovatno teško sve to složiti na brod, a još teže prebaciti na kamion. Onda je izmišljen <strong>brodski kontejner</strong> — standardna metalna kutija. Bez obzira šta je unutra (televizori, kafa, automobili), svaki kran i svaki brod na svijetu tačno zna kako da podigne i prenese taj kontejner.</p>
+
+            <p><strong>Docker je upravo to, ali za softver.</strong></p>
+
+            <p>Prije Dockera, proces pokretanja tuđeg koda izgledao je ovako: <em>"Da bi moj program radio kod tebe, moraš instalirati tačno Python verziju 3.10, pa instalirati ovu bazu podataka, pa podesiti ove varijable..."</em>. To je često rezultiralo poznatom frazom: <span class="highlight">"Ali kod mene na računaru radi!"</span>.</p>
+
+            <p>Sa Dockerom, programer zapakuje svoj kod, zajedno sa svim programima koji mu trebaju (Python, baza, biblioteke) u jedan virtuelni "kontejner". Vi samo preuzmete taj kontejner i pokrenete ga. Vaš računar ne mora imati ništa instalirano (ni Python ni bazu) — sve je zatvoreno u tom kontejneru. Ako radi na programerovom kompjuteru, garantovano će raditi i na vašem.</p>
+
+            <div class="card">
+                <h3>Kontejneri vs. Virtuelne Mašine (VM)</h3>
+                <p>Možda ste čuli za VirtualBox ili VMware (virtuelne mašine). Virtuelna mašina (VM) u sebi sadrži <strong>cijeli operativni sistem</strong> (npr. instalira cijeli Windows ili Linux unutar vašeg Windowsa). To je jako tromo, sporo se pali i troši mnogo RAM-a.</p>
+                <p><strong>Docker kontejneri nemaju svoj operativni sistem.</strong> Oni posuđuju jezgro vašeg sistema. Zato su kontejneri teški samo nekoliko megabajta, pale se za par sekundi i ne troše gotovo nimalo resursa kada ne rade ništa.</p>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>Dva najvažnija pojma u Dockeru:</strong>
+                <ul>
+                    <li><strong>Image (Slika):</strong> Ovo je "recept" ili "nacrt". To je fajl koji sadrži sve instrukcije. Ne radi ništa, samo stoji na disku (kao instalacijski fajl igre).</li>
+                    <li><strong>Container (Kontejner):</strong> Ovo je "živa" aplikacija. Nastaje onog trenutka kada pokrenete <em>Image</em> (kao kada zapravo igrate igru). Od jednog <em>Image-a</em> možete pokrenuti 100 istih <em>Kontejnera</em>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SEKCIJA 2: INSTALACIJA -->
+        <section>
+            <h2>2. Instalacija i Deinstalacija na Windows-u</h2>
+
+            <h3>Instalacija</h3>
+            <ol>
+                <li>Otiđite na <a href="https://www.docker.com/products/docker-desktop/" target="_blank" style="color: #60a5fa;">službenu Docker stranicu</a> i preuzmite <strong>Docker Desktop for Windows</strong>.</li>
+                <li>Pokrenite instalaciju. Pojavit će se opcija <strong>"Use WSL 2 instead of Hyper-V"</strong>. OBAVEZNO ostavite ovo označeno. (WSL 2 je "Windows Subsystem for Linux" — fantastičan Microsoftov alat koji omogućava Dockeru da radi brzo na Windows-u).</li>
+                <li>Nakon instalacije, Windows će tražiti restart računara.</li>
+                <li>Nakon restarta, pokrenite aplikaciju Docker Desktop (pronađite je u Start meniju).</li>
+                <li>Sačekajte dok ikonica u donjem lijevom uglu (ili dole u taskbaru) ne postane <strong>zelena</strong>. Tek tada je Docker spreman za rad.</li>
+            </ol>
+
+            <p><strong>Provjera da li sve radi:</strong> Otvorite PowerShell (ili Command Prompt) i upišite:</p>
+            <pre><code>docker run hello-world</code></pre>
+            <p>Ako vidite poruku <em>"Hello from Docker!"</em>, instalacija je savršena.</p>
+
+            <h3>Deinstalacija</h3>
+            <p>Ako nekada želite potpuno ukloniti Docker:</p>
+            <ol>
+                <li>Idite na <em>Add or remove programs</em> u Windows postavkama.</li>
+                <li>Pronađite <em>Docker Desktop</em> i kliknite <em>Uninstall</em>.</li>
+                <li>Da biste obrisali zaostale ogromne fajlove koje je Docker ostavio (npr. slike kontejnera), izbrišite folder: <code>C:\Users\VašeImeKorisnika\AppData\Local\Docker</code>.</li>
+            </ol>
+        </section>
+
+        <!-- SEKCIJA 3: DOCKER VOLUMES -->
+        <section>
+            <h2>3. Trajnost podataka (Docker Volumes)</h2>
+
+            <div class="alert alert-danger">
+                <strong>Zlatno pravilo Dockera:</strong> Kontejneri su POTROŠNI (ephemeral). Ako obrišete kontejner, <strong>SVI podaci</strong> koji su bili unutar njega zauvijek nestaju!
+            </div>
+
+            <p>Zamislimo da ste pokrenuli kontejner za bazu podataka (npr. SQL Server). Vaša aplikacija je cijeli dan spremala podatke u bazu. Ugasite računar, Docker ubije kontejner, sutra ga upalite — baza je potpuno prazna! Zašto? Jer su podaci bili zapisani "unutar" kontejnera.</p>
+
+            <p>Da bismo ovo spriječili, koristimo <strong>Volumes (Volumene)</strong>. Volume je prozorčić u zidu kontejnera kroz koji kontejner sprema podatke direktno na vaš pravi hard disk (Windows).</p>
+
+            <p>Postoje dva načina čuvanja podataka:</p>
+            
+            <h3>1. Bind Mounts (Mapiranje vašeg foldera)</h3>
+            <p>Kažete Dockeru: "Umiješto da podatke spremaš kod sebe, spremaj ih u moj folder <code>C:\moji_podaci</code>".</p>
+            <pre><code>docker run -v "C:\moji_podaci:/putanja/u/kontejneru" ime_imagea</code></pre>
+            
+            <h3>2. Docker Volumes (Preporučeno)</h3>
+            <p>Kažete Dockeru: "Kreiraj ti jedan poseban zaštićeni prostor na mom disku pod nazivom <em>sql_podaci</em>, i tu čuvaj podatke nezavisno od kontejnera".</p>
+            <pre><code># Prvo kreiramo volumen
+docker volume create sql_podaci
+
+# Zatim pokrećemo kontejner i spajamo ga na volumen
+docker run -v sql_podaci:/var/opt/mssql ime_imagea</code></pre>
+
+            <p>Kada sutra obrišete kontejner i pokrenete novi, samo ga ponovo spojite na volumen <code>sql_podaci</code> i vaši podaci su tu!</p>
+        </section>
+
+        <!-- SEKCIJA 4: KOMANDE -->
+        <section>
+            <h2>4. Osnovne Docker komande</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Komanda</th>
+                        <th>Šta radi?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>docker ps</code></td>
+                        <td>Prikazuje listu kontejnera koji trenutno RADE.</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker ps -a</code></td>
+                        <td>Prikazuje listu SVIH kontejnera (i onih koji rade i onih koji su ugašeni/pali).</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker pull &lt;image&gt;</code></td>
+                        <td>Samo preuzima <em>Image</em> (nacrt) sa interneta na vaš računar. Ne pokreće ga. (npr. <code>docker pull ubuntu</code>)</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker run &lt;image&gt;</code></td>
+                        <td>Pokreće kontejner iz datog image-a. (Često se koriste dodaci poput <code>-d</code> da radi u pozadini, ili <code>-p</code> za portove).</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker stop &lt;id&gt;</code></td>
+                        <td>Zaustavlja upaljeni kontejner, ali ga NE briše sa računara. Podaci u njemu i dalje postoje.</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker rm &lt;id&gt;</code></td>
+                        <td>Potpuno briše kontejner! (Gubite sve podatke koji nisu sačuvani u Volumen).</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker logs &lt;id&gt;</code></td>
+                        <td>Prikazuje šta se ispisivalo u terminalu tog kontejnera (odlično za pronalazak grešaka ako aplikacija ne radi).</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker exec -it &lt;id&gt; bash</code></td>
+                        <td>"Ulazi" unutar kontejnera, dajući vam terminal kako biste mogli kucati komande kao da ste na tom sistemu.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- SEKCIJA 5: DOCKER COMPOSE -->
+        <section>
+            <h2>5. Šta je docker-compose.yml?</h2>
+            
+            <p>Zamislimo da naša aplikacija (poput onih na edukaciji) treba:</p>
+            <ul>
+                <li>SQL Bazu podataka</li>
+                <li>Ollama server za AI modele</li>
+                <li>ChromaDB vektorsku bazu</li>
+            </ul>
+
+            <p>Da bismo ovo pokrenuli koristeći obične Docker komande, morali bismo kucati tri ogromne linije koda, svaka sa po 10 parametara (za portove, lozinke, volumene). Ako pogriješimo jedno slovo, ne radi. I to moramo raditi svaki dan.</p>
+
+            <p><strong>Docker Compose</strong> to rješava. On nam omogućava da sva ta pravila zapišemo u jedan tekstualni fajl (<code>docker-compose.yml</code>). Onda u terminalu ukucamo samo jednu jedinu komandu:</p>
+            <pre><code>docker compose up -d</code></pre>
+            <p>I on automatski pročita fajl i pokrene sve tri aplikacije povezane u mrežu!</p>
+
+            <h3>Analiza stvarnog docker-compose.yml fajla</h3>
+            <p>Ovo je fajl koji se nalazi u root folderu vaših projekata (<code>x:\Projects\GitHub\AI-Training\docker-compose.yml</code>). Razbijmo ga na dijelove:</p>
+
+            <pre><code>version: '3.9' # Verzija sintakse koju koristimo
+
+services:      # Ovdje počinjemo listati naše kontejnere
+
+  # Prvi kontejner: SQL Server
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest # Koji image skidamo s interneta
+    container_name: ai-trening-sqlserver             # Ime koje ćemo vidjeti u docker ps
+    environment:                                     # Lozinke i postavke koje aplikacija traži
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "Training123!"
+    ports:
+      - "1433:1433"   # Prespajamo port 1433 našeg računara na port 1433 kontejnera
+    volumes:
+      - sqlserver_data:/var/opt/mssql # Bazu podataka spašavamo trajno u volumen!
+
+  # Drugi kontejner: Ollama AI server
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-trening-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama   # AI Modele teške gigabajte spašavamo trajno
+
+# Ovdje na kraju fajla govorimo Dockeru koje Volumene da zaista kreira na našem hard disku
+volumes:
+  sqlserver_data:    
+  ollama_models:     
+  chroma_data:</code></pre>
+
+            <div class="alert alert-warning">
+                <strong>Najvažnije Compose komande:</strong>
+                <ul>
+                    <li><code>docker compose up -d</code> — Pokreće sve sisteme opisane u yml fajlu u pozadini (-d znači detached).</li>
+                    <li><code>docker compose down</code> — Zaustavlja i briše kontejnere, ali <strong>ČUVA</strong> volumene (podaci su sigurni).</li>
+                    <li><code>docker compose down -v</code> — Brisanje svega UKLJUČUJUĆI i volumene. Oprez, ovo nepovratno briše bazu i skinute AI modele!</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- SEKCIJA 6: POKRETANJE POJEDINIH SERVISA -->
+        <section>
+            <h2>6. Pokretanje pojedinih servisa — pristup za edukaciju</h2>
+
+            <p>Na ovom treningu koristimo više servisa (SQL Server, Ollama, ChromaDB), ali <strong>nije ih potrebno pokretati sve odjednom</strong>. Svaki dan edukacije koristi samo određene servise. Pokretanje samo onoga što trebate štedi RAM, CPU i smanjuje konfuziju.</p>
+
+            <div class="card">
+                <h3>Organizacija docker/ foldera</h3>
+                <p>Sve Docker Compose konfiguracije nalaze se u folderu <code>docker/</code>. Svaki servis ima <strong>vlastiti podfolder</strong> s <code>docker-compose.yml</code> unutar njega. Iz tog foldera pokrenete standardnu komandu — bez ikakvih dodatnih parametara:</p>
+                <pre><code>AI-Training/
+└── docker/
+    ├── README.md          ← Kratko uputstvo
+    ├── ollama/            ← SAMO Ollama (Dan 1, Dan 3)
+    │   └── docker-compose.yml
+    ├── sql/               ← SAMO SQL Server
+    │   └── docker-compose.yml
+    ├── chroma/            ← SAMO ChromaDB
+    │   └── docker-compose.yml
+    ├── no-sql/            ← Ollama + ChromaDB (Dan 2, Dan 4)
+    │   └── docker-compose.yml
+    └── full/              ← Svi servisi zajedno
+        └── docker-compose.yml</code></pre>
+            </div>
+
+            <h3>Koji servis, za koji dan i zašto</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dan / Projekat</th>
+                        <th>Potrebni servisi</th>
+                        <th>Folder za pokretanje</th>
+                        <th>Zašto baš taj servis?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Dan 1</strong> — Tokeni &amp; Temperatura</td>
+                        <td>Ollama <em>(opcionalno)</em></td>
+                        <td><code>cd docker/ollama</code></td>
+                        <td>Aplikacija može raditi s DeepSeek API-jem bez Ollame. Ollama je fallback za offline rad.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dan 2</strong> — Film Chat</td>
+                        <td>ChromaDB + Ollama</td>
+                        <td><code>cd docker/no-sql</code></td>
+                        <td>ChromaDB čuva embeddinze filmova. Ollama ili cloud API odgovaraju na pitanja.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dan 3</strong> — Ollama projekat</td>
+                        <td>Ollama</td>
+                        <td><code>cd docker/ollama</code></td>
+                        <td>Dan je posvećen isključivo lokalnim AI modelima. SQL i ChromaDB nisu potrebni.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Dan 4</strong> — Prognoza</td>
+                        <td>SQL Server + Ollama</td>
+                        <td><code>cd docker/no-sql</code></td>
+                        <td>Podaci o vremenskim prognozama čuvaju se u SQL bazi.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Kompletan setup</strong></td>
+                        <td>Svi servisi</td>
+                        <td><code>cd docker/full</code></td>
+                        <td>Za predavača ili napredne korisnike koji rade više projekata istovremeno.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Kako pokrenuti pojedinačni servis</h3>
+            <p>Uđite u odgovarajući folder i pokrenite standardnu komandu — bez ikakvih dodatnih parametara:</p>
+
+            <pre><code># Dan 1 i Dan 3 — samo Ollama
+cd docker/ollama
+docker compose up -d
+
+# Dan 2 — Ollama + ChromaDB
+cd docker/no-sql
+docker compose up -d
+
+# SQL Server
+cd docker/sql
+docker compose up -d
+
+# Samo ChromaDB
+cd docker/chroma
+docker compose up -d
+
+# Sve odjednom (predavački računar)
+cd docker/full
+docker compose up -d</code></pre>
+
+            <h3>Provjera i zaustavljanje</h3>
+            <pre><code># Pregled svih aktivnih kontejnera (iz bilo kojeg foldera)
+docker ps
+
+# Praćenje logova uživo (iz foldera gdje ste pokrenuli)
+docker compose logs -f
+
+# Zaustavljanje — iz ISTOG foldera odakle ste pokrenuli
+docker compose down
+
+# Zaustavljanje + brisanje volumena (PAŽNJA: nepovratno!)
+docker compose down -v</code></pre>
+
+            <div class="alert alert-info">
+                <strong>Savjet za predavače:</strong> Na početku svakog dana edukacije, uđite u odgovarajući folder i pokrenite samo servis koji taj dan treba. Studenti tada vide samo jedan kontejner u <code>docker ps</code> listi — manje konfuzije, lakše praćenje. Naredni dan: <code>docker compose down</code> u prethodnom folderu, <code>cd</code> u novi, <code>docker compose up -d</code>.
+            </div>
+        </section>
+
+        <!-- SEKCIJA 7: OLLAMA — POSEBNO POGLAVLJE -->
+        <section>
+            <h2>7. Ollama — upravljanje lokalnim AI modelima</h2>
+
+            <p>Ollama je posebno važna komponenta ovog treninga jer nam omogućava da pokrećemo AI modele <strong>potpuno lokalno</strong> — bez interneta, bez plaćanja, bez slanja podataka na cloud. Razumijevanje kako Ollama radi ključno je za Dan 3 i sve projekte koji ne koriste cloud API.</p>
+
+            <div class="card">
+                <h3>Analogija: Ollama kao "garaža za AI modele"</h3>
+                <p>Zamislite <strong>Ollamu kao garažu</strong>, a <strong>AI modele kao automobile</strong>:</p>
+                <ul>
+                    <li>Garaža (Ollama) je uvijek na istom mjestu, uvijek dostupna na portu 11434</li>
+                    <li>Automobili (modeli: Llama, Mistral, Phi...) su različite veličine i namjena</li>
+                    <li>Možete imati više automobila u garaži — ali vozite samo jedan u datom trenutku (ili nekoliko, uz dijeljenje resursa)</li>
+                    <li>Kada trebate drugi model, jednostavno ga "izvučete iz garaže" — bez reinstalacije</li>
+                </ul>
+            </div>
+
+            <h3>Kako Ollama prima zahtjeve od aplikacija</h3>
+            <p>Kada vaša Python aplikacija pošalje pitanje AI-u, tok izgleda ovako:</p>
+            <pre><code>Vaša Python aplikacija
+        ↓
+HTTP zahtjev na http://localhost:11434/v1/chat/completions
+        ↓
+Ollama server (Docker kontejner) prima zahtjev
+        ↓
+Ollama učita model (npr. llama3.2:1b) u RAM
+        ↓
+Model generira odgovor token po token
+        ↓
+Ollama vraća odgovor vašoj aplikaciji</code></pre>
+
+            <h3>Preuzimanje AI modela</h3>
+            <p>Kad Ollama kontejner radi, modeli se preuzimaju komandom <code>ollama pull</code>. Postoje dva načina:</p>
+
+            <pre><code># Način 1: Direktno unutar kontejnera
+docker exec ai-trening-ollama ollama pull llama3.2:1b
+
+# Način 2: Ako imate Ollamu instaliranu i lokalno (ne u Dockeru)
+ollama pull llama3.2:1b</code></pre>
+
+            <div class="alert alert-warning">
+                <strong>Važno — veličine modela:</strong> Modeli su veliki fajlovi koji se preuzimaju jednom i čuvaju u Docker volumenu <code>ollama_models</code>. Preuzimanje traje nekoliko minuta ovisno o brzini interneta i veličini modela.
+            </div>
+
+            <h3>Pregled popularnih modela — veličina i namjena</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Model</th>
+                        <th>Veličina na disku</th>
+                        <th>RAM potreban</th>
+                        <th>Namjena</th>
+                        <th>Komanda za preuzimanje</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>llama3.2:1b</code></td>
+                        <td>~700 MB</td>
+                        <td>~2 GB RAM</td>
+                        <td>Testiranje, brzi odgovori, slabiji kvalitet. <em>(SMALL model)</em></td>
+                        <td><code>ollama pull llama3.2:1b</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>llama3.2:3b</code></td>
+                        <td>~2 GB</td>
+                        <td>~4 GB RAM</td>
+                        <td>Balans između brzine i kvaliteta. <em>(MEDIUM model)</em></td>
+                        <td><code>ollama pull llama3.2:3b</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>llama3.1:8b</code></td>
+                        <td>~5 GB</td>
+                        <td>~8 GB RAM</td>
+                        <td>Dobar kvalitet, potreban jači laptop/desktop.</td>
+                        <td><code>ollama pull llama3.1:8b</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>mistral:7b</code></td>
+                        <td>~4 GB</td>
+                        <td>~8 GB RAM</td>
+                        <td>Izvrsna alternativa, često brži od Llame iste veličine.</td>
+                        <td><code>ollama pull mistral:7b</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>phi3:mini</code></td>
+                        <td>~2.3 GB</td>
+                        <td>~4 GB RAM</td>
+                        <td>Microsoft-ov model, odličan za kod i logiku.</td>
+                        <td><code>ollama pull phi3:mini</code></td>
+                    </tr>
+                    <tr>
+                        <td><code>gemma2:2b</code></td>
+                        <td>~1.6 GB</td>
+                        <td>~3 GB RAM</td>
+                        <td>Google-ov mali model. Dobar za edukaciju.</td>
+                        <td><code>ollama pull gemma2:2b</code></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Upravljanje modelima — pregled komandi</h3>
+            <pre><code># Preuzimanje modela
+docker exec ai-trening-ollama ollama pull llama3.2:1b
+
+# Lista svih preuzetih modela (s veličinom i datumom)
+docker exec ai-trening-ollama ollama list
+
+# Provjera koji modeli trenutno RADE (učitani u RAM)
+docker exec ai-trening-ollama ollama ps
+
+# Testiranje modela direktno u terminalu (interaktivni chat)
+docker exec -it ai-trening-ollama ollama run llama3.2:1b
+
+# Brisanje modela (oslobađa prostor na disku)
+docker exec ai-trening-ollama ollama rm llama3.2:1b
+
+# Informacije o modelu
+docker exec ai-trening-ollama ollama show llama3.2:1b</code></pre>
+
+            <div class="card">
+                <h3>Chat sa modelom iz Terminala (bez koda)</h3>
+                <p>
+                    Kao što je prikazano u komandama iznad, možete pokrenuti interaktivni chat sa modelom direktno u vašem terminalu (PowerShell, Command Prompt ili WSL).
+                </p>
+                <p>
+                    Pokrenite sljedeću komandu:
+                </p>
+                <pre><code>docker exec -it ai-trening-ollama ollama run llama3.2:1b</code></pre>
+                <p>
+                    <em>Napomena:</em> Ako imate Ollamu instaliranu lokalno na računaru (nativno, van Docker-a), dovoljno je pokrenuti samo:
+                </p>
+                <pre><code>ollama run llama3.2:1b</code></pre>
+                <p>
+                    Nakon što se chat pokrene, možete kucati pitanja i komunicirati sa modelom. Kada želite izaći iz chat sesije, upišite <code>/bye</code> i pritisnite Enter, ili pritisnite <kbd>Ctrl</kbd> + <kbd>D</kbd>.
+                </p>
+            </div>
+
+            <h3 id="ollama-vise-modela">Mogu li dva AI modela raditi istovremeno?</h3>
+
+            <div class="card">
+                <p><strong>Odgovor: Da — ali uz važan asterisk.</strong></p>
+                <p>Ollama <em>može</em> imati više modela učitanih istovremeno, ali to <strong>dijeli isti RAM i CPU</strong>. Evo šta se zapravo dešava:</p>
+                <ul>
+                    <li><strong>Model se učita u RAM</strong> kada ga prvi put pozovete. Ostaje učitan neko vrijeme (zadano: 5 minuta neaktivnosti).</li>
+                    <li><strong>Ako pozovete drugi model</strong> dok je prvi još u RAMu, Ollama može oba držati u memoriji — ako imate dovoljno RAM-a.</li>
+                    <li><strong>Na računarima s manje RAM-a</strong> (npr. 8 GB), Ollama će automatski istisnuti prethodni model kada treba učitati novi.</li>
+                    <li><strong>Zahtjevi se obrađuju sekvencijalno</strong> po modelu — Ollama nije dizajnirana za paralelne zahtjeve na isti model od više korisnika.</li>
+                </ul>
+            </div>
+
+            <div class="alert alert-info">
+                <strong>Praktično pravilo za edukaciju:</strong> Na jednom studentskom laptopu (8-16 GB RAM), koristite samo jedan model istovremeno. Prebacivanje između modela radi promjenom <code>OLLAMA_MODEL_SMALL</code> u <code>.env</code> fajlu i restartom aplikacije — ne trebate uopšte dirati Docker.
+            </div>
+
+            <h3>Mijenjanje aktivnog modela za aplikaciju</h3>
+            <p>Da promijenite koji model vaša aplikacija koristi, <strong>ne trebate mijenjati kod</strong>. Dovoljno je:</p>
+            <ol>
+                <li>Preuzeti željeni model: <code>docker exec ai-trening-ollama ollama pull ime-modela</code></li>
+                <li>Otvoriti <code>.env</code> fajl u projektu</li>
+                <li>Promijeniti vrijednost <code>OLLAMA_MODEL_SMALL=novi-model</code></li>
+                <li>Restartovati Python server (Ctrl+C, pa ponovo <code>uvicorn</code>)</li>
+            </ol>
+            <p>Aplikacija automatski pokupi novu vrijednost iz <code>.env</code> fajla pri svakom startu.</p>
+
+            <h3>Ollama u Dockeru vs. Ollama nativno instalirana</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Aspekt</th>
+                        <th>Ollama u Dockeru</th>
+                        <th>Ollama nativno instalirana</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Instalacija</td>
+                        <td><code>docker compose up -d</code> — gotovo!</td>
+                        <td>Preuzimanje instalera s ollama.com, instalacija</td>
+                    </tr>
+                    <tr>
+                        <td>Deinstalacija</td>
+                        <td><code>docker compose down -v</code> — nestane sve</td>
+                        <td>Deinstalacija + ručno brisanje modela</td>
+                    </tr>
+                    <tr>
+                        <td>GPU podrška</td>
+                        <td>Potrebna dodatna konfiguracija u yml fajlu</td>
+                        <td>Automatski detektuje GPU</td>
+                    </tr>
+                    <tr>
+                        <td>Port i URL</td>
+                        <td>Isti: <code>http://localhost:11434</code></td>
+                        <td>Isti: <code>http://localhost:11434</code></td>
+                    </tr>
+                    <tr>
+                        <td>Preporuka za edukaciju</td>
+                        <td>✅ Da — standardno za sve studente</td>
+                        <td>Opcionalno za napredne korisnike s GPU</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- SEKCIJA 8: OLLAMA_MODEL_SMALL i MEDIUM -->
+        <section>
+            <h2>8. OLLAMA_MODEL_SMALL i MEDIUM u .env fajlu</h2>
+
+            <p>Svaki projekat u ovom treningu koristi <code>.env</code> fajl za konfiguraciju. U tom fajlu postoje dvije varijable za Ollama modele: <code>OLLAMA_MODEL_SMALL</code> i <code>OLLAMA_MODEL_MEDIUM</code>. Ova sekcija objašnjava šta su, kada se koji koristi i kako ih mijenjati.</p>
+
+            <div class="card">
+                <h3>Šta piše u .env fajlu</h3>
+                <pre><code># Ollama konfiguracija (lokalni LLM server)
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL_SMALL=llama3.2:1b
+OLLAMA_MODEL_MEDIUM=llama3.2:3b</code></pre>
+                <p>Ovo su <strong>samo tekstualne varijable</strong> — same po sebi ne rade ništa. Vrijednost dobivaju tek kada ih Python kod eksplicitno pročita i preda Ollami.</p>
+            </div>
+
+            <h3>Šta znači "Small" a šta "Medium"?</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Varijabla</th>
+                        <th>Podrazumijevana vrijednost</th>
+                        <th>Veličina modela</th>
+                        <th>Tipična namjena</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>OLLAMA_MODEL_SMALL</code></td>
+                        <td><code>llama3.2:1b</code></td>
+                        <td>1.3 milijardu parametara (~700 MB)</td>
+                        <td>Brzi odgovori, demo, testiranje. Radi čak i na starijim laptopovima s 4 GB RAM-a.</td>
+                    </tr>
+                    <tr>
+                        <td><code>OLLAMA_MODEL_MEDIUM</code></td>
+                        <td><code>llama3.2:3b</code></td>
+                        <td>3.2 milijarde parametara (~2 GB)</td>
+                        <td>Bolji kvalitet odgovora. Preporučeno kada imate 8+ GB RAM-a i malo više strpljenja.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Kada aplikacija koristi SMALL, a kada MEDIUM?</h3>
+            <p>To <strong>ovisi o kodu</strong> svake aplikacije. Svaki projekat čita onu varijablu koja mu je najprikladnija. Na primjer, u Dan 1 projektu (<code>main.py</code>):</p>
+            <pre><code># Iz main.py — Dan 1 projekat
+# Aplikacija traži OLLAMA_MODEL_SMALL jer je Dan 1 demo projekat
+# koji treba brze odgovore, ne nužno visok kvalitet
+
+model = os.getenv("OLLAMA_MODEL_SMALL", "llama3.2:1b")
+#                  ↑ varijabla iz .env   ↑ default ako varijabla ne postoji</code></pre>
+
+            <p>Aplikacija uvijek čita <code>OLLAMA_MODEL_SMALL</code> ako je to ono što joj treba za određenu funkciju. Možete imati aplikaciju koja koristi SMALL za brze klasifikacije, a MEDIUM za detaljne analize — sve u istom kodu, sve konfigurirano kroz <code>.env</code>.</p>
+
+            <h3>Kako promijeniti model bez promjene koda</h3>
+            <p>Ovo je ključna prednost <code>.env</code> pristupa. Cijeli postupak:</p>
+            <ol>
+                <li>Otvorite <code>.env</code> fajl u VS Code-u</li>
+                <li>Promijenite vrijednost, npr: <code>OLLAMA_MODEL_SMALL=mistral:7b</code></li>
+                <li>Provjerite da je model preuzet: <code>docker exec ai-trening-ollama ollama list</code></li>
+                <li>Restartujte server (Ctrl+C u terminalu, pa ponovo pokrenite uvicorn)</li>
+                <li>Gotovo — aplikacija sad koristi Mistral umjesto Llame, a kod se nije promijenio ni za slovo</li>
+            </ol>
+
+            <div class="alert alert-warning">
+                <strong>Česta greška:</strong> Promijenite <code>.env</code> fajl, ali <em>ne restartujete server</em>. <code>.env</code> se čita <strong>samo pri startu aplikacije</strong> — promjene ne stupaju na snagu dok ne restartujete. Ovo je namjerno ponašanje: production aplikacije ne smiju dinamički mijenjati konfiguraciju u toku rada.
+            </div>
+
+            <h3>Može li aplikacija koristiti model koji nije preuzet?</h3>
+            <p>Ne — i Ollama će vratiti grešku. Tok je sljedeći:</p>
+            <pre><code># Scenarij: u .env stoji OLLAMA_MODEL_SMALL=llama3.1:8b
+# ali taj model NIJE preuzet
+
+# Aplikacija pošalje zahtjev Ollami → Ollama odgovori greškom:
+# "model 'llama3.1:8b' not found, try 'ollama pull llama3.1:8b'"
+
+# Rješenje: preuzmite model PRIJE pokretanja aplikacije
+docker exec ai-trening-ollama ollama pull llama3.1:8b</code></pre>
+
+            <h3>Praktični workflow za predavače</h3>
+            <ol>
+                <li><strong>Jutro prije nastave</strong>: Pokrenite Ollama kontejner i preuzmite modele koji će se koristiti taj dan</li>
+                <li><strong>Studenti kopiraju .env.example → .env</strong>: Podrazumijevane vrijednosti (llama3.2:1b) rade odmah</li>
+                <li><strong>Napredni studenti</strong>: Mogu promijeniti na llama3.2:3b ako žele boji kvalitet</li>
+                <li><strong>Eksperiment na času</strong>: Zajedno promijenite model u .env, restartujte, usporedite odgovore</li>
+            </ol>
+        </section>
+
+        <!-- SEKCIJA 9: ČIŠĆENJE DISKA -->
+        <section>
+            <h2 id="cistenje-diska">9. Čišćenje diska — brisanje modela, images i volumena</h2>
+
+            <p>Tokom rada sa Dockerom i Ollamom, na disku se akumulira značajna količina podataka: AI modeli mogu biti teški po nekoliko gigabajta, a Docker image-i, zaustavljeni kontejneri i stari volumeni polako "jedu" prostor. Ova sekcija objašnjava kako to sve pregledati i očistiti — korak po korak.</p>
+
+            <div class="alert alert-warning">
+                <strong>Prije brisanja — provjeri šta imaš!</strong> Uvijek prvo pokrenite komande za pregled (npr. <code>ollama list</code>, <code>docker images</code>) da vidite šta postoji, pa tek onda brišite. Brisanje je <strong>nepovratno</strong>.
+            </div>
+
+            <h3 id="provjera-zauzetog-prostora">Korak 1 — Provjera koliko prostora Docker i Ollama zauzimaju</h3>
+            <p>Prije nego počnete brisati, dobro je znati koliko prostora zapravo zauzimate:</p>
+            <pre><code># Ukupan pregled zauzetog prostora od strane Dockera
+# (images, kontejneri, volumeni, build cache)
+docker system df
+
+# Detaljnija verzija — prikazuje svaki resurs posebno
+docker system df -v</code></pre>
+            <p>Tipičan ispis izgleda otprilike ovako:</p>
+            <pre><code>TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          5         2         8.2GB     5.1GB (62%)
+Containers      3         1         12kB      12kB (100%)
+Local Volumes   3         2         4.7GB     0B (0%)
+Build Cache     12        0         1.3GB     1.3GB</code></pre>
+            <p>Kolona <strong>RECLAIMABLE</strong> pokazuje koliko prostora možete osloboditi brisanjem neaktivnih resursa.</p>
+
+            <pre><code># Provjera slobodnog prostora na disku (Windows PowerShell)
+Get-PSDrive C | Select-Object Used, Free</code></pre>
+
+            <h3 id="brisanje-ollama-modela">Korak 2 — Brisanje pojedinačnih Ollama modela</h3>
+            <p>Ollama modeli se čuvaju unutar Docker volumena <code>ollama_models</code>. Brišu se komandom <code>ollama rm</code> izvršenom unutar kontejnera:</p>
+
+            <pre><code># Prvo — pregledaj koji modeli su preuzeti (s veličinom)
+docker exec ai-trening-ollama ollama list
+
+# Primjer ispisa:
+# NAME              ID            SIZE    MODIFIED
+# llama3.2:1b       ...           1.3 GB  2 hours ago
+# llama3.2:3b       ...           2.0 GB  3 days ago
+# mistral:7b        ...           4.1 GB  1 week ago
+# phi3:mini         ...           2.3 GB  2 weeks ago</code></pre>
+
+            <pre><code># Brisanje jednog modela
+docker exec ai-trening-ollama ollama rm llama3.2:1b
+
+# Brisanje više modela odjednom (svaki posebno)
+docker exec ai-trening-ollama ollama rm mistral:7b
+docker exec ai-trening-ollama ollama rm phi3:mini
+
+# Provjera nakon brisanja
+docker exec ai-trening-ollama ollama list</code></pre>
+
+            <div class="alert alert-info">
+                <strong>Savjet:</strong> Nakon brisanja modela, <strong>ne morate restartovati Ollamu ni Docker</strong>. Model je odmah uklonjen. Ako ga ponovo trebate, jednostavno ga ponovo preuzmite s <code>ollama pull ime-modela</code>.
+            </div>
+
+            <h3 id="brisanje-docker-images">Korak 3 — Brisanje Docker image-a (slika)</h3>
+            <p>Docker image-i su "nacrti" kontejnera. Akumuliraju se na disku svaki put kada preuzmete novi ili buildujete vlastiti. Možete ih slobodno brisati — kontejner koji iz njih radi <strong>neće biti pogođen dok ga ne restartujete</strong>.</p>
+
+            <pre><code># Pregled svih preuzetih image-a (s veličinom)
+docker images
+
+# Primjer ispisa:
+# REPOSITORY                        TAG       IMAGE ID       SIZE
+# ollama/ollama                     latest    abc123...      1.5GB
+# mcr.microsoft.com/mssql/server    2022-...  def456...      2.9GB
+# chromadb/chroma                   latest    ghi789...      620MB</code></pre>
+
+            <pre><code># Brisanje jednog image-a (koristite IMAGE ID ili naziv:tag)
+docker rmi ollama/ollama:latest
+
+# Ako image koristi neki kontejner, Docker će javiti grešku.
+# Prvo zaustavite i obrišite kontejner:
+docker stop ai-trening-ollama
+docker rm ai-trening-ollama
+docker rmi ollama/ollama:latest
+
+# Brisanje SVIH image-a koji se trenutno ne koriste ni od jednog kontejnera
+docker image prune -a</code></pre>
+
+            <div class="alert alert-warning">
+                <strong>Pažnja uz <code>docker image prune -a</code>:</strong> Ova komanda briše <em>sve</em> image-e koji nemaju pokrenuti kontejner. Sljedeći put kad pokrenete <code>docker compose up</code>, Docker će morati ponovo preuzeti image-e s interneta (može potrajati nekoliko minuta, ovisno o brzini veze).
+            </div>
+
+            <h3 id="brisanje-volumena">Korak 4 — Brisanje Docker volumena</h3>
+            <p>Volumeni čuvaju trajne podatke (AI modele, baze podataka, vektore). Brisanje volumena je <strong>najopasnija operacija</strong> — podaci su nepovratno izgubljeni.</p>
+
+            <pre><code># Pregled svih volumena i njihove veličine
+docker volume ls
+
+# Detaljni pregled (s veličinom) — zahtijeva malo više vremena
+docker system df -v | grep -A 20 "Local Volumes"</code></pre>
+
+            <pre><code># Brisanje jednog volumena (SAMO ako kontejner koji ga koristi ne radi!)
+docker volume rm ollama_models
+
+# Brisanje svih volumena koji NISU prikačeni ni za jedan kontejner
+docker volume prune
+
+# Brisanje volumena zajedno s kontejnerima (iz foldera docker-compose-a)
+cd docker/ollama
+docker compose down -v   # Zaustavlja kontejnere I briše njihove volumene</code></pre>
+
+            <div class="alert alert-danger">
+                <strong>UPOZORENJE — <code>docker compose down -v</code>:</strong> Ovo briše i sve preuzete AI modele iz <code>ollama_models</code> volumena! Ako imate modele teške po 4–8 GB, morat ćete ih ponovo preuzimati. Koristite samo ako ste sigurni da vam ti podaci više ne trebaju.
+            </div>
+
+            <h3 id="brisanje-zaustavljenih-kontejnera">Korak 5 — Brisanje zaustavljenih kontejnera</h3>
+            <p>Kontejneri koji su zaustavljeni (status: <em>Exited</em>) i dalje zauzimaju prostor, mada obično malen. Vrijedi ih povremeno počistiti:</p>
+
+            <pre><code># Pregled SVIH kontejnera (i aktivnih i zaustavljenih)
+docker ps -a
+
+# Brisanje jednog zaustavljenog kontejnera
+docker rm ai-trening-ollama
+
+# Brisanje SVIH zaustavljenih kontejnera odjednom
+docker container prune</code></pre>
+
+            <h3 id="nuklearno-ciscenje">Korak 6 — "Nuklearno čišćenje" (sve odjednom)</h3>
+            <p>Ako želite osloboditi što više prostora odjednom i početi od nule, postoji jedna komanda koja briše sve nekorištene resurse:</p>
+
+            <pre><code># Briše sve odjednom: zaustavljene kontejnere, nekorištene image-e,
+# nekorištene mreže i build cache.
+# NE briše volumene!
+docker system prune -a
+
+# Isto, ali UKLJUČUJE i volumene (MAKSIMALNO agresivno — sve nestaje!)
+docker system prune -a --volumes</code></pre>
+
+            <div class="alert alert-danger">
+                <strong>Ekstremna pažnja uz <code>docker system prune -a --volumes</code>:</strong><br>
+                Ova komanda briše <em>bukvalno sve</em> što Docker ima — sve image-e, sve volumene, sve cache. Koristite samo kada stvarno želite početi od apsolutne nule i ne smeta vam što ćete sve ponovo preuzimati.
+            </div>
+
+            <h3 id="preporuceni-redosljed">Preporučeni redosljed čišćenja (za studente)</h3>
+            <p>Ako vam ponestaje prostora na disku, pratite ovaj redosljed — od najsigurnijeg prema agresivnijem:</p>
+
+            <div class="card">
+                <ol>
+                    <li>
+                        <strong>Obrišite Ollama modele koje ne koristite</strong> — najsigurnije, modeli se lako ponovo preuzmu:
+                        <pre><code>docker exec ai-trening-ollama ollama list
+docker exec ai-trening-ollama ollama rm ime-modela</code></pre>
+                    </li>
+                    <li>
+                        <strong>Očistite build cache i zaustavljene kontejnere</strong> — nema gubitka podataka:
+                        <pre><code>docker system prune</code></pre>
+                    </li>
+                    <li>
+                        <strong>Obrišite nekorištene image-e</strong> — Docker će ih ponovo preuzeti po potrebi:
+                        <pre><code>docker image prune -a</code></pre>
+                    </li>
+                    <li>
+                        <strong>Tek kao posljednji korak</strong> — brisanje volumena (podaci su izgubljeni):
+                        <pre><code>docker compose down -v   # iz odgovarajućeg docker/ foldera</code></pre>
+                    </li>
+                </ol>
+            </div>
+
+            <h3 id="tabela-sazimanje">Sažetak — šta koja komanda briše i koliko je opasna</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Komanda</th>
+                        <th>Šta se briše</th>
+                        <th>Podaci izgubljeni?</th>
+                        <th>Opasnost</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>ollama rm &lt;model&gt;</code></td>
+                        <td>Jedan AI model iz volumena</td>
+                        <td>Model (ponovo se preuzme)</td>
+                        <td>🟡 Niska</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker container prune</code></td>
+                        <td>Svi zaustavljeni kontejneri</td>
+                        <td>Ne (podaci u volumenima ostaju)</td>
+                        <td>🟢 Bezopasno</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker image prune -a</code></td>
+                        <td>Svi nekorišteni image-i</td>
+                        <td>Ne (image-i se ponovo preuzmu)</td>
+                        <td>🟡 Niska</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker system prune -a</code></td>
+                        <td>Kontejneri + image-i + cache</td>
+                        <td>Ne (volumeni ostaju)</td>
+                        <td>🟡 Srednja</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker volume rm &lt;volumen&gt;</code></td>
+                        <td>Jedan volumen (baza, modeli...)</td>
+                        <td><strong>DA — nepovratno!</strong></td>
+                        <td>🔴 Visoka</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker compose down -v</code></td>
+                        <td>Kontejneri + svi vezani volumeni</td>
+                        <td><strong>DA — nepovratno!</strong></td>
+                        <td>🔴 Visoka</td>
+                    </tr>
+                    <tr>
+                        <td><code>docker system prune -a --volumes</code></td>
+                        <td>Apsolutno sve što Docker ima</td>
+                        <td><strong>DA — sve!</strong></td>
+                        <td>🔴🔴 Maksimalna</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="alert alert-info">
+                <strong>Pro tip za predavače:</strong> Na kraju svakog dana edukacije, sigurno je pokrenuti <code>docker system prune</code> (bez <code>-a</code> i bez <code>--volumes</code>) — to čisti samo privremeni cache i zaustavljene kontejnere, a ne dira AI modele ni baze. Studenti sutra nastavljaju bez problema.
+            </div>
+        </section>
+
+    </div>
+</body>
+</html>

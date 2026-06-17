@@ -1,0 +1,37 @@
+[
+    {
+        "id": 1,
+        "kategorija": "geografija",
+        "pitanje": "Na kojoj rijeci se nalazi grad Banja Luka",
+        "tacan_odgovor": "Vrbas",
+        "tezina": "1"
+    },
+    {
+        "id": 2,
+        "kategorija": "geografija",
+        "pitanje": "Koji grad u Bosni i Hercegovini ima status distrikta",
+        "tacan_odgovor": "Brčko",
+        "tezina": "2"
+    },
+    {
+        "id": 3,
+        "kategorija": "geografija",
+        "pitanje": "Na kojoj rijeci se nalazi Stari Most u Mostaru",
+        "tacan_odgovor": "Neretva",
+        "tezina": "2"
+    },
+    {
+        "id": 4,
+        "kategorija": "tech",
+        "pitanje": "Za šta je skraćenica RAM",
+        "tacan_odgovor": "Random Access Memory",
+        "tezina": "3"
+    },
+    {
+        "id": 5,
+        "kategorija": "nauka",
+        "pitanje": "Koja planeta je poznata kao 'crvena planeta'",
+        "tacan_odgovor": "Mars",
+        "tezina": "1"
+    }
+]

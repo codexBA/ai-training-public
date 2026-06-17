@@ -1,0 +1,189 @@
+[
+    {
+        "id": 1,
+        "naslov": "The Godfather",
+        "naslov_bs": "Kum",
+        "godina": "1972",
+        "reziser": "Francis Ford Coppola",
+        "zanr": [
+            "krimi",
+            "drama"
+        ],
+        "glumci": [
+            "Marlon Brando",
+            "Al Pacino"
+        ],
+        "radnja": "Vjencanje Donove kcerke i paralelno desavanje mafijanskih poslova. Ispunjen ritualima, obiteljskim vrijednostima i nasiljem. Don Corleone donosi pravdu po svome. Jedan od najboljih filmova svih vremena.",
+        "jezik": "Engleski",
+        "ocjena": 9
+    },
+    {
+        "id": 2,
+        "naslov": "The Dark Knight",
+        "naslov_bs": "Vitez Tame",
+        "godina": "2008",
+        "reziser": "Christopher Nolan",
+        "zanr": [
+            "akcija",
+            "krimi",
+            "drama"
+        ],
+        "glumci": [
+            "Christian Bale",
+            "Heath Ledger"
+        ],
+        "radnja": "Batmen se suočava sa Džokerom koji unosi haos u Gotam. Film se bavi moralnim dilemama, korupcijom i cijenom herojstva.",
+        "jezik": "Engleski",
+        "ocjena": 8
+    },
+    {
+        "id": 3,
+        "naslov": "The Matrix",
+        "naslov_bs": "Matriks",
+        "godina": "1999",
+        "reziser": "The Wachowskis",
+        "zanr": [
+            "akcija",
+            "sci-fi"
+        ],
+        "glumci": [
+            "Keanu Reeves",
+            "Laurence Fishburne"
+        ],
+        "radnja": "Haker Neo otkriva da je stvarnost iluzija koju kontrolišu mašine i postaje dio ljudskog pokreta otpora.",
+        "jezik": "Engleski",
+        "ocjena": 7
+    },
+    {
+        "id": 4,
+        "naslov": "Inception",
+        "naslov_bs": "Početak",
+        "godina": "2010",
+        "reziser": "Christopher Nolan",
+        "zanr": [
+            "akcija",
+            "sci-fi",
+            "triler"
+        ],
+        "glumci": [
+            "Leonardo DiCaprio",
+            "Joseph Gordon-Levitt"
+        ],
+        "radnja": "Grupa lopova ulazi u snove drugih ljudi kako bi ukrali ili posadili ideje.",
+        "jezik": "Engleski",
+        "ocjena": 9
+    },
+    {
+        "id": 5,
+        "naslov": "Parasite",
+        "naslov_bs": "Parazit",
+        "godina": "2019",
+        "reziser": "Bong Joon-ho",
+        "zanr": [
+            "komedija",
+            "drama",
+            "triler"
+        ],
+        "glumci": [
+            "Song Kang-ho",
+            "Choi Woo-shik"
+        ],
+        "radnja": "Skromna korejska porodica se infiltrira u život bogate porodice pretvarajući se da su visoko kvalificirani radnici, što dovodi do katastrofalnih posljedica.",
+        "jezik": "Korejski",
+        "ocjena": 9
+    },
+    {
+        "id": 6,
+        "naslov": "Titanic",
+        "naslov_bs": "Titanik",
+        "godina": "1997",
+        "reziser": "James Cameron",
+        "zanr": [
+            "drama",
+            "romantika"
+        ],
+        "glumci": [
+            "Leonardo DiCaprio",
+            "Kate Winslet"
+        ],
+        "radnja": "Ljubavna prica izmedju Rose i Jacka koji se zaljubljuju jedno u drugo tokom putovanja na Titaniku, koji kasnije tone i mnogi ginu. Rose prezivljava, ali Jack umire. Film je poznat po specijalnim efektima i emocionalnom sadržaju. ",
+        "jezik": "Engleski",
+        "ocjena": 9
+    },
+    {
+        "id": 7,
+        "naslov": "Parada",
+        "naslov_bs": "Parada",
+        "godina": "2011",
+        "reziser": "Srdjan Dragojevic",
+        "zanr": [
+            "komedija",
+            "drama"
+        ],
+        "glumci": [
+            "Nikola Kojo",
+            "Bojan Navojec"
+        ],
+        "radnja": "Ujedinjenje ratnih veterana iz različitih sukoba u bivšoj Jugoslaviji. Oni zajedno organizuju gej prajd paradu u Beogradu kako bi promovisali toleranciju i suprotstavili se homofobiji, što dovodi do brojnih komičnih i dramatičnih situacija.",
+        "jezik": "Srpski",
+        "ocjena": 10
+    },
+    {
+        "id": 8,
+        "naslov": "Partizanska Eskadrila",
+        "naslov_bs": "Partizanska Eskadrila",
+        "godina": "1979",
+        "reziser": "Hajrudin Krvavac",
+        "zanr": [
+            "akcija",
+            "ratni"
+        ],
+        "glumci": [
+            "Velimir Bata Zivojinovic",
+            "Rade Serbedzija",
+            "Milutin Karadzic"
+        ],
+        "radnja": "",
+        "jezik": "",
+        "ocjena": 0
+    },
+    {
+        "id": 9,
+        "naslov": "Lepa sela lepo gore",
+        "naslov_bs": "Lepa sela lepo gore",
+        "godina": "1996",
+        "reziser": "Srdjan Dragojevic",
+        "zanr": [
+            "komedija",
+            "drama",
+            "ratni"
+        ],
+        "glumci": [
+            "Dragan Bjelogrlic",
+            "Nikola Kojo"
+        ],
+        "radnja": "",
+        "jezik": "",
+        "ocjena": 0
+    },
+    {
+        "id": 10,
+        "naslov": "Harry Potter and the Sorcerer's Stone",
+        "naslov_bs": "Hari Poter i Kamen mudraca",
+        "godina": "2001",
+        "reziser": "Chris Columbus",
+        "zanr": [
+            "fantazija",
+            "avantura",
+            "porodicni"
+        ],
+        "glumci": [
+            "Daniel Radcliffe",
+            "Emma Watson",
+            "Rupert Grint"
+        ],
+        "radnja": "Mladi Hari Poter otkriva da je vjestac i da je poznat u magicarskom svijetu. On ide u skolu Hogvorts gdje se sprijateljuje sa Ronom i Hermionom. Njih trojica otkrivaju zavjeru koja ukljucuje Voldemorta koji pokusava da se vrati u zivot i da preuzme vlast u magicarskom svijetu. ",
+        "jezik": "Engleski",
+        "ocjena": 7
+    }
+]

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="bs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dan 3 — Film Chat</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>  
+    <div class="app-container">
+        <header class="app-header">
+            <div class="day-badge">Dan 3</div>
+            <h1>Film Chat — historija, system prompt, JSON</h1>
+            <p class="subtitle">Chatbot s katalogom od 40 filmova (<code>podaci/filmovi.json</code>)</p>
+        </header>
+
+        <section class="section">
+            <h2 class="section-title">System prompt</h2>
+            <textarea id="system-prompt"
+                rows="4">Ti si asistent za preporuku filmova. Odgovaraj na bosanskom. Koristi samo filmove iz kataloga.</textarea>
+        </section>
+
+        <section class="section chat-section">
+            <div id="chat-messages" class="chat-messages"></div>
+            <div class="chat-input-row">
+                <input type="text" id="chat-input" placeholder="Npr: Preporuči mi dramu za večeras..." />
+                <button class="btn btn-primary" id="btn-send">Pošalji</button>
+                <button class="btn btn-secondary" id="btn-clear">Obriši historiju</button>
+            </div>
+            <div id="chat-meta" class="chat-meta"></div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">JSON preporuka (strukturirani output)</h2>
+            <div class="input-row">
+                <label>Žanr: <input id="json-zanr" placeholder="drama" /></label>
+                <label>Raspoloženje: <input id="json-raspolozenje" value="opusteno" /></label>
+                <button class="btn btn-primary" id="btn-json">Dohvati JSON preporuku</button>
+            </div>
+            <pre id="json-output" class="json-output">{}</pre>
+        </section>
+
+        <footer
+            style="text-align:center; padding:20px; margin-top:40px; border-top:1px solid #30363d; color:#8b949e; font-size:0.85rem;">
+            <p>Dan 3 — Film Chat | AI Trening &mdash; Advanced Application of LLMs and AI Tools in IT</p>
+            <p>Autor: <strong>Erkan Islamovic</strong></p>
+        </footer>
+    </div>
+    <script src="/static/app.js"></script>
+</body>
+
+</html>

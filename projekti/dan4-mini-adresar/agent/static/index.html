@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="bs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Adresar API — Function Calling</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: #334155;
+            --tool-bg: #2d1f4e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Inter, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+            line-height: 1.6;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 4px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            margin-bottom: 24px;
+            font-size: 1.05em;
+            text-align: center;
+            max-width: 640px;
+        }
+
+        .app {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 780px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .section-label {
+            font-size: 0.85em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .chip {
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.88em;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .chip:hover {
+            border-color: var(--primary);
+            color: var(--text);
+        }
+
+        .chat-area {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            max-height: 360px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .chat-area.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dim);
+            font-style: italic;
+        }
+
+        .msg {
+            margin-bottom: 16px;
+            line-height: 1.6;
+        }
+
+        .msg:last-child {
+            margin-bottom: 0;
+        }
+
+        .msg-user {
+            text-align: right;
+        }
+
+        .msg-user .bubble {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            padding: 10px 16px;
+            border-radius: 14px 14px 4px 14px;
+            max-width: 80%;
+            text-align: left;
+        }
+
+        .msg-assistant .bubble {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 10px 16px;
+            border-radius: 14px 14px 14px 4px;
+            max-width: 85%;
+        }
+
+        .msg-label {
+            font-size: 0.75em;
+            color: var(--text-dim);
+            margin-bottom: 3px;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-row input {
+            flex: 1;
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-family: inherit;
+            font-size: 1em;
+        }
+
+        .input-row input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .input-row button {
+            padding: 14px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .input-row button:hover {
+            background: #2563eb;
+        }
+
+        .input-row button:disabled {
+            background: #475569;
+            cursor: not-allowed;
+        }
+
+        .meta {
+            margin-top: 12px;
+            text-align: center;
+            font-size: 0.85em;
+            color: var(--text-dim);
+            font-family: monospace;
+        }
+
+        .info-box {
+            margin-top: 20px;
+            padding: 14px 18px;
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid var(--warning);
+            border-radius: 0 8px 8px 0;
+            font-size: 0.9em;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .info-box strong {
+            color: var(--warning);
+        }
+
+        .trace-section {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .trace-box {
+            background: var(--tool-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 0.75rem;
+            font-family: monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            max-height: 280px;
+            overflow-y: auto;
+        }
+
+        .collapsible-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .collapsible-header span {
+            font-size: 0.9em;
+            color: var(--text-dim);
+        }
+
+        .test-row {
+            display: flex;
+            gap: 10px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+
+        .test-row input {
+            flex: 1;
+            min-width: 140px;
+            background: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-family: inherit;
+        }
+
+        .test-row button {
+            padding: 10px 16px;
+            background: var(--border);
+            color: var(--text);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+        }
+
+        .test-row button:hover {
+            background: #475569;
+        }
+
+        .footer-links {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.85em;
+            color: var(--text-dim);
+        }
+
+        .footer-links a {
+            color: var(--primary);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 10px;
+            }
+
+            .app {
+                padding: 20px;
+            }
+
+            .input-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="badge">Mini-projekat — Dva servisa</div>
+    <h1>Adresar API</h1>
+    <p class="subtitle">AI agent (port 8021) odgovara gdje ljudi rade i žive — pozivajući zaseban adresar REST API (port
+        8020)</p>
+
+    <div class="app">
+        <div class="section-label">Primjeri pitanja</div>
+        <div class="chip-row" id="chip-row">
+            <button type="button" class="chip" data-q="Gdje radi Emin?">Gdje radi Emin?</button>
+            <button type="button" class="chip" data-q="U kom gradu živi Amra?">U kom gradu živi Amra?</button>
+            <button type="button" class="chip" data-q="Koga sve poznaješ?">Koga sve poznaješ?</button>
+        </div>
+
+        <div class="chat-area empty" id="chat-area">
+            Postavite pitanje o osobi iz adresara...
+        </div>
+
+        <div class="input-row">
+            <input type="text" id="msg-input" placeholder="Npr. Gdje radi Kenan?" />
+            <button type="button" id="btn-send">Pošalji</button>
+        </div>
+
+        <div class="meta" id="meta"></div>
+
+        <div class="info-box">
+            <strong>Stateless chat:</strong> Svaki poziv šalje samo system + user poruku —
+            <strong>nema historije</strong> na serveru. UI prikazuje prethodne poruke lokalno, ali ih ne šalje ponovo.
+        </div>
+
+        <div class="trace-section">
+            <div class="section-label">Tool trace (šta je AI pozvao)</div>
+            <pre class="trace-box" id="tool-trace">[]</pre>
+        </div>
+
+        <div class="trace-section">
+            <div class="collapsible-header" id="toggle-test">
+                <div class="section-label" style="margin:0">Test adresar API (bez AI)</div>
+                <span id="toggle-icon">▼</span>
+            </div>
+            <div id="test-panel">
+                <div class="test-row">
+                    <input type="text" id="direct-name" placeholder="Ime, npr. Emin" value="Emin" />
+                    <button type="button" id="btn-direct">Dohvati iz API-ja</button>
+                </div>
+                <pre class="trace-box" id="direct-output">{}</pre>
+            </div>
+        </div>
+    </div>
+
+    <p class="footer-links">
+        <a href="/uputstvo">Uputstvo</a> ·
+        <a href="../../mini-adresar/uputstvo.html">mini-adresar (monolit)</a> ·
+        <a href="../../dan4-prognoza/uputstvo.html">dan4-prognoza</a>
+    </p>
+
+    <script>
+        /**
+         * Mini Adresar API — stateless chat + function calling tool trace
+         */
+        var chatArea = document.getElementById('chat-area');
+        var msgInput = document.getElementById('msg-input');
+        var btnSend = document.getElementById('btn-send');
+        var meta = document.getElementById('meta');
+        var toolTrace = document.getElementById('tool-trace');
+        var adresarApiUrl = null;
+
+        function escapeHtml(text) {
+            var d = document.createElement('div');
+            d.textContent = text;
+            return d.innerHTML;
+        }
+
+        function addMessage(role, text, label) {
+            if (chatArea.classList.contains('empty')) {
+                chatArea.classList.remove('empty');
+                chatArea.innerHTML = '';
+            }
+            var div = document.createElement('div');
+            div.className = 'msg msg-' + role;
+            div.innerHTML =
+                '<div class="msg-label">' + escapeHtml(label) + '</div>' +
+                '<div class="bubble">' + escapeHtml(text) + '</div>';
+            chatArea.appendChild(div);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        async function loadConfig() {
+            try {
+                var response = await fetch('/api/config');
+                if (response.ok) {
+                    var data = await response.json();
+                    adresarApiUrl = data.adresar_api_url;
+                }
+            } catch (err) {
+                console.warn('Nije moguće učitati /api/config:', err);
+            }
+        }
+
+        async function sendQuestion(pitanje) {
+            var text = (pitanje || msgInput.value).trim();
+            if (!text) return;
+
+            addMessage('user', text, 'Vi');
+            msgInput.value = '';
+            btnSend.disabled = true;
+            btnSend.textContent = 'Čekam...';
+            toolTrace.textContent = '[]';
+            meta.textContent = 'AI razmišlja i možda poziva alate...';
+
+            try {
+                var response = await fetch('/api/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pitanje: text, tool_choice: 'auto' })
+                });
+
+                if (!response.ok) {
+                    var err = await response.json();
+                    throw new Error(err.detail || ('HTTP ' + response.status));
+                }
+
+                var data = await response.json();
+                addMessage('assistant', data.odgovor, 'Asistent');
+                toolTrace.textContent = "Praćenje alata onemogućeno u jednostavnom prikazu.";
+                meta.textContent =
+                    'Model: ' + data.model +
+                    ' | ' + data.trajanje_ms + ' ms';
+            } catch (err) {
+                addMessage('assistant', 'Greška: ' + err.message, 'Sistem');
+                meta.textContent = '';
+            } finally {
+                btnSend.disabled = false;
+                btnSend.textContent = 'Pošalji';
+                msgInput.focus();
+            }
+        }
+
+        async function direktniTest() {
+            var name = document.getElementById('direct-name').value.trim();
+            if (!name) return;
+
+            var output = document.getElementById('direct-output');
+            output.textContent = 'Učitavam...';
+
+            if (!adresarApiUrl) {
+                await loadConfig();
+            }
+            if (!adresarApiUrl) {
+                output.textContent = 'Greška: adresar API URL nije konfigurisan.';
+                return;
+            }
+
+            try {
+                var url = adresarApiUrl + '/osoba/' + encodeURIComponent(name);
+                var response = await fetch(url);
+                var data = await response.json();
+                if (!response.ok && data.detail) {
+                    output.textContent = JSON.stringify(data.detail, null, 2);
+                } else {
+                    output.textContent = JSON.stringify(data, null, 2);
+                }
+            } catch (err) {
+                output.textContent = 'Greška: ' + err.message;
+            }
+        }
+
+        document.getElementById('chip-row').addEventListener('click', function (e) {
+            if (e.target.classList.contains('chip')) {
+                sendQuestion(e.target.getAttribute('data-q'));
+            }
+        });
+
+        btnSend.addEventListener('click', function () { sendQuestion(); });
+        msgInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && !btnSend.disabled) sendQuestion();
+        });
+
+        document.getElementById('btn-direct').addEventListener('click', direktniTest);
+
+        var testPanel = document.getElementById('test-panel');
+        var toggleIcon = document.getElementById('toggle-icon');
+        var testVisible = true;
+
+        document.getElementById('toggle-test').addEventListener('click', function () {
+            testVisible = !testVisible;
+            testPanel.style.display = testVisible ? 'block' : 'none';
+            toggleIcon.textContent = testVisible ? '▼' : '▶';
+        });
+
+        loadConfig();
+        msgInput.focus();
+    </script>
+</body>
+
+</html>

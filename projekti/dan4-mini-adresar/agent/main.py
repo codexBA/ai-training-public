@@ -48,8 +48,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/")
 async def root():
-    #return FileResponse("static/index.html")
-    return {"poruka": "Dobro dosao u Mini Adresar"}
+    return FileResponse("static/index.html")
+    #return {"poruka": "Dobro dosao u Mini Adresar"}
 
 @app.post("/api/ask", response_model=AskResponse)
 async def ask(zahtjev: AskRequest):

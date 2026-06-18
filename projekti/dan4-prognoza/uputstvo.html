@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="bs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uputstvo — Function Calling Prognoza | Dan 4 — Detaljno</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: #334155;
+            --fun: #8b5cf6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 0 0 40px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+        .badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        h1 { font-size: 2.2em; margin-bottom: 8px; }
+        .subtitle { color: var(--text-dim); font-size: 1.1em; margin-bottom: 30px; }
+
+        h2 {
+            font-size: 1.5em;
+            margin: 40px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            color: var(--primary);
+            scroll-margin-top: 80px;
+        }
+
+        h3 { font-size: 1.15em; margin: 24px 0 10px; color: #fff; }
+        h4 { font-size: 1.05em; margin: 16px 0 8px; color: #bfdbfe; }
+        p { margin-bottom: 12px; }
+        ul, ol { margin: 0 0 16px 24px; }
+        li { margin-bottom: 6px; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        kbd {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0 16px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88em;
+            line-height: 1.6;
+        }
+
+        pre code { background: none; padding: 0; }
+
+        nav.top-nav {
+            background: #0f172a;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav.top-nav a { color: var(--primary); text-decoration: none; }
+        nav.top-nav a:hover { text-decoration: underline; }
+        nav.top-nav .sep { color: var(--border); }
+
+        nav.toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+
+        nav.toc h3 { margin-top: 0; font-size: 1em; color: var(--primary); }
+        nav.toc ol { margin-bottom: 0; columns: 2; column-gap: 30px; }
+        nav.toc a { color: var(--primary); text-decoration: none; font-size: 0.95em; }
+        nav.toc a:hover { text-decoration: underline; }
+
+        .step {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .step h3 { display: inline; margin: 0; }
+
+        .sub-step {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            border: 1px solid var(--border);
+        }
+
+        .sub-step-label {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 2px 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tip {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .tip strong { color: var(--accent); }
+
+        .warning {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid var(--warning);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .warning strong { color: var(--warning); }
+
+        .checkpoint {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 16px 0;
+            font-size: 0.95em;
+        }
+
+        .checkpoint strong { color: var(--primary); }
+
+        .concept {
+            background: rgba(139, 92, 246, 0.08);
+            border-left: 3px solid var(--fun);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .concept strong { color: #a78bfa; }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.08);
+            border-left: 3px solid var(--primary);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+
+        .alert-info strong { color: var(--primary); }
+
+        .narrator {
+            background: rgba(3, 105, 161, 0.08);
+            border-left: 3px solid #0369a1;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .narrator strong { color: #38bdf8; }
+
+        .expected-output {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+
+        .expected-output::before {
+            content: "Očekivani output:";
+            display: block;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .expected-output pre {
+            margin: 0;
+            border: none;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .ascii-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 16px;
+            font-size: 0.92em;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 8px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+        .exp {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            border-left: 4px solid var(--warning);
+        }
+
+        .exp-label {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .checklist { list-style: none; margin-left: 0; }
+        .checklist li::before { content: "✓ "; color: var(--primary); font-weight: bold; }
+
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        @media (max-width: 700px) {
+            nav.toc ol { columns: 1; }
+            .step, .exp { padding: 16px; }
+            pre { font-size: 0.78em; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="top-nav">
+        <a href="../../docs/index.html">← AI Trening Dokumentacija</a>
+        <span class="sep">›</span>
+        <a href="../../docs/dan4.html">Dan 4 — Function Calling Prognoza</a>
+        <span class="sep">›</span>
+        <span style="color: var(--text-dim);">Uputstvo</span>
+    </nav>
+
+    <div class="container">
+
+        <div class="badge">Dan 4 — Function Calling Prognoza, port 8004</div>
+        <h1>Uputstvo: AI Prognoza s Function Calling-om</h1>
+        <p class="subtitle">Potpuni korak-po-korak vodič — od Open-Meteo API-ja do function calling petlje, CLI trace-a i
+            web interfejsa. Port <strong>8004</strong>.</p>
+
+        <div class="alert-info">
+            <strong>Za koga je ovaj vodič?</strong>
+            <p style="margin:8px 0 0">Za svakoga ko je završio Dan 2 (Chat API) i Dan 3 (Ollama) i želi naučiti kako LLM
+                <em>poziva prave funkcije</em> — dohvat vremenske prognoze, cache, tool trace i kompletnu agent petlju.</p>
+        </div>
+
+        <nav class="toc">
+            <h3>Sadržaj</h3>
+            <ol>
+                <li><a href="#uvod">Uvod i preduslovi</a></li>
+                <li><a href="#tri-puta">Tri puta do vremenskih podataka</a></li>
+                <li><a href="#stateless">Stateless vs tool-loop poruke</a></li>
+                <li><a href="#mini-adresar">Usporedba s mini-adresar</a></li>
+                <li><a href="#venv">Virtualno okruženje i requirements</a></li>
+                <li><a href="#env">Konfiguracija .env fajla</a></li>
+                <li><a href="#tools-cities">tools/cities.py — baza gradova</a></li>
+                <li><a href="#tools-weather">tools/weather.py — Open-Meteo i cache</a></li>
+                <li><a href="#main-py">main.py — function calling srce</a></li>
+                <li><a href="#cli">CLI alati (meteo_direct, weather_agent)</a></li>
+                <li><a href="#frontend">Frontend (static/)</a></li>
+                <li><a href="#api">API dokumentacija</a></li>
+                <li><a href="#pokretanje">Pokretanje i testiranje</a></li>
+                <li><a href="#notebook">Jupyter notebook</a></li>
+                <li><a href="#modeli">DeepSeek vs Ollama</a></li>
+                <li><a href="#troubleshooting">Rješavanje problema</a></li>
+                <li><a href="#eksperimenti">Eksperimenti</a></li>
+                <li><a href="#recnik">Rečnik pojmova</a></li>
+                <li><a href="#zakljucak">Šta smo naučili</a></li>
+            </ol>
+        </nav>
+
+        <h2 id="uvod">Teorijski uvod — Zašto ovaj projekat i šta gradimo?</h2>
+        <p>
+            Dobrodošli u Dan 4! U ovom projektu gradimo <strong>AI asistenta za vremensku prognozu</strong> koji ne
+            izmišlja temperature — već poziva prave Python funkcije koje dohvaćaju podatke s Open-Meteo API-ja.
+        </p>
+
+        <h3>Zašto radimo ovaj projekat i čemu služi?</h3>
+        <p>
+            U Dan 2 ste naučili Chat API i system prompt. U Dan 3 ste radili s Ollamom lokalno. Sada dolazi
+            <strong>sljedeći nivo</strong>: model ne mora znati sve iz glave — može <em>tražiti</em> da aplikacija
+            izvrši funkciju i vrati mu rezultat. To je osnova modernih AI agenata, chatbota s alatima i asistenata
+            koji pretražuju web, baze podataka ili interne sisteme.
+        </p>
+
+        <h3>Šta želimo demonstrirati?</h3>
+        <ul>
+            <li><strong>Function Calling (Tool Use):</strong> Model prima JSON opis alata i odlučuje <em>kada</em> i
+                <em>koji</em> alat pozvati, s kojim argumentima.</li>
+            <li><strong>Izvršenje alata u Pythonu:</strong> LLM <em>ne</em> izvršava kod — mi u <code>execute_tool()</code>
+                pokrećemo pravu funkciju i vraćamo JSON rezultat modelu.</li>
+            <li><strong>Tool loop petlja:</strong> Vi pitate → model traži alat → vi izvršite → model čita rezultat →
+                model odgovara korisniku na bosanskom.</li>
+            <li><strong>Vanjski API bez ključa:</strong> Open-Meteo je besplatan — demonstriramo integraciju stvarnih
+                podataka s cache-om i timeout-om.</li>
+            <li><strong>Trace / vidljivost:</strong> Frontend i CLI pokazuju šta je AI pozvao — ključno za učenje i debug.</li>
+        </ul>
+
+        <h3>Veza s Dan 2 i Dan 3</h3>
+        <table>
+            <thead><tr><th>Dan</th><th>Šta ste naučili</th><th>Šta dodajemo u Dan 4</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><a href="../dan2-saljivi-asistent/uputstvo.html">Dan 2 — Šaljivi Asistent</a></td>
+                    <td>Chat API, system prompt, FastAPI, stateless chat</td>
+                    <td>Isti Chat API, ali s <code>tools=</code> i ulogom <code>tool</code></td>
+                </tr>
+                <tr>
+                    <td><a href="../dan3-ollama/uputstvo.html">Dan 3 — Ollama</a></td>
+                    <td>Lokalni modeli, <code>get_llm_client()</code> pattern</td>
+                    <td>Isti fallback DeepSeek → Ollama; function calling zahtijeva sposobniji model</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Preduslovi</h3>
+        <table>
+            <thead>
+                <tr><th>Šta vam treba</th><th>Kako provjeriti</th><th>Gdje nabaviti</th></tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Python 3.11+</strong></td>
+                    <td><code>python --version</code></td>
+                    <td><a href="https://python.org" target="_blank">python.org</a></td>
+                </tr>
+                <tr>
+                    <td><strong>VS Code + Python ekstenzija</strong></td>
+                    <td>Extensions → "Python"</td>
+                    <td><a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></td>
+                </tr>
+                <tr>
+                    <td><strong>Dan 2 koncepti</strong></td>
+                    <td>Razumijete <code>messages</code>, FastAPI</td>
+                    <td><a href="../dan2-saljivi-asistent/uputstvo.html">Dan 2 uputstvo</a></td>
+                </tr>
+                <tr>
+                    <td><strong>DeepSeek API ključ</strong> (preporučeno)</td>
+                    <td><code>sk-...</code> u <code>.env</code></td>
+                    <td>platform.deepseek.com ili od predavača</td>
+                </tr>
+                <tr>
+                    <td><strong>Ollama</strong> (fallback)</td>
+                    <td><code>http://localhost:11434</code></td>
+                    <td>Lokalno; manji modeli slabije rade function calling</td>
+                </tr>
+                <tr>
+                    <td><strong>Internet</strong></td>
+                    <td>Open-Meteo API</td>
+                    <td>Besplatan, bez registracije</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Dva načina rada</h3>
+        <ul>
+            <li><strong>Gradite od nule</strong> — pratite vodič korak po korak i kucate svaki fajl u VS Code-u.</li>
+            <li><strong>Otvorite gotov projekat</strong> — folder <code>projekti/dan4-prognoza</code> već postoji u repou.
+                Koristite vodič da <em>razumijete</em> svaki dio koda.</li>
+        </ul>
+
+        <div class="ascii-box">ARHITEKTURA — Function Calling Prognoza (port 8004)
+
+┌────────────┐    POST /api/ask     ┌─────────────────────────┐
+│  Browser   │─────────────────────▶│  FastAPI (main.py)       │
+│  app.js    │◀─────────────────────│  run_tool_loop()         │
+└────────────┘    odgovor + trace   └───────────┬─────────────┘
+                                                │
+                    ┌───────────────────────────┼───────────────────────────┐
+                    ▼                           ▼                           ▼
+         ┌──────────────────┐      ┌──────────────────┐      ┌──────────────────┐
+         │ DeepSeek / Ollama │      │ execute_tool()   │      │ Open-Meteo API   │
+         │ tools=TOOLS       │      │ get_weather_...  │      │ (httpx GET)      │
+         │ tool_calls u      │      │ list_supported_  │      │ temp, kiša, kod  │
+         │ odgovoru          │      │ cities           │      │                  │
+         └──────────────────┘      └──────────────────┘      └──────────────────┘
+
+TOK: user pitanje → LLM odlučuje pozvati alat → Python izvršava → LLM čita JSON → finalni odgovor</div>
+
+        <h3 id="tri-puta">Tri puta do vremenskih podataka</h3>
+        <p>Projekat ima <strong>tri načina</strong> da stignete do istih Open-Meteo podataka. Razlikuju se po tome
+            koristite li AI i function calling:</p>
+        <table>
+            <thead><tr><th>Put</th><th>Kada koristiti</th><th>Šta učite</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><code>cli/meteo_direct.py</code> ili <code>GET /api/weather/{city}</code></td>
+                    <td>Test API-ja, debug, bez LLM troška</td>
+                    <td><code>httpx</code>, cache, JSON struktura prognoze</td>
+                </tr>
+                <tr>
+                    <td><code>POST /api/ask</code> (web ili curl)</td>
+                    <td>Korisnik piše prirodni jezik</td>
+                    <td>Function calling, <code>tool_trace</code></td>
+                </tr>
+                <tr>
+                    <td><code>run_tool_loop</code> unutrašnje poruke</td>
+                    <td>Automatski — ne dirate ručno</td>
+                    <td>OpenAI protokol (<code>tool_calls</code>, <code>role: tool</code>)</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="ascii-box">PUT 1 — Bez AI (direktno)
+  meteo_direct.py  ili  GET /api/weather/Mostar
+        │
+        ▼
+  get_weather_forecast()  →  Open-Meteo API
+
+PUT 2 — AI + alati (stateless)
+  POST /api/ask  { "pitanje": "Kakva je prognoza za Mostar?" }
+        │
+        ▼
+  LLM bira alat  →  execute_tool()  →  get_weather_forecast()  →  Open-Meteo
+        │
+        ▼
+  LLM formatira odgovor na bosanskom + tool_trace u JSON-u</div>
+
+        <div class="concept" id="stateless">
+            <strong>Stateless vs tool-loop poruke — ne miješajte ova dva pojma!</strong>
+            <ul>
+                <li><strong>Stateless</strong> — svaki <code>POST /api/ask</code> šalje samo 2 poruke
+                    (<code>system</code> + jedan <code>user</code>). Server ne pamti prethodna pitanja.
+                    Web i CLI rade ovako.</li>
+                <li><strong>Tool-loop poruke</strong> — privremene poruke unutar <em>jednog</em> zahtjeva dok LLM
+                    ne završi (assistant s <code>tool_calls</code>, zatim <code>role: tool</code> s rezultatom).
+                    To <em>nije</em> chat historija iz Dana 2 — nema višeturnskog razgovora.</li>
+            </ul>
+            <p><strong>Analogija:</strong> Stateless = svaki put novi razgovor s operaterom. Tool-loop = operater
+                telefonira kolegi (alat), čeka podatke, pa vam odgovori — sve u jednom pozivu.</p>
+        </div>
+
+        <h3 id="mini-adresar">Usporedba s mini-adresar</h3>
+        <p>Ako ste radili <a href="../mini-adresar/uputstvo.html">mini-adresar</a>, isti function calling obrazac —
+            razlika je u izvoru podataka:</p>
+        <table>
+            <thead><tr><th></th><th>mini-adresar</th><th>dan4-prognoza</th></tr></thead>
+            <tbody>
+                <tr><td>Izvor podataka</td><td>Lokalni JSON (sim-API)</td><td>Open-Meteo (pravi internet)</td></tr>
+                <tr><td>Chat historija</td><td>Ne — stateless <code>/api/ask</code></td><td>Ne — stateless <code>/api/ask</code></td></tr>
+                <tr><td>Function calling</td><td>Da</td><td>Da</td></tr>
+                <tr><td>Direktni test</td><td><code>lookup_direct.py</code></td><td><code>meteo_direct.py</code> + <code>GET /api/weather/{city}</code></td></tr>
+                <tr><td>Port</td><td>8019</td><td>8004</td></tr>
+            </tbody>
+        </table>
+
+        <div class="narrator">
+            <strong>Predavač:</strong> Zamislite call centar. Korisnik pita operateru (AI): "Kakva je prognoza za Mostar?"
+            Operater ne zna napamet — ali ima dugme "Provjeri prognozu" (alat). Pritisne dugme, sustav vrati podatke,
+            operater ih preformuliše korisniku. To je function calling: model <em>ne laže</em> o temperaturi, već traži
+            da <em>vi</em> dohvatite podatke.
+        </div>
+
+        <div class="concept"><strong>Industrijski nazivi:</strong> OpenAI zove ovo <strong>Function Calling</strong>.
+            Anthropic i drugi koriste <strong>Tool Use</strong>. U kodu često vidite <code>tools</code>,
+            <code>tool_calls</code>, <code>tool_choice</code>. Sve se odnosi na isti obrazac: model bira alat, aplikacija izvršava.</div>
+
+        <h3>Šta ćemo naučiti? (ishodi učenja)</h3>
+        <ul>
+            <li><strong>JSON schema alata</strong> — kako opisati funkciju modelu (<code>TOOLS</code> lista)</li>
+            <li><strong>Tool loop</strong> — iterativna petlja u <code>run_tool_loop()</code></li>
+            <li><strong>Uloga <code>tool</code></strong> — poruka s rezultatom alata natrag modelu</li>
+            <li><strong>HTTP integracija</strong> — <code>httpx</code> + Open-Meteo + in-memory cache</li>
+            <li><strong>Modularnost</strong> — <code>tools/</code> odvojen od <code>main.py</code></li>
+            <li><strong>CLI debugging</strong> — vidljiv <code>[TOOL CALL]</code> trace bez browsera</li>
+            <li><strong>Stateless API</strong> — <code>/api/ask</code> bez historije razgovora (kao mini-adresar)</li>
+            <li><strong>API dizajn</strong> — direktna prognoza vs AI endpoint (<code>/api/weather</code> vs <code>/api/ask</code>)</li>
+        </ul>
+
+        <h2 id="vscode">Korak 1 — Kreiranje projekta u VS Code-u</h2>
+
+        <div class="step">
+            <span class="step-num">1</span>
+            <h3>Otvorite repozitorij</h3>
+            <ol>
+                <li>Pokrenite <strong>Visual Studio Code</strong></li>
+                <li><strong>File → Open Folder</strong> → odaberite <code>AI-Training</code></li>
+                <li>U Exploreru pronađite <code>projekti/dan4-prognoza</code></li>
+            </ol>
+            <div class="tip"><strong>Explorer:</strong> <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>E</kbd> ako panel nije vidljiv.</div>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <h3>Struktura foldera dan4-prognoza</h3>
+            <p>Ako gradite od nule, kreirajte sljedeću strukturu:</p>
+            <div class="ascii-box">dan4-prognoza/
+├── main.py                 ← FastAPI + function calling petlja
+├── requirements.txt
+├── .env.example
+├── .env                    ← kreirate vi (ne commitujte!)
+├── tools/
+│   ├── __init__.py
+│   ├── cities.py           ← BiH gradovi + koordinate
+│   └── weather.py          ← Open-Meteo, cache, execute_tool
+├── cli/
+│   ├── meteo_direct.py     ← direktni API test (bez AI)
+│   └── weather_agent.py    ← CLI chat s tool trace-om
+├── static/
+│   ├── index.html
+│   ├── app.js
+│   └── style.css
+├── notebooks/
+│   └── dan4_prognoza.ipynb
+└── uputstvo.html           ← ovaj vodič</div>
+            <table>
+                <thead><tr><th>Folder / fajl</th><th>Svrha</th></tr></thead>
+                <tbody>
+                    <tr><td><code>tools/</code></td><td>Poslovna logika alata — nezavisna od FastAPI-ja</td></tr>
+                    <tr><td><code>cli/</code></td><td>Skripte za terminal — učenje i debug bez servera (djelomično)</td></tr>
+                    <tr><td><code>static/</code></td><td>Web UI — pitanja AI-u i direktni Open-Meteo test</td></tr>
+                    <tr><td><code>notebooks/</code></td><td>Jupyter — eksperimenti ćeliju po ćeliju</td></tr>
+                </tbody>
+            </table>
+            <div class="checkpoint"><strong>Kontrolna tačka:</strong> Imate folder <code>dan4-prognoza</code> s
+                podfolderima <code>tools</code>, <code>cli</code>, <code>static</code>, <code>notebooks</code>.</div>
+        </div>
+
+        <h2 id="venv">Korak 2 — Virtualno okruženje i requirements.txt</h2>
+
+        <div class="concept"><strong>Šta je venv?</strong> Izolirana Python okolina samo za ovaj projekat — biblioteke
+            ne miješaju se s drugim projektima na računaru.</div>
+
+        <div class="step">
+            <span class="step-num">1</span>
+            <h3>Sadržaj requirements.txt</h3>
+<pre><code># fastapi = Web framework
+fastapi==0.115.0
+uvicorn[standard]==0.30.0
+openai>=1.84.0
+python-dotenv==1.0.0
+httpx==0.27.0</code></pre>
+            <table>
+                <thead><tr><th>Paket</th><th>Zašto nam treba</th><th>Gdje u kodu</th></tr></thead>
+                <tbody>
+                    <tr><td><code>fastapi</code></td><td>Web framework, endpointi, Pydantic</td><td><code>main.py</code> — <code>@app.get</code>, <code>@app.post</code></td></tr>
+                    <tr><td><code>uvicorn</code></td><td>ASGI server koji pokreće aplikaciju</td><td><code>uvicorn main:app --port 8004</code></td></tr>
+                    <tr><td><code>openai</code></td><td>SDK kompatibilan s DeepSeek i Ollama</td><td><code>AsyncOpenAI</code>, <code>chat.completions.create(tools=...)</code></td></tr>
+                    <tr><td><code>python-dotenv</code></td><td>Čita <code>.env</code> varijable</td><td><code>load_dotenv()</code></td></tr>
+                    <tr><td><code>httpx</code></td><td>Moderni HTTP klijent (sync i async)</td><td><code>tools/weather.py</code> — Open-Meteo; <code>main.py</code> — provjera Ollame</td></tr>
+                </tbody>
+            </table>
+            <div class="narrator">
+                <strong>Predavač:</strong> <code>httpx</code> je nov u odnosu na Dan 2. Bez njega ne možete dohvatiti
+                prognozu s interneta. Ako vidite <code>ModuleNotFoundError: No module named 'httpx'</code> — vratite se
+                ovdje i pokrenite <code>pip install -r requirements.txt</code>.
+            </div>
+            <div class="tip"><strong>Pydantic</strong> dolazi automatski s FastAPI-jem — ne morate ga posebno navesti.</div>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <h3>Kreirajte i aktivirajte venv</h3>
+            <p>U terminalu, u folderu <code>dan4-prognoza</code>:</p>
+<pre><code>python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt</code></pre>
+            <div class="expected-output">
+<pre><code>(venv) PS X:\...\dan4-prognoza&gt; pip install -r requirements.txt
+Successfully installed fastapi-0.115.0 uvicorn-0.30.0 openai-1.x.x python-dotenv-1.0.0 httpx-0.27.0 ...</code></pre>
+            </div>
+            <div class="warning"><strong>PowerShell blokira skripte?</strong>
+<pre><code>Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser</code></pre>
+            </div>
+        </div>
+
+        <h2 id="env">Korak 3 — Konfiguracija .env fajla</h2>
+
+        <div class="step">
+            <span class="step-num">1</span>
+            <h3>Kopirajte šablon</h3>
+<pre><code>copy .env.example .env</code></pre>
+            <p>Sadržaj <code>.env.example</code>:</p>
+<pre><code># Dan 4 — Function calling + vremenska prognoza
+
+DEEPSEEK_API_KEY=sk-vas-kljuc-ovdje
+
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL_SMALL=llama3.2:1b
+
+# Open-Meteo (besplatan, bez keya)
+OPEN_METEO_TIMEOUT=10.0
+WEATHER_CACHE_TTL=300
+
+APP_PORT=8004
+APP_ENV=development</code></pre>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <h3>Objašnjenje svih varijabli</h3>
+            <table>
+                <thead><tr><th>Varijabla</th><th>Primjer</th><th>Šta radi</th></tr></thead>
+                <tbody>
+                    <tr><td><code>DEEPSEEK_API_KEY</code></td><td><code>sk-...</code></td><td>Ključ za DeepSeek cloud. Ako nije valjan, koristi se Ollama.</td></tr>
+                    <tr><td><code>OLLAMA_BASE_URL</code></td><td><code>http://localhost:11434</code></td><td>Adresa lokalnog Ollama servera.</td></tr>
+                    <tr><td><code>OLLAMA_MODEL_SMALL</code></td><td><code>llama3.2:1b</code></td><td>Mali lokalni model za fallback.</td></tr>
+                    <tr><td><code>OPEN_METEO_TIMEOUT</code></td><td><code>10.0</code></td><td>Maksimalno čekanje (sekunde) na Open-Meteo odgovor u <code>weather.py</code>.</td></tr>
+                    <tr><td><code>WEATHER_CACHE_TTL</code></td><td><code>300</code></td><td>Koliko sekundi cache drži prognozu (5 minuta).</td></tr>
+                    <tr><td><code>APP_PORT</code></td><td><code>8004</code></td><td>Informativno; stvarni port: <code>uvicorn ... --port 8004</code>.</td></tr>
+                    <tr><td><code>APP_ENV</code></td><td><code>development</code></td><td>Označava razvojno okruženje.</td></tr>
+                </tbody>
+            </table>
+            <div class="warning"><strong>Nikad ne commitujte .env!</strong> U repou je samo <code>.env.example</code>.</div>
+            <div class="warning"><strong>.env se čita pri pokretanju!</strong> Promjene zahtijevaju restart servera.</div>
+        </div>
+
+        <h2 id="tools-cities">Korak 4 — tools/cities.py — Baza gradova BiH</h2>
+        <p>Otvorite <code>tools/cities.py</code>. Ovaj modul ne zna ništa o AI-u — samo mapira nazive gradova na
+            geografske koordinate za Open-Meteo.</p>
+
+        <div class="sub-step">
+            <div class="sub-step-label">4a — Docstring (linije 1–3)</div>
+<pre><code>&quot;&quot;&quot;
+BiH gradovi s geografskim koordinatama za Open-Meteo API.
+&quot;&quot;&quot;</code></pre>
+            <p>Dokumentacija modula — objašnjava svrhu bez čitanja ostatka koda.</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">4b — Rječnik BIH_CITIES (linije 5–16)</div>
+<pre><code>BIH_CITIES = {
+    &quot;sarajevo&quot;: {&quot;lat&quot;: 43.8563, &quot;lon&quot;: 18.4131, &quot;display&quot;: &quot;Sarajevo&quot;},
+    &quot;banja luka&quot;: {&quot;lat&quot;: 44.7722, &quot;lon&quot;: 17.1910, &quot;display&quot;: &quot;Banja Luka&quot;},
+    ...
+}</code></pre>
+            <table>
+                <thead><tr><th>Ključ</th><th>Polja</th><th>Značenje</th></tr></thead>
+                <tbody>
+                    <tr><td><code>"sarajevo"</code></td><td><code>lat</code>, <code>lon</code></td><td>Geografske koordinate za Open-Meteo</td></tr>
+                    <tr><td>—</td><td><code>display</code></td><td>Lijepi naziv za korisnika ("Sarajevo", "Bihać")</td></tr>
+                </tbody>
+            </table>
+            <p>Podržano 10 gradova: Sarajevo, Banja Luka, Mostar, Tuzla, Zenica, Bihać, Bijeljina, Trebinje, Brčko, Livno.</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">4c — normalize_city() (linije 19–21)</div>
+<pre><code>def normalize_city(name: str) -&gt; str:
+    &quot;&quot;&quot;Normalizuje naziv grada za lookup.&quot;&quot;&quot;
+    return name.strip().lower().replace(&quot;ć&quot;, &quot;c&quot;).replace(&quot;č&quot;, &quot;c&quot;).replace(&quot;š&quot;, &quot;s&quot;).replace(&quot;ž&quot;, &quot;z&quot;)</code></pre>
+            <table>
+                <thead><tr><th>Korak</th><th>Primjer</th></tr></thead>
+                <tbody>
+                    <tr><td><code>strip()</code></td><td>"  Mostar  " → "Mostar"</td></tr>
+                    <tr><td><code>lower()</code></td><td>"SARAJEVO" → "sarajevo"</td></tr>
+                    <tr><td>Zamjena dijakritika</td><td>"Bihać" → "bihac" (ključ u rječniku)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">4d — find_city() (linije 24–36)</div>
+<pre><code>def find_city(name: str) -&gt; dict | None:
+    key = normalize_city(name)
+    if key in BIH_CITIES:
+        return BIH_CITIES[key]
+    for k, v in BIH_CITIES.items():
+        if k == name.strip().lower():
+            return v
+    return None</code></pre>
+            <table>
+                <thead><tr><th>Linija</th><th>Šta radi</th></tr></thead>
+                <tbody>
+                    <tr><td>Normalizacija</td><td>Pokušaj direktnog pogotka u rječniku</td></tr>
+                    <tr><td>Fallback petlja</td><td>Traži bez zamjene dijakritika (npr. "brčko")</td></tr>
+                    <tr><td><code>return None</code></td><td>Grad nije podržan — <code>weather.py</code> vraća grešku</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">4e — list_cities() (linije 39–41)</div>
+<pre><code>def list_cities() -&gt; list[str]:
+    return [v[&quot;display&quot;] for v in BIH_CITIES.values()]</code></pre>
+            <p>Vraća listu čitljivih naziva za UI i poruke o greškama. Koristi se u <code>list_supported_cities</code> alatu.</p>
+        </div>
+
+        <div class="checkpoint"><strong>Kontrolna tačka cities.py:</strong> Razumijete lookup gradova, normalizaciju i
+            zašto Open-Meteo treba <code>lat</code>/<code>lon</code>, ne naziv grada.</div>
+
+        <h2 id="tools-weather">Korak 5 — tools/weather.py — Open-Meteo, cache, execute_tool</h2>
+        <p>Srco vanjskih podataka. Dohvata prognozu, kešira rezultate i izvršava alate koje AI poziva.</p>
+
+        <div class="sub-step">
+            <div class="sub-step-label">5a — Importi i konstante (linije 1–23)</div>
+<pre><code>import httpx
+from tools.cities import find_city, list_cities
+
+_cache: dict[str, tuple[dict, float]] = {}
+CACHE_TTL = int(os.getenv(&quot;WEATHER_CACHE_TTL&quot;, &quot;300&quot;))
+REQUEST_TIMEOUT = float(os.getenv(&quot;OPEN_METEO_TIMEOUT&quot;, &quot;10.0&quot;))
+OPEN_METEO_URL = &quot;https://api.open-meteo.com/v1/forecast&quot;</code></pre>
+            <table>
+                <thead><tr><th>Element</th><th>Šta radi</th></tr></thead>
+                <tbody>
+                    <tr><td><code>_cache</code></td><td>In-memory rječnik: ključ → (podaci, timestamp)</td></tr>
+                    <tr><td><code>CACHE_TTL</code></td><td>Iz .env; default 300 s = 5 min</td></tr>
+                    <tr><td><code>REQUEST_TIMEOUT</code></td><td>Koliko čekati Open-Meteo (default 10 s)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">5b — _cache_key() (linije 26–27)</div>
+<pre><code>def _cache_key(city: str, days: int) -&gt; str:
+    return f&quot;{city.lower()}:{days}&quot;</code></pre>
+            <p>Jedinstveni ključ npr. <code>"sarajevo:3"</code> — različit broj dana = različit cache unos.</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">5c — get_weather_forecast() KORAK 1: Cache (linije 44–51)</div>
+<pre><code>if ck in _cache:
+    podaci, ts = _cache[ck]
+    if time.time() - ts &lt; CACHE_TTL:
+        podaci = dict(podaci)
+        podaci[&quot;iz_cachea&quot;] = True
+        return podaci</code></pre>
+            <div class="concept"><strong>Zašto cache?</strong> Open-Meteo je besplatan ali ima rate limit. Ponovna pitanja
+                u istom razredu ne trebaju novi HTTP poziv. Polje <code>iz_cachea: true</code> pokazuje da podaci nisu svježi.</div>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">5d — KORAK 2: Lookup grada (linije 53–59)</div>
+<pre><code>info = find_city(city)
+if not info:
+    return {
+        &quot;greska&quot;: f&quot;Grad '{city}' nije u bazi. Podržani: {', '.join(list_cities())}&quot;,
+        &quot;grad&quot;: city,
+    }</code></pre>
+            <p>Ako grad ne postoji, vraćamo strukturiranu grešku — AI je može pročitati i predložiti podržane gradove.</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">5e — KORAK 3: HTTP poziv Open-Meteo (linije 61–78)</div>
+<pre><code>params = {
+    &quot;latitude&quot;: info[&quot;lat&quot;],
+    &quot;longitude&quot;: info[&quot;lon&quot;],
+    &quot;daily&quot;: &quot;temperature_2m_max,temperature_2m_min,precipitation_sum,weathercode&quot;,
+    &quot;timezone&quot;: &quot;Europe/Sarajevo&quot;,
+    &quot;forecast_days&quot;: days,
+}
+with httpx.Client(timeout=REQUEST_TIMEOUT) as client:
+    response = client.get(OPEN_METEO_URL, params=params)
+    response.raise_for_status()
+    raw = response.json()</code></pre>
+            <table>
+                <thead><tr><th>Parametar Open-Meteo</th><th>Naše polje u JSON-u</th></tr></thead>
+                <tbody>
+                    <tr><td><code>temperature_2m_max</code></td><td><code>temp_max_c</code></td></tr>
+                    <tr><td><code>temperature_2m_min</code></td><td><code>temp_min_c</code></td></tr>
+                    <tr><td><code>precipitation_sum</code></td><td><code>padavine_mm</code></td></tr>
+                    <tr><td><code>weathercode</code></td><td><code>weather_code</code> (WMO kod)</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">5f — KORAK 4: Formatiranje (linije 80–104)</div>
+<pre><code>prognoza_dani.append({
+    &quot;datum&quot;: datum,
+    &quot;temp_max_c&quot;: daily.get(&quot;temperature_2m_max&quot;, [None])[i],
+    &quot;temp_min_c&quot;: daily.get(&quot;temperature_2m_min&quot;, [None])[i],
+    &quot;padavine_mm&quot;: daily.get(&quot;precipitation_sum&quot;, [None])[i],
+    &quot;weather_code&quot;: daily.get(&quot;weathercode&quot;, [None])[i],
+})
+rezultat = {
+    &quot;grad&quot;: info[&quot;display&quot;],
+    &quot;lat&quot;: info[&quot;lat&quot;],
+    &quot;lon&quot;: info[&quot;lon&quot;],
+    &quot;dani&quot;: days,
+    &quot;prognoza&quot;: prognoza_dani,
+    &quot;iz_cachea&quot;: False,
+}
+_cache[ck] = (rezultat, time.time())</code></pre>
+            <div class="narrator">
+                <strong>Predavač:</strong> Obratite pažnju na imena polja: <code>temp_max_c</code>, ne <code>max_temp</code>.
+                Frontend, CLI i testovi moraju koristiti ista imena — inače ćete misliti da API ne radi.
+            </div>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">5g — list_supported_cities() (linije 107–109)</div>
+<pre><code>def list_supported_cities() -&gt; dict[str, Any]:
+    return {&quot;gradovi&quot;: list_cities(), &quot;ukupno&quot;: len(list_cities())}</code></pre>
+            <p>Alat koji AI poziva kada korisnik pita "koje gradove podržavate?".</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">5h — execute_tool() (linije 112–130)</div>
+<pre><code>def execute_tool(name: str, arguments: str) -&gt; str:
+    args = json.loads(arguments) if arguments else {}
+    if name == &quot;get_weather_forecast&quot;:
+        city = args.get(&quot;city&quot;, &quot;&quot;)
+        days = args.get(&quot;days&quot;, 3)
+        return json.dumps(get_weather_forecast(city, days), ensure_ascii=False)
+    if name == &quot;list_supported_cities&quot;:
+        return json.dumps(list_supported_cities(), ensure_ascii=False)
+    return json.dumps({&quot;greska&quot;: f&quot;Nepoznat alat: {name}&quot;}, ensure_ascii=False)</code></pre>
+            <div class="concept"><strong>Ključni koncept:</strong> <code>arguments</code> dolazi kao <em>JSON string</em> iz
+                <code>tool_call</code>. Mi ga parsiramo, pozivamo Python funkciju i vraćamo <em>JSON string</em> natrag
+                modelu u ulozi <code>tool</code>.</div>
+        </div>
+
+        <h2 id="main-py">Korak 6 — main.py — Function calling srce aplikacije</h2>
+        <p>Otvorite <code>main.py</code>. Ovdje se spajaju FastAPI, LLM i alati u <code>run_tool_loop()</code>.</p>
+
+        <div class="sub-step">
+            <div class="sub-step-label">6a — Docstring i importi (linije 1–21)</div>
+<pre><code>&quot;&quot;&quot;
+Dan 4: Function Calling — AI koji koristi alate (Open-Meteo prognoza)
+Pokretanje: uvicorn main:app --reload --port 8004
+&quot;&quot;&quot;
+
+import json, logging, os, time
+from typing import Any, List, Literal, Optional
+
+import httpx
+from dotenv import load_dotenv
+from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+from openai import AsyncOpenAI
+from pydantic import BaseModel, Field
+
+from tools.cities import list_cities
+from tools.weather import execute_tool, get_weather_forecast, list_supported_cities</code></pre>
+            <table>
+                <thead><tr><th>Import</th><th>Novo u Dan 4?</th><th>Svrha</th></tr></thead>
+                <tbody>
+                    <tr><td><code>httpx</code></td><td>Da</td><td>Provjera da li Ollama radi (<code>get_llm_client</code>)</td></tr>
+                    <tr><td><code>HTTPException</code></td><td>Da</td><td>404 za nepoznat grad na <code>/api/weather</code></td></tr>
+                    <tr><td><code>execute_tool</code></td><td>Da</td><td>Most između LLM tool_call i Python funkcija</td></tr>
+                    <tr><td><code>AsyncOpenAI</code></td><td>Ne</td><td>Asinhroni LLM pozivi u FastAPI</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">6b — Inicijalizacija (linije 23–31)</div>
+<pre><code>load_dotenv()
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(&quot;dan4-prognoza&quot;)
+
+app = FastAPI(title=&quot;Dan 4 — Prognoza (Function Calling)&quot;, version=&quot;1.0.0&quot;)
+app.mount(&quot;/static&quot;, StaticFiles(directory=&quot;static&quot;), name=&quot;static&quot;)
+
+MAX_TOOL_ITERATIONS = 3</code></pre>
+            <p><code>MAX_TOOL_ITERATIONS</code> sprječava beskonačnu petlju ako model stalno traži alate.</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">6c — DEFAULT_SYSTEM (linije 33–36)</div>
+<pre><code>DEFAULT_SYSTEM = &quot;&quot;&quot;Ti si asistent za vremensku prognozu u Bosni i Hercegovini.
+Koristi alate get_weather_forecast i list_supported_cities kada korisnik pita o vremenu.
+Odgovaraj na bosanskom jeziku, jasno i sa konkretnim temperaturama iz alata.
+Ako grad nije podržan, predloži list_supported_cities.&quot;&quot;&quot;</code></pre>
+            <p>System prompt <em>navodi</em> model da koristi alate — bez ovoga model bi pogađao vremenske podatke.</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">6d — TOOLS definicija (linije 38–73)</div>
+<pre><code>TOOLS = [
+    {
+        &quot;type&quot;: &quot;function&quot;,
+        &quot;function&quot;: {
+            &quot;name&quot;: &quot;get_weather_forecast&quot;,
+            &quot;description&quot;: &quot;Dohvata vremensku prognozu za grad u BiH...&quot;,
+            &quot;parameters&quot;: {
+                &quot;type&quot;: &quot;object&quot;,
+                &quot;properties&quot;: {
+                    &quot;city&quot;: {&quot;type&quot;: &quot;string&quot;, &quot;description&quot;: &quot;Naziv grada npr. Sarajevo&quot;},
+                    &quot;days&quot;: {&quot;type&quot;: &quot;integer&quot;, &quot;description&quot;: &quot;Broj dana (1-7)&quot;, &quot;default&quot;: 3}
+                },
+                &quot;required&quot;: [&quot;city&quot;]
+            }
+        }
+    },
+    {
+        &quot;type&quot;: &quot;function&quot;,
+        &quot;function&quot;: {
+            &quot;name&quot;: &quot;list_supported_cities&quot;,
+            &quot;description&quot;: &quot;Vraća listu gradova...&quot;,
+            &quot;parameters&quot;: {&quot;type&quot;: &quot;object&quot;, &quot;properties&quot;: {}, &quot;required&quot;: []}
+        }
+    }
+]</code></pre>
+            <table>
+                <thead><tr><th>Polje</th><th>Zašto je važno</th></tr></thead>
+                <tbody>
+                    <tr><td><code>description</code></td><td>Model čita opis da odluči <em>kada</em> pozvati alat</td></tr>
+                    <tr><td><code>parameters</code></td><td>JSON Schema — model generiše argumente u tom formatu</td></tr>
+                    <tr><td><code>required: ["city"]</code></td><td>Grad je obavezan; <code>days</code> ima default 3</td></tr>
+                </tbody>
+            </table>
+            <div class="narrator">
+                <strong>Predavač:</strong> Ovo je "meni" koji dajete modelu. Loš <code>description</code> = model ne poziva
+                alat kad treba ili poziva pogrešan. Pišite opise kao da objašnjavate kolegi šta funkcija radi.
+            </div>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">6e — get_llm_client() (linije 76–90)</div>
+<pre><code>def get_llm_client() -&gt; tuple[AsyncOpenAI, str]:
+    deepseek_key = os.getenv(&quot;DEEPSEEK_API_KEY&quot;, &quot;&quot;)
+    if deepseek_key and deepseek_key.startswith(&quot;sk-&quot;):
+        return AsyncOpenAI(api_key=deepseek_key, base_url=&quot;https://api.deepseek.com&quot;), &quot;deepseek-chat&quot;
+
+    ollama_url = os.getenv(&quot;OLLAMA_BASE_URL&quot;, &quot;http://localhost:11434&quot;)
+    try:
+        httpx.get(f&quot;{ollama_url}/api/tags&quot;, timeout=2.0)
+        model = os.getenv(&quot;OLLAMA_MODEL_SMALL&quot;, &quot;llama3.2:1b&quot;)
+        return AsyncOpenAI(api_key=&quot;ollama&quot;, base_url=f&quot;{ollama_url}/v1&quot;), model
+    except Exception:
+        raise RuntimeError(&quot;Ni DeepSeek API ni Ollama nisu dostupni!&quot;)</code></pre>
+            <p>Prioritet: DeepSeek ako ključ počinje s <code>sk-</code>, inače provjera Ollame preko <code>httpx.get</code>.</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">6f — Pydantic modeli (linije 93–112)</div>
+            <table>
+                <thead><tr><th>Model</th><th>Polja</th><th>Svrha</th></tr></thead>
+                <tbody>
+                    <tr><td><code>ToolTraceEntry</code></td><td><code>korak</code>, <code>alat</code>, <code>argumenti</code>, <code>rezultat</code>, <code>trajanje_ms</code></td><td>Jedan zapis u tool trace-u za frontend</td></tr>
+                    <tr><td><code>AskRequest</code></td><td><code>pitanje</code>, <code>tool_choice</code></td><td>POST /api/ask tijelo</td></tr>
+                    <tr><td><code>AskResponse</code></td><td><code>odgovor</code>, <code>tool_trace</code>, <code>iteracije</code>, <code>trajanje_ms</code></td><td>Stateless odgovor s trace-om</td></tr>
+                </tbody>
+            </table>
+            <p>Nema <code>ChatRequest</code> / <code>ChatResponse</code> — projekat je namjerno stateless, kao
+                <a href="../mini-adresar/uputstvo.html">mini-adresar</a>.</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">6g — run_tool_loop() — SRCE (linije 115–174)</div>
+            <div class="concept"><strong>Ovo je najvažnija funkcija u projektu.</strong> Implementira function calling petlju.</div>
+<pre><code>async def run_tool_loop(klijent, model, messages, tool_choice=&quot;auto&quot;):
+    trace = []
+    current_messages = list(messages)
+
+    for iteration in range(MAX_TOOL_ITERATIONS):
+        response = await klijent.chat.completions.create(
+            model=model,
+            messages=current_messages,
+            tools=TOOLS,
+            tool_choice=tool_choice if iteration == 0 else &quot;auto&quot;,
+            temperature=0.3,
+            max_tokens=500,
+        )
+        msg = response.choices[0].message
+
+        if not msg.tool_calls:
+            return msg.content or &quot;&quot;, trace, iteration + 1
+
+        current_messages.append(msg.model_dump(exclude_none=True))
+
+        for tc in msg.tool_calls:
+            fn_name = tc.function.name
+            fn_args = tc.function.arguments or &quot;{}&quot;
+            result_str = execute_tool(fn_name, fn_args)
+            trace.append(ToolTraceEntry(...))
+            current_messages.append({
+                &quot;role&quot;: &quot;tool&quot;,
+                &quot;tool_call_id&quot;: tc.id,
+                &quot;content&quot;: result_str,
+            })
+
+    return &quot;Ne mogu dovršiti zahtjev — previše koraka alata.&quot;, trace, MAX_TOOL_ITERATIONS</code></pre>
+            <table>
+                <thead><tr><th>Korak petlje</th><th>Šta se dešava</th></tr></thead>
+                <tbody>
+                    <tr><td>1. LLM poziv</td><td>Šaljemo <code>messages</code> + <code>tools=TOOLS</code></td></tr>
+                    <tr><td>2. Nema tool_calls?</td><td>Model je spreman odgovoriti — vraćamo tekst</td></tr>
+                    <tr><td>3. Ima tool_calls</td><td>Dodajemo assistant poruku u <strong>privremenu listu poruka</strong> (samo za ovaj zahtjev)</td></tr>
+                    <tr><td>4. Za svaki alat</td><td><code>execute_tool()</code> → JSON string rezultat</td></tr>
+                    <tr><td>5. Tool poruka</td><td><code>role: "tool"</code> + <code>tool_call_id</code> — model zna koji rezultat pripada kojem pozivu</td></tr>
+                    <tr><td>6. Ponovi</td><td>Model čita rezultate i ili poziva još alata ili odgovara</td></tr>
+                </tbody>
+            </table>
+            <div class="ascii-box">TOOL LOOP — jedna iteracija
+
+messages: [system, user]
+    │
+    ▼
+LLM + tools=TOOLS
+    │
+    ├─► nema tool_calls ──► return odgovor korisniku
+    │
+    └─► ima tool_calls
+            │
+            ├─► execute_tool("get_weather_forecast", '{"city":"Mostar"}')
+            ├─► append role:tool + rezultat JSON
+            └─► sljedeća iteracija petlje</div>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">6h — GET endpointi (linije 177–199)</div>
+            <table>
+                <thead><tr><th>Endpoint</th><th>Funkcija</th><th>Svrha</th></tr></thead>
+                <tbody>
+                    <tr><td><code>GET /</code></td><td><code>root()</code></td><td>Servira <code>static/index.html</code></td></tr>
+                    <tr><td><code>GET /api/tools</code></td><td><code>api_tools()</code></td><td>Vraća <code>{"alati": TOOLS}</code> — pregled sheme</td></tr>
+                    <tr><td><code>GET /api/cities</code></td><td><code>api_cities()</code></td><td>Lista gradova za dropdown</td></tr>
+                    <tr><td><code>GET /api/weather/{city}</code></td><td><code>api_weather_direct()</code></td><td>Prognoza <em>bez AI</em> — test Open-Meteo</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">6i — POST /api/ask (linije 202–228)</div>
+<pre><code>@app.post(&quot;/api/ask&quot;, response_model=AskResponse)
+async def ask(zahtjev: AskRequest):
+    &quot;&quot;&quot;
+    Stateless pitanje — šalje samo system + user poruku (nema historije).
+    Pokreće function calling petlju.
+    &quot;&quot;&quot;
+    klijent, model = get_llm_client()
+    messages = [
+        {&quot;role&quot;: &quot;system&quot;, &quot;content&quot;: DEFAULT_SYSTEM},
+        {&quot;role&quot;: &quot;user&quot;, &quot;content&quot;: zahtjev.pitanje},
+    ]
+    odgovor, trace, iteracije = await run_tool_loop(
+        klijent, model, messages, zahtjev.tool_choice
+    )
+    return AskResponse(pitanje=..., odgovor=..., tool_trace=trace, ...)</code></pre>
+            <p>Jedini AI endpoint — <strong>stateless</strong>: šalje samo <code>system</code> + jedan <code>user</code>;
+                server ne pamti prethodne razgovore. Frontend (<code>app.js</code>) i CLI koriste isključivo ovaj endpoint.
+                Pun <code>tool_trace</code> u odgovoru.</p>
+        </div>
+
+        <div class="checkpoint"><strong>Kontrolna tačka main.py:</strong> Razumijete <code>TOOLS</code>,
+            <code>run_tool_loop</code>, stateless <code>/api/ask</code>, razliku tool-loop poruka vs chat historije,
+            i ulogu <code>execute_tool</code>.</div>
+
+        <h2 id="cli">Korak 7 — CLI alati</h2>
+        <p>Dva skripta u <code>cli/</code> — jedan bez AI (samo Open-Meteo), drugi s punim function calling trace-om.</p>
+
+        <h3>cli/meteo_direct.py — Direktni Open-Meteo test</h3>
+
+        <div class="sub-step">
+            <div class="sub-step-label">7a — sys.path i importi (linije 9–15)</div>
+<pre><code>sys.path.insert(0, os.path.join(os.path.dirname(__file__), &quot;..&quot;))
+from tools.weather import get_weather_forecast, list_supported_cities</code></pre>
+            <p>Dodaje roditeljski folder u Python path da <code>tools</code> modul radi iz <code>cli/</code> podfoldera.</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">7b — main() — argumenti (linije 18–30)</div>
+<pre><code>if len(sys.argv) &lt; 2:
+    gradovi = list_supported_cities()
+    print(&quot;Upotreba: python cli/meteo_direct.py &lt;grad&gt; [dani]&quot;)
+    print(&quot;Podrzani gradovi:&quot;, &quot;, &quot;.join(gradovi[&quot;gradovi&quot;]))
+    return
+
+city = sys.argv[1]
+days = int(sys.argv[2]) if len(sys.argv) &gt; 2 else 3
+rezultat = get_weather_forecast(city, days)
+print(json.dumps(rezultat, indent=2, ensure_ascii=False))</code></pre>
+            <p>Pokretanje:</p>
+<pre><code>python cli/meteo_direct.py Sarajevo
+python cli/meteo_direct.py Mostar 5</code></pre>
+            <div class="expected-output">
+<pre><code>{
+  "grad": "Sarajevo",
+  "lat": 43.8563,
+  "lon": 18.4131,
+  "dani": 3,
+  "prognoza": [
+    {
+      "datum": "2026-06-17",
+      "temp_max_c": 28.5,
+      "temp_min_c": 15.2,
+      "padavine_mm": 0.0,
+      "weather_code": 1
+    },
+    ...
+  ],
+  "iz_cachea": false
+}</code></pre>
+            </div>
+        </div>
+
+        <h3>cli/weather_agent.py — CLI s function calling trace-om</h3>
+
+        <div class="sub-step">
+            <div class="sub-step-label">7c — get_client() (linije 25–39)</div>
+            <p>Slično <code>get_llm_client()</code> u main.py, ali sinkrono (<code>OpenAI</code>, ne <code>AsyncOpenAI</code>)
+                jer CLI nije async web server.</p>
+        </div>
+
+        <div class="sub-step">
+            <div class="sub-step-label">7d — Chat petlja s trace-om (linije 70–105)</div>
+<pre><code>for _ in range(max_iter):
+    response = klijent.chat.completions.create(
+        model=model, messages=messages, tools=TOOLS, tool_choice=&quot;auto&quot;, ...)
+    msg = response.choices[0].message
+
+    if not msg.tool_calls:
+        print(f&quot;\nAI: {msg.content}&quot;)
+        break
+
+    messages.append(msg.model_dump(exclude_none=True))
+    for tc in msg.tool_calls:
+        fn = tc.function.name
+        args = tc.function.arguments or &quot;{}&quot;
+        print(f&quot;\n  [TOOL CALL] {fn}&quot;)
+        print(f&quot;  [ARGS] {args}&quot;)
+        result = execute_tool(fn, args)
+        print(f&quot;  [RESULT] {preview}&quot;)
+        messages.append({&quot;role&quot;: &quot;tool&quot;, &quot;tool_call_id&quot;: tc.id, &quot;content&quot;: result})</code></pre>
+            <div class="narrator">
+                <strong>Predavač:</strong> Obratite pažnju na format ispisa: <code>[TOOL CALL]</code>, ne
+                <code>[STEP 1]</code>. To je namjerno — jasno označava da model traži izvršenje alata, ne da je to
+                "korak razmišljanja".
+            </div>
+            <p>Pokretanje: <code>python cli/weather_agent.py</code>. Svako pitanje je <strong>stateless</strong>:
+                nova lista <code>messages</code> s <code>system</code> + <code>user</code> — bez slanja prethodnih pitanja.</p>
+            <div class="expected-output">
+<pre><code>============================================================
+  Dan 4 — Weather Agent (Function Calling CLI)
+  Primjer: Kakva je prognoza za Sarajevo?
+  /quit za izlaz
+============================================================
+  Model: DeepSeek (cloud)
+
+Vi: Kakva je prognoza za Sarajevo sutra?
+
+  [TOOL CALL] get_weather_forecast
+  [ARGS] {"city": "Sarajevo", "days": 1}
+  [RESULT] {"grad": "Sarajevo", "prognoza": [{"temp_max_c": 28.5, ...
+
+AI: Sutra u Sarajevu očekujte maksimalnu temperaturu oko 28°C...
+  [2340 ms]</code></pre>
+            </div>
+        </div>
+
+        <h2 id="frontend">Korak 8 — Frontend (static/)</h2>
+
+        <div class="step">
+            <span class="step-num">1</span>
+            <h3>index.html — ključni id atributi</h3>
+            <table>
+                <thead><tr><th>id</th><th>Element</th><th>Svrha</th></tr></thead>
+                <tbody>
+                    <tr><td><code>ask-input</code></td><td>textarea</td><td>Pitanje za AI (function calling)</td></tr>
+                    <tr><td><code>btn-ask</code></td><td>button</td><td>Pokreće <code>pitajAI()</code> → POST /api/ask</td></tr>
+                    <tr><td><code>answer</code></td><td>div</td><td>AI odgovor u tekstu</td></tr>
+                    <tr><td><code>ask-meta</code></td><td>div</td><td>Model, iteracije, broj alata, trajanje</td></tr>
+                    <tr><td><code>tool-trace</code></td><td>pre</td><td>JSON tool_trace iz odgovora</td></tr>
+                    <tr><td><code>city-select</code></td><td>select</td><td>Dropdown gradova (iz /api/cities)</td></tr>
+                    <tr><td><code>days-input</code></td><td>input number</td><td>Broj dana (1–7)</td></tr>
+                    <tr><td><code>btn-direct</code></td><td>button</td><td>Direktni Open-Meteo bez AI</td></tr>
+                    <tr><td><code>direct-output</code></td><td>pre</td><td>JSON prognoze s /api/weather</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <h3>app.js — funkcije</h3>
+            <table>
+                <thead><tr><th>Funkcija</th><th>Šta radi</th></tr></thead>
+                <tbody>
+                    <tr><td><code>ucitajGradove()</code></td><td>GET <code>/api/cities</code> → puni <code>city-select</code></td></tr>
+                    <tr><td><code>pitajAI()</code></td><td>POST <code>/api/ask</code> s <code>{pitanje, tool_choice: 'auto'}</code>; prikazuje odgovor i trace</td></tr>
+                    <tr><td><code>direktnaPrognoza()</code></td><td>GET <code>/api/weather/{city}?days=</code> → <code>direct-output</code></td></tr>
+                </tbody>
+            </table>
+<pre><code>document.getElementById('btn-ask').addEventListener('click', pitajAI);
+document.getElementById('btn-direct').addEventListener('click', direktnaPrognoza);
+ucitajGradove();</code></pre>
+        </div>
+
+        <div class="step">
+            <span class="step-num">3</span>
+            <h3>style.css — trace-box</h3>
+<pre><code>.trace-box {
+  background: var(--tool-bg);   /* tamno ljubičasta — vizualno "alat" */
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  font-family: monospace;
+  font-size: 0.8rem;
+  max-height: 400px;
+  overflow-y: auto;
+}</code></pre>
+            <p><code>--tool-bg: #2d1f4e</code> vizualno odvaja JSON trace od običnog odgovora — učenicima pomaže da vide
+                šta je AI pozvao naspram šta je rekao korisniku.</p>
+        </div>
+
+        <h2 id="api">API dokumentacija</h2>
+        <p>Server sluša na <code>http://localhost:8004</code>. Swagger UI: <a href="http://localhost:8004/docs" target="_blank">/docs</a></p>
+
+        <table>
+            <thead>
+                <tr><th>Metoda</th><th>Putanja</th><th>Funkcija</th><th>Request</th><th>Response</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>GET</td><td><code>/</code></td><td><code>root()</code></td><td>—</td><td>HTML (index.html)</td></tr>
+                <tr><td>GET</td><td><code>/api/tools</code></td><td><code>api_tools()</code></td><td>—</td><td><code>{"alati": TOOLS}</code></td></tr>
+                <tr><td>GET</td><td><code>/api/cities</code></td><td><code>api_cities()</code></td><td>—</td><td><code>{"gradovi": [...], "ukupno": 10}</code></td></tr>
+                <tr><td>GET</td><td><code>/api/weather/{city}</code></td><td><code>api_weather_direct()</code></td><td>Query: <code>days</code></td><td>Prognoza JSON ili 404</td></tr>
+                <tr><td>POST</td><td><code>/api/ask</code></td><td><code>ask()</code></td><td><code>AskRequest</code></td><td><code>AskResponse</code> + tool_trace (stateless)</td></tr>
+            </tbody>
+        </table>
+
+        <h3>POST /api/ask — primjer</h3>
+<pre><code>curl -X POST http://localhost:8004/api/ask ^
+  -H "Content-Type: application/json" ^
+  -d "{\"pitanje\": \"Kakva je prognoza za Mostar?\", \"tool_choice\": \"auto\"}"</code></pre>
+        <div class="expected-output">
+<pre><code>{
+  "pitanje": "Kakva je prognoza za Mostar?",
+  "odgovor": "U Mostaru danas...",
+  "model": "deepseek-chat",
+  "tool_trace": [
+    {
+      "korak": 1,
+      "alat": "get_weather_forecast",
+      "argumenti": {"city": "Mostar", "days": 3},
+      "rezultat": {"grad": "Mostar", "prognoza": [...], "iz_cachea": false},
+      "trajanje_ms": 45
+    }
+  ],
+  "iteracije": 2,
+  "trajanje_ms": 1850
+}</code></pre>
+        </div>
+
+        <h2 id="pokretanje">Korak 9 — Pokretanje i testiranje</h2>
+
+        <div class="step">
+            <span class="step-num">1</span>
+            <h3>Pokrenite FastAPI server</h3>
+            <p>U terminalu (venv aktivan, folder <code>dan4-prognoza</code>):</p>
+<pre><code>uvicorn main:app --reload --port 8004</code></pre>
+            <div class="expected-output">
+<pre><code>INFO:     Uvicorn running on http://127.0.0.1:8004 (Press CTRL+C to quit)
+INFO:     Application startup complete.</code></pre>
+            </div>
+        </div>
+
+        <div class="step">
+            <span class="step-num">2</span>
+            <h3>Test meteo_direct (bez servera)</h3>
+            <p>U <em>drugom</em> terminalu — ne treba uvicorn:</p>
+<pre><code>python cli/meteo_direct.py Tuzla 3</code></pre>
+            <p>Provjerite JSON polja: <code>temp_max_c</code>, <code>temp_min_c</code>, <code>padavine_mm</code>,
+                <code>weather_code</code>, <code>iz_cachea</code>.</p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">3</span>
+            <h3>Test u browseru</h3>
+            <p>Otvorite: <a href="http://localhost:8004" target="_blank">http://localhost:8004</a></p>
+            <table>
+                <thead><tr><th>#</th><th>Scenarij</th><th>Očekivano</th></tr></thead>
+                <tbody>
+                    <tr><td>1</td><td>Klik "Pitaj AI" s default pitanjem o Mostaru</td><td>Odgovor na bosanskom + tool trace s <code>get_weather_forecast</code></td></tr>
+                    <tr><td>2</td><td>Pogledajte <code>ask-meta</code></td><td>Model, iteracije, broj alata, ms</td></tr>
+                    <tr><td>3</td><td>Odaberite grad, "Dohvati prognozu"</td><td>JSON u <code>direct-output</code> s ispravnim poljima</td></tr>
+                    <tr><td>4</td><td>Pitajte: "Koje gradove podržavate?"</td><td>AI poziva <code>list_supported_cities</code></td></tr>
+                    <tr><td>5</td><td>Pitajte za "Pariz"</td><td>Greška iz alata + AI predlaže podržane gradove</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="step">
+            <span class="step-num">4</span>
+            <h3>Test weather_agent CLI</h3>
+<pre><code>python cli/weather_agent.py</code></pre>
+            <p>Upišite pitanje, provjerite <code>[TOOL CALL]</code> linije. Izlaz: <code>/quit</code></p>
+        </div>
+
+        <div class="step">
+            <span class="step-num">5</span>
+            <h3>Test cache-a</h3>
+            <ol>
+                <li>Pokrenite: <code>python cli/meteo_direct.py Zenica 3</code> — zabilježite <code>"iz_cachea": false</code></li>
+                <li>Odmah ponovite istu komandu — trebate vidjeti <code>"iz_cachea": true</code></li>
+                <li>Čekajte 5+ minuta (ili smanjite <code>WEATHER_CACHE_TTL</code> u .env) — ponovo <code>false</code></li>
+            </ol>
+            <div class="tip"><strong>Brzi test:</strong> U notebooku ćelija 6 mjeri vrijeme dva uzastopna poziva.</div>
+        </div>
+
+        <div class="checkpoint"><strong>Završna kontrolna tačka:</strong> Server na 8004, browser radi, CLI pokazuje
+            <code>[TOOL CALL]</code>, JSON ima <code>temp_max_c</code> ne <code>max_temp</code>, cache radi.</div>
+
+        <h2 id="notebook">Korak 10 — Jupyter notebook (6 ćelija)</h2>
+        <p>Fajl: <code>notebooks/dan4_prognoza.ipynb</code>. Pokrenite ćelije redom.</p>
+
+        <table>
+            <thead><tr><th>Ćelija</th><th>Naslov</th><th>Šta učite</th></tr></thead>
+            <tbody>
+                <tr><td>0</td><td>Markdown uvod</td><td>Ciljevi, prerequisites, pregled petlje</td></tr>
+                <tr><td>1</td><td>KORAK 1: Setup</td><td><code>pip install</code> openai, httpx, python-dotenv</td></tr>
+                <tr><td>2</td><td>KORAK 2: Direktni Open-Meteo</td><td><code>get_weather_forecast('Sarajevo', 3)</code> bez AI</td></tr>
+                <tr><td>3</td><td>KORAK 3: Definicija alata</td><td>Ispis <code>TOOLS</code> JSON sheme iz main.py</td></tr>
+                <tr><td>4</td><td>KORAK 4: Ručno izvršenje</td><td><code>execute_tool('get_weather_forecast', args)</code></td></tr>
+                <tr><td>5</td><td>KORAK 5: Puna petlja</td><td>DeepSeek + tool loop — uporedi Sarajevo i Banja Luku</td></tr>
+                <tr><td>6</td><td>KORAK 6: Cache</td><td>Dva poziva za Tuzlu — mjeri vrijeme i <code>iz_cachea</code></td></tr>
+            </tbody>
+        </table>
+
+        <div class="narrator">
+            <strong>Predavač:</strong> Ćelija 5 je "aha moment" — u konzoli vidite <code>Tool: get_weather_forecast</code>
+            dva puta jer model upoređuje dva grada. To je ista logika kao u <code>run_tool_loop</code>, samo ručno u notebooku.
+        </div>
+
+        <p>Pokretanje notebooka iz VS Code-a: otvorite <code>.ipynb</code>, odaberite Python kernel iz venv-a.</p>
+
+        <h2 id="modeli">DeepSeek vs Ollama za Function Calling</h2>
+
+        <table>
+            <thead><tr><th>Kriterij</th><th>DeepSeek (cloud)</th><th>Ollama (lokalno)</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Function calling</strong></td><td>Odličan — pouzdano poziva alate</td><td>Varira — mali modeli (1b) često ne pozivaju alat ispravno</td></tr>
+                <tr><td><strong>Trošak</strong></td><td>Plaća se po tokenima (jeftin)</td><td>Besplatno</td></tr>
+                <tr><td><strong>Internet</strong></td><td>Potreban</td><td>Samo za Open-Meteo; LLM lokalno</td></tr>
+                <tr><td><strong>Preporuka za Dan 4</strong></td><td><strong>Primarni izbor</strong></td><td>Fallback za testiranje bez ključa</td></tr>
+                <tr><td><strong>Model u .env</strong></td><td><code>deepseek-chat</code> (hardcoded)</td><td><code>OLLAMA_MODEL_SMALL=llama3.2:1b</code></td></tr>
+                <tr><td><strong>Provjera dostupnosti</strong></td><td>Ključ počinje s <code>sk-</code></td><td><code>httpx.get(.../api/tags)</code></td></tr>
+            </tbody>
+        </table>
+
+        <div class="warning"><strong>Ollama i function calling:</strong> Ako AI ne poziva alat nego izmišlja prognozu,
+            vjerovatno koristite premali lokalni model. Rješenje: DeepSeek API ili veći Ollama model (npr. llama3.1:8b).</div>
+
+        <h2 id="troubleshooting">Rješavanje problema</h2>
+        <table>
+            <thead><tr><th>Problem</th><th>Uzrok</th><th>Rješenje</th></tr></thead>
+            <tbody>
+                <tr><td><code>ModuleNotFoundError: No module named 'httpx'</code></td><td>httpx nije instaliran ili venv nije aktivan</td><td><code>.\venv\Scripts\Activate.ps1</code> pa <code>pip install -r requirements.txt</code></td></tr>
+                <tr><td><code>ModuleNotFoundError: fastapi</code></td><td>venv nije aktivan</td><td>Aktivirajte venv prije uvicorn</td></tr>
+                <tr><td><code>RuntimeError: Ni DeepSeek API ni Ollama...</code></td><td>Nema valjanog API ključa ni Ollame</td><td>Dodajte <code>DEEPSEEK_API_KEY</code> ili pokrenite Ollama</td></tr>
+                <tr><td>AI izmišlja temperature</td><td>Model ne poziva alat (čest s malim Ollama modelom)</td><td>Koristite DeepSeek; provjerite <code>TOOLS</code> i system prompt</td></tr>
+                <tr><td><code>Address already in use</code></td><td>Port 8004 zauzet</td><td>Zatvorite drugi proces ili <code>--port 8005</code></td></tr>
+                <tr><td>Open-Meteo timeout</td><td>Spor internet ili API nedostupan</td><td>Povećajte <code>OPEN_METEO_TIMEOUT</code>; pokušajte kasnije</td></tr>
+                <tr><td>Grad nije u bazi</td><td>Grad izvan BiH liste</td><td>Dodajte u <code>BIH_CITIES</code> ili koristite podržani grad</td></tr>
+                <tr><td><code>iz_cachea: true</code> uvijek</td><td>Cache još aktivan</td><td>Čekajte TTL (300 s) ili restartujte Python proces</td></tr>
+                <tr><td>Prazan tool trace <code>[]</code></td><td>Model odgovorio bez alata</td><td>Pitanje nije o vremenu, ili model preskočio alat</td></tr>
+                <tr><td>404 na <code>/api/weather/Pariz</code></td><td>Grad ne postoji u bazi</td><td>Očekivano — HTTPException 404</td></tr>
+                <tr><td>Import error iz cli/</td><td>Pogrešan working directory</td><td>Pokrenite iz <code>dan4-prognoza</code>: <code>python cli/meteo_direct.py</code></td></tr>
+                <tr><td>.env promjena ne radi</td><td>Server nije restartovan</td><td>Ctrl+C pa ponovo uvicorn</td></tr>
+                <tr><td>PowerShell blokira Activate.ps1</td><td>Execution policy</td><td><code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code></td></tr>
+            </tbody>
+        </table>
+
+        <h2 id="eksperimenti">Eksperimenti (45 min)</h2>
+        <p>Eksperimenti fokusirani na function calling — ne na temperature ili persone kao u Dan 2.</p>
+
+        <div class="exp">
+            <div class="exp-label">Eksperiment 1</div>
+            <h3>Uporedi direktni API i AI odgovor</h3>
+            <ol>
+                <li>U browseru: "Dohvati prognozu" za Mostar — kopirajte <code>temp_max_c</code> iz JSON-a</li>
+                <li>Pitajte AI: "Kakva je maksimalna temperatura u Mostaru sutra?"</li>
+                <li>Uporedite brojke — AI bi trebao koristiti iste podatke iz alata</li>
+            </ol>
+            <div class="tip"><strong>Zaključak:</strong> Function calling povezuje prirodni jezik sa stvarnim podacima.</div>
+        </div>
+
+        <div class="exp">
+            <div class="exp-label">Eksperiment 2</div>
+            <h3>Dodajte treći alat</h3>
+            <p>Dodajte <code>get_current_time</code> u <code>TOOLS</code> i <code>execute_tool</code>:</p>
+<pre><code>def get_current_time() -&gt; dict:
+    from datetime import datetime
+    return {&quot;vrijeme&quot;: datetime.now().isoformat(), &quot;timezone&quot;: &quot;Europe/Sarajevo&quot;}</code></pre>
+            <p>Pitajte: "Koliko je sati i kakva je prognoza za Sarajevo?" — model bi trebao pozvati oba alata.</p>
+        </div>
+
+        <div class="exp">
+            <div class="exp-label">Eksperiment 3</div>
+            <h3>Šta ako uklonite system prompt?</h3>
+            <p>U <code>/api/ask</code> privremeno zamijenite <code>DEFAULT_SYSTEM</code> s <code>"Ti si korisni asistent."</code></p>
+            <ul>
+                <li>Model može prestati pozivati alate i pogađati vremenske podatke</li>
+                <li>Vratite originalni prompt nakon testa</li>
+            </ul>
+        </div>
+
+        <div class="exp">
+            <div class="exp-label">Eksperiment 4</div>
+            <h3>tool_choice forsiranje</h3>
+            <p>U Swaggeru na <code>/api/ask</code> pošaljite <code>tool_choice: "required"</code> (ako model podržava) ili
+                testirajte s pitanjem koje nije o vremenu: "Reci vic." — vidi da li model i dalje poziva alat.</p>
+            <p>Uočite razliku između pitanja koja <em>zahtijevaju</em> alat i onih koja ne.</p>
+        </div>
+
+        <div class="exp">
+            <div class="exp-label">Eksperiment 5</div>
+            <h3>Multi-city uporedba</h3>
+            <p>U <code>weather_agent.py</code> pitajte:</p>
+            <p><code>"Uporedi prognozu za Sarajevo, Mostar i Banja Luku za naredna 2 dana."</code></p>
+            <p>Brojite <code>[TOOL CALL]</code> linije u trace-u. DeepSeek obično poziva alat 3 puta (ili jednom s različitim
+                gradovima u seriji). Analizirajte <code>iteracije</code> u meta podacima.</p>
+        </div>
+
+        <h2 id="recnik">Rečnik pojmova — Function Calling</h2>
+        <table>
+            <thead><tr><th>Pojam</th><th>Objašnjenje</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Function Calling</strong></td><td>LLM odlučuje pozvati funkciju i generiše JSON argumente</td></tr>
+                <tr><td><strong>Tool Use</strong></td><td>Sinonim (Anthropic i drugi provajderi)</td></tr>
+                <tr><td><strong>tools</strong></td><td>Lista JSON shema alata u Chat API pozivu</td></tr>
+                <tr><td><strong>tool_calls</strong></td><td>Niz poziva alata u assistant poruci od modela</td></tr>
+                <tr><td><strong>tool_choice</strong></td><td><code>auto</code> (model bira), <code>none</code>, ili forsiran alat</td></tr>
+                <tr><td><strong>role: tool</strong></td><td>Poruka s rezultatom izvršenog alata natrag modelu</td></tr>
+                <tr><td><strong>tool_call_id</strong></td><td>ID koji povezuje tool rezultat s originalnim pozivom</td></tr>
+                <tr><td><strong>execute_tool()</strong></td><td>Naša Python funkcija koja mapira ime alata na pravu funkciju</td></tr>
+                <tr><td><strong>tool loop / petlja</strong></td><td>Ponavljanje: LLM → alat → rezultat → LLM dok nema finalnog odgovora</td></tr>
+                <tr><td><strong>tool trace</strong></td><td>Zapis svih poziva alata za debugging i UI</td></tr>
+                <tr><td><strong>JSON Schema</strong></td><td>Format opisa parametara alata (<code>parameters</code> u TOOLS)</td></tr>
+                <tr><td><strong>Open-Meteo</strong></td><td>Besplatan vremenski API bez API ključa</td></tr>
+                <tr><td><strong>httpx</strong></td><td>Python HTTP klijent za pozive prema Open-Meteo i Ollama</td></tr>
+                <tr><td><strong>iz_cachea</strong></td><td>Polje u odgovoru — <code>true</code> ako podaci dolaze iz cache-a</td></tr>
+                <tr><td><strong>weather_code</strong></td><td>WMO kod vremena (broj, ne tekstualni opis)</td></tr>
+                <tr><td><strong>Agent</strong></td><td>LLM + alati + petlja — model koji "radi" u svijetu, ne samo priča</td></tr>
+                <tr><td><strong>stateless chat</strong></td><td>Server ne čuva prethodne korisničke poruke; svaki <code>/api/ask</code> je nezavisan</td></tr>
+                <tr><td><strong>tool-loop poruke</strong></td><td>Privremeni <code>messages</code> niz unutar <code>run_tool_loop</code> — ne miješati s multi-turn chatom iz Dana 2</td></tr>
+            </tbody>
+        </table>
+
+        <h2 id="zakljucak">Šta smo naučili?</h2>
+
+        <table>
+            <thead><tr><th>Koncept</th><th>Šta znači</th><th>Gdje u kodu</th></tr></thead>
+            <tbody>
+                <tr><td><strong>Function Calling</strong></td><td>Model bira alat i argumente</td><td><code>TOOLS</code>, <code>tool_calls</code></td></tr>
+                <tr><td><strong>Tool loop</strong></td><td>Iterativno izvršavanje alata</td><td><code>run_tool_loop()</code></td></tr>
+                <tr><td><strong>Izvršenje u Pythonu</strong></td><td>LLM ne poziva API direktno</td><td><code>execute_tool()</code></td></tr>
+                <tr><td><strong>Vanjski API</strong></td><td>Stvarni podaci s interneta</td><td><code>get_weather_forecast()</code> + httpx</td></tr>
+                <tr><td><strong>Cache</strong></td><td>Manje HTTP poziva</td><td><code>_cache</code>, <code>iz_cachea</code></td></tr>
+                <tr><td><strong>Modularnost</strong></td><td>Alati odvojeni od FastAPI-ja</td><td><code>tools/</code> folder</td></tr>
+                <tr><td><strong>Trace</strong></td><td>Vidljivost za učenje</td><td><code>ToolTraceEntry</code>, CLI <code>[TOOL CALL]</code></td></tr>
+                <tr><td><strong>System prompt</strong></td><td>Navodi model da koristi alate</td><td><code>DEFAULT_SYSTEM</code></td></tr>
+                <tr><td><strong>Stateless API</strong></td><td>Svaki zahtjev nezavisan — nema multi-turn historije</td><td><code>POST /api/ask</code></td></tr>
+            </tbody>
+        </table>
+
+        <h3>Progresija kroz AI Trening</h3>
+        <div class="ascii-box">PROGRESIJA — Dan 2 → Dan 4
+
+Dan 2 (Šaljivi)     Dan 3 (Ollama)        Dan 4 (Prognoza)
+──────────────      ──────────────        ─────────────────
+✓ Chat API          ✓ Lokalni modeli      ✓ Chat API + tools
+✓ System prompt     ✓ get_llm_client      ✓ Function calling
+✓ Temperatura       ✓ Fallback pattern    ✓ Tool loop petlja
+✗ Alati             ✗ Alati               ✓ Vanjski API (httpx)
+✗ Vanjski podaci    ✗ Vanjski podaci      ✓ Cache + trace</div>
+
+        <div class="concept"><strong>Sljedeći korak:</strong> Function calling je temelj agenata. U naprednijim projektima
+            dodajete više alata (pretraga, baza, email), RAG, i dužu memoriju razgovora.</div>
+
+        <div class="checkpoint">
+            <strong>Finalna kontrolna lista:</strong>
+            <ul class="checklist">
+                <li>Razumijem strukturu foldera dan4-prognoza (tools, cli, static)</li>
+                <li>Instalirao/la httpx i sve pakete iz requirements.txt</li>
+                <li>Konfigurisao/la .env s DeepSeek ili Ollama</li>
+                <li>Razumijem tools/cities.py lookup i normalizaciju</li>
+                <li>Razumijem cache, Open-Meteo i execute_tool u weather.py</li>
+                <li>Mogu objasniti run_tool_loop() korak po korak</li>
+                <li>Testirao/la uvicorn, meteo_direct, browser i weather_agent</li>
+                <li>Znam da JSON koristi temp_max_c, iz_cachea — ne max_temp/opis</li>
+                <li>Vidio/la [TOOL CALL] u CLI trace-u</li>
+                <li>Pokrenuo/la notebook ćelije 1–6</li>
+                <li>Razumijem razliku: stateless <code>/api/ask</code> vs privremene poruke u tool loopu</li>
+                <li>Znam tri puta do podataka (direktno / AI+alat / Open-Meteo)</li>
+                <li>Uporedio/la dan4-prognoza s mini-adresar (isti obrazac, drugi izvor podataka)</li>
+            </ul>
+        </div>
+
+    </div>
+</body>
+
+</html>

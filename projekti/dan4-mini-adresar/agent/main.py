@@ -1,5 +1,5 @@
 from tools.adresar import execute_tool
-
+import time
 import json
 import os
 from pathlib import Path 
@@ -55,6 +55,9 @@ async def root():
 async def ask(zahtjev: AskRequest):
     klijent, model = get_llm_client()
 
+    # mjerenje vremena odgovora
+    start_time = time.monotonic()
+
     messages=[
         {"role":"system","content":system_prompt},
         {"role":"user","content":zahtjev.pitanje}
@@ -62,11 +65,15 @@ async def ask(zahtjev: AskRequest):
 
     odgovor = await run_llm(klijent, model, messages)
 
+    # racunamo vrijeme odgovora
+    end_time = time.monotonic()
+    trajanje_ms = int((end_time - start_time) * 1000)
+
     return AskResponse(
         pitanje=zahtjev.pitanje,
         odgovor=odgovor,
         model=model,
-        trajanje_ms=0
+        trajanje_ms=trajanje_ms
     )
     
 
@@ -118,7 +125,9 @@ async def run_llm(
 
 # kreiramo sistemki prompt kojim definisemo ponasanje modela
 system_prompt = """
-Ti si asistent koji odgovara na pitanja o tome gdje ljudi rade i žive.
+Ti si asistent koji odgovara šaljivim tonom na postavljena pitanja. 
+Ukoliko korisnik traži listu osoba ili detalje o osobi, koristi alate. 
+Ukoliko su pitanja nevezana za osobu ili alat, ne koristi alate i koristi ono što ti je inače dostupno.
 Za činjenice MORAŠ koristiti alate lookup_person i list_people ne smijes nista izmisljati. 
 Kada korisnik pita "gdje radi" - koristi posao i ustanovu iz alata.
 Kada pita "gdje živi" ili "u kom gradu" - koristi grad iz alata.

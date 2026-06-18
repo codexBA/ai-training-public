@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  dan4-prognoza:
+    build: .
+    container_name: ai-trening-dan4
+    ports:
+      - "8004:8004"
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

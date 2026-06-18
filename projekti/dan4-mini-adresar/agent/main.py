@@ -1,3 +1,5 @@
+from tools.adresar import execute_tool
+
 import json
 import os
 from pathlib import Path 
@@ -25,6 +27,16 @@ def get_llm_client():
     model = os.getenv("OLLAMA_MODEL_SMALL", "llama3.2:1b")
     return AsyncOpenAI(base_url=f"{ollama_url}/v1", api_key="ollama"), model
 
+class AskRequest(BaseModel):
+    pitanje: str
+    tool_choice: str = "auto"
+
+class AskResponse(BaseModel):
+    pitanje: str
+    odgovor: str
+    model: str
+    trajanje_ms: int
+
 # kreiranje FastAPI aplikacije 
 app = FastAPI(
     title="Dan4 - Mini Adresar",
@@ -38,6 +50,71 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 async def root():
     #return FileResponse("static/index.html")
     return {"poruka": "Dobro dosao u Mini Adresar"}
+
+@app.post("/api/ask", response_model=AskResponse)
+async def ask(zahtjev: AskRequest):
+    klijent, model = get_llm_client()
+
+    messages=[
+        {"role":"system","content":system_prompt},
+        {"role":"user","content":zahtjev.pitanje}
+    ]
+
+    odgovor = await run_llm(klijent, model, messages)
+
+    return AskResponse(
+        pitanje=zahtjev.pitanje,
+        odgovor=odgovor,
+        model=model,
+        trajanje_ms=0
+    )
+    
+
+async def run_llm(
+    klijent: AsyncOpenAI,
+    model: str,
+    messages: list,    
+)->str:
+    current_messages = list(messages)
+    max_tool_calls = 5
+    
+    for _ in range(max_tool_calls):
+        response = await klijent.chat.completions.create(
+            model=model,
+            temperature=0.0,
+            messages=current_messages,
+            tools=TOOLS,
+            tool_choice="auto"        
+        )
+
+        msg = response.choices[0].message
+        # provjeravamo da li je LLM koristion tools
+        if not msg.tool_calls:
+            return msg.content
+
+        current_messages.append(msg.model_dump(exclude_none=True))
+
+        for tc in msg.tool_calls:
+            fn_name = tc.function.name
+            fn_args = tc.function.arguments or {}
+
+            result_str = execute_tool(fn_name, fn_args)
+            
+            current_messages.append(
+                {
+                    "role": "tool",
+                    "tool_call_id": tc.id,                
+                    "content": result_str
+                }
+            )
+
+    return "Maximalan broj poziva alata je porekoracen"
+
+
+
+
+
+
 
 # kreiramo sistemki prompt kojim definisemo ponasanje modela
 system_prompt = """

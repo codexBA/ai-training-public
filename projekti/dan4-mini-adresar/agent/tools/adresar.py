@@ -32,3 +32,32 @@ def lookup_person(name:str) -> dict[str, Any]:
         response = client.get(url)
         response.raise_for_status() # bacamo exception ako nije 200 OK
         return response.json()
+
+# ova funkcija izvrsava tool/f-ju i vraca rezultat u string formatu koji ce LLM moci da koristi
+def execute_tool(name: str, arguments: str) -> str:
+    # pokusavamo parsirati arguments iz stringa u dict
+    try:
+        args_dict = json.loads(arguments) if arguments else {}
+    except json.JSONDecodeError:
+        return f"Greska pri parsiranju argumenata: {arguments}"
+
+    tool_functions = {
+        "list_people": list_people,
+        "lookup_person": lookup_person,
+    }
+
+    func = tool_functions.get(name)
+    if not func:
+        return f"Ne postoji funkcija {name}"
+    
+    try:
+        if name == "list_people":
+            result = func()
+        elif name == "lookup_person":
+            result = func(args_dict.get("name", ""))
+        else:
+            return f"Ne postoji funkcija {name}"
+            
+        return json.dumps(result, ensure_ascii=False)
+    except Exception as e:
+        return f"Greska pri izvrsavanju funkcije {name}: {str(e)}"

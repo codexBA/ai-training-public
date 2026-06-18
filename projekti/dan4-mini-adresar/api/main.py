@@ -1,4 +1,4 @@
-from data_store import list_osobe
+from data_store import list_osobe,lookup_person
 import os
 from pathlib import Path
 
@@ -23,3 +23,8 @@ async def root():
 @app.get("/osobe")
 async def osobe():
     return list_osobe()
+
+
+@app.get("/osoba/{query}")
+async def osoba(query:str):
+    return lookup_person(query) 

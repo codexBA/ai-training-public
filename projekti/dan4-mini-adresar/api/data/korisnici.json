@@ -1,0 +1,85 @@
+{
+    "korisnici": [
+        {
+            "id": 1,
+            "ime": "Anes",
+            "prezime": "Hadžić",
+            "puno_ime": "Anes Hadžić",
+            "posao": "Profesor",
+            "ustanova": "VSTV",
+            "grad": "Sarajevo"
+        },
+        {
+            "id": 2,
+            "ime": "Ajdin",
+            "prezime": "Smriko",
+            "puno_ime": "Ajdin Smriko",
+            "posao": "CEO",
+            "ustanova": "SPS",
+            "grad": ""
+        },
+        {
+            "id": 3,
+            "ime": "Nataša",
+            "prezime": "Radović",
+            "puno_ime": "Nataša Radović",
+            "posao": "CEO",
+            "ustanova": "FZS",
+            "grad": "Sarajevo"
+        },
+        {
+            "id": 4,
+            "ime": "Stefan",
+            "prezime": "Koprivica",
+            "puno_ime": "Stefan Koprivica",
+            "posao": "CEO",
+            "ustanova": "SPS",
+            "grad": ""
+        },
+        {
+            "id": 5,
+            "ime": "Nedim",
+            "prezime": "Fatić",
+            "puno_ime": "Nedim Fatić",
+            "posao": "CTO",
+            "ustanova": "VSTV",
+            "grad": "Sarajevo"
+        },
+        {
+            "id": 6,
+            "ime": "Ivana",
+            "prezime": "Vujić",
+            "puno_ime": "Ivana Vujić",
+            "posao": "Profesor",
+            "ustanova": "RZS RS",
+            "grad": "Banja Luka"
+        },
+        {
+            "id": 7,
+            "ime": "Mirsade",
+            "prezime": "Ribić",
+            "puno_ime": "Mirsade Ribić",
+            "posao": "Profesor",
+            "ustanova": "ASBL",
+            "grad": "Brčko"
+        },
+        {
+            "id": 8,
+            "ime": "Denis",
+            "prezime": "Xyz",
+            "puno_ime": "Denis Xyz",
+            "posao": "Direktor",
+            "ustanova": "PU FBIH",
+            "grad": "Sarajevo"
+        },
+        {
+            "id": 9,
+            "ime": "Amel",
+            "prezime": "Sikirica",
+            "puno_ime": "Amel Sikirica",
+            "posao": "Profesor",
+            "ustanova": "AS",
+            "grad": "Sarajevo"
+        }
+    ]
+}

@@ -1,0 +1,5 @@
+fastapi==0.110.0 # Web framework - kreira API endpointe
+uvicorn==0.30.0 # ASGI server - pokrece FastAPI aplikaciju
+openai>=1.84.0 # OpenAI SDK - radi i s DeepSeek i Ollama API-jem
+python-dotenv==1.0.0 # Python dotenv - cita .env fajl - sprijecava hardkodiranje lozinki
+httpx>=0.28.1 # HTTP klijent za testiranje

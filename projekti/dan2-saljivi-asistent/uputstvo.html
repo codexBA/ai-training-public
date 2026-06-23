@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+
+<html lang="bs">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Uputstvo — Šaljivi Asistent | Dan 2 — Detaljno</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: #334155;
+            --fun: #8b5cf6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 0 0 40px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+        .badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        h1 { font-size: 2.2em; margin-bottom: 8px; }
+        .subtitle { color: var(--text-dim); font-size: 1.1em; margin-bottom: 30px; }
+
+        h2 {
+            font-size: 1.5em;
+            margin: 40px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            color: var(--primary);
+            scroll-margin-top: 80px;
+        }
+
+        h3 { font-size: 1.15em; margin: 24px 0 10px; color: #fff; }
+        h4 { font-size: 1.05em; margin: 16px 0 8px; color: #bfdbfe; }
+        p { margin-bottom: 12px; }
+        ul, ol { margin: 0 0 16px 24px; }
+        li { margin-bottom: 6px; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        kbd {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0 16px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88em;
+            line-height: 1.6;
+        }
+
+        pre code { background: none; padding: 0; }
+
+        nav.top-nav {
+            background: #0f172a;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav.top-nav a { color: var(--primary); text-decoration: none; }
+        nav.top-nav a:hover { text-decoration: underline; }
+        nav.top-nav .sep { color: var(--border); }
+
+        nav.toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+
+        nav.toc h3 { margin-top: 0; font-size: 1em; color: var(--primary); }
+        nav.toc ol { margin-bottom: 0; columns: 2; column-gap: 30px; }
+        nav.toc a { color: var(--primary); text-decoration: none; font-size: 0.95em; }
+        nav.toc a:hover { text-decoration: underline; }
+
+        .step {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .step h3 { display: inline; margin: 0; }
+
+        .sub-step {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            border: 1px solid var(--border);
+        }
+
+        .sub-step-label {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 2px 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tip {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .tip strong { color: var(--accent); }
+
+        .warning {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid var(--warning);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .warning strong { color: var(--warning); }
+
+        .checkpoint {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 16px 0;
+            font-size: 0.95em;
+        }
+
+        .checkpoint strong { color: var(--primary); }
+
+        .concept {
+            background: rgba(139, 92, 246, 0.08);
+            border-left: 3px solid var(--fun);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .concept strong { color: #a78bfa; }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.08);
+            border-left: 3px solid var(--primary);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+
+        .alert-info strong { color: var(--primary); }
+
+        .expected-output {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+
+        .expected-output::before {
+            content: "Očekivani output:";
+            display: block;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .expected-output pre {
+            margin: 0;
+            border: none;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .ascii-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 16px;
+            font-size: 0.92em;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 8px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+        .exp {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            border-left: 4px solid var(--warning);
+        }
+
+        .exp-label {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .checklist { list-style: none; margin-left: 0; }
+        .checklist li::before { content: "✓ "; color: var(--primary); font-weight: bold; }
+
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        @media (max-width: 700px) {
+            nav.toc ol { columns: 1; }
+            .step, .exp { padding: 16px; }
+            pre { font-size: 0.78em; }
+        }
+
+    </style>
+</head>
+<body>
+<nav class="top-nav">
+<a href="../../docs/index.html">← AI Trening Dokumentacija</a>
+<span class="sep">›</span>
+<span style="color: var(--text-dim);">Dan 2 — Šaljivi Asistent</span>
+</nav>
+<div class="container">
+<div class="badge">Dan 2 — Mini-projekat A</div>
+<h1>Uputstvo: Šaljivi Asistent</h1>
+<p class="subtitle">Potpuni korak-po-korak vodič — od kreiranja projekta u VS Code-u do testiranja persona,
+            temperature i stateless Chat API-ja. Port <strong>8017</strong>.</p>
+<div class="alert-info">
+<strong>Za koga je ovaj vodič?</strong>
+<p style="margin:8px 0 0">Za svakoga ko želi <em>od nule</em> napraviti chatbota s personama i razumjeti svaku
+                liniju koda — system prompt, temperatura, FastAPI endpointe i frontend bez historije razgovora.</p>
+</div>
+<nav class="toc">
+<h3>Sadržaj</h3>
+<ol>
+<li><a href="#uvod">Uvod i preduslovi</a></li>
+
+
+
+
+<li><a href="#api">API dokumentacija</a></li>
+
+<li><a href="#pokretanje">Pokretanje i testiranje</a></li>
+<li><a href="#troubleshooting">Rješavanje problema</a></li>
+<li><a href="#eksperimenti">Eksperimenti</a></li>
+<li><a href="#recnik">Rečnik pojmova</a></li>
+<li><a href="#zakljucak">Šta smo naučili</a></li>
+</ol>
+</nav>
+<h2 id="uvod">Teorijski uvod — Zašto ovaj projekat i šta gradimo?</h2>
+<p>
+            Dobrodošli u prvi mini-projekat za Dan 2! U ovom projektu gradimo <strong>Šaljivog Asistenta</strong> — jednostavan chatbot 
+            koji može mijenjati svoju "ličnost" i odgovarati kao mrgodni djed, pirat, romantični pjesnik, sarkastična IT podrška ili sportski komentator.
+        </p>
+<h3>Zašto radimo ovaj projekat i čemu služi?</h3>
+<p>
+            Cilj ovog projekta je savladavanje samih osnova komunikacije sa modernim Large Language Modelima (LLM) kroz kod, 
+            odnosno učenje kako radi <strong>Chat API</strong>. Prije nego što počnemo praviti kompleksne agente koji pamte duge 
+            razgovore i barataju bazama podataka, moramo razumjeti osnovne gradivne blokove. Ovaj projekat služi da demistificira 
+            magiju iza ChatGPT-a i pokaže vam da se sve svodi na slanje jednostavnih tekstualnih instrukcija u strukturiranom JSON formatu na server.
+        </p>
+<h3>Šta želimo demonstrirati?</h3>
+<ul>
+<li><strong>Moć System Prompt-a:</strong> Pokazaćemo kako samo jedna rečenica skrivene instrukcije (system prompt) može 
+                iz temelja promijeniti vokabular, ton i ponašanje modela, a da pritom koristimo potpuno isti jezički model u pozadini.</li>
+<li><strong>Parametar Temperature:</strong> Demonstriraćemo kako matematički parametar (temperatura od 0.0 do 1.5) 
+                upravlja time da li će model biti strogo precizan i predvidiv (0.0), ili izuzetno kreativan i pomalo haotičan (1.5).</li>
+<li><strong>Osnove backend posredništva:</strong> Vidjećemo kako napraviti jednostavan web server u Pythonu (FastAPI) koji služi kao posrednik 
+                između našeg korisničkog interfejsa (frontenda) i LLM provajdera (DeepSeek ili Ollama).</li>
+</ul>
+<h3>Zašto koristimo "stateless" (besstanični) API i zašto nema historije?</h3>
+<p>
+            Ključna specifičnost ovog projekta u odnosu na naprednije chatbote je ta što ovdje <strong>nema historije razgovora</strong>.
+            Svaki put kada pošaljete poruku, naš backend šalje samo dvije stvari modelu: <em>System prompt (uloga persone)</em> i <em>Trenutnu poruku korisnika</em>.
+        </p>
+<p>
+            Ovo radimo namjerno kako bismo naučili koncept <strong>stateless API-ja</strong> (API-ja bez stanja). 
+            Važno je shvatiti da jezički modeli (LLM) prirodno <strong>nemaju memoriju</strong>. Oni ne znaju šta ste ih pitali prije 5 sekundi. 
+            Da bi chatbot "pamtio" razgovor, mi kao programeri moramo pri svakom novom pitanju iznova poslati modelu cjelokupnu historiju 
+            dosadašnjeg razgovora. Ostavljajući ovaj projekat "stateless", jasno demonstriramo tu činjenicu: 
+            svaki zahtjev prema modelu je potpuno neovisan događaj izbrisan od svake prošlosti. Razumijevanje ovoga sada je ključno za kasnije optimiziranje potrošnje tokena i pamćenja u većim projektima!
+        </p>
+<h3>Preduslovi</h3>
+<table>
+<thead>
+<tr><th>Šta vam treba</th><th>Kako provjeriti</th><th>Gdje nabaviti</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Python 3.11+</strong></td>
+<td><code>python --version</code></td>
+<td><a href="https://python.org" target="_blank">python.org</a></td>
+</tr>
+<tr>
+<td><strong>VS Code</strong></td>
+<td>Otvorite program</td>
+<td><a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></td>
+</tr>
+<tr>
+<td><strong>Python ekstenzija</strong></td>
+<td>Extensions → tražite "Python"</td>
+<td>Microsoft Python ekstenzija u VS Code-u</td>
+</tr>
+<tr>
+<td><strong>DeepSeek API ključ</strong> (opcionalno)</td>
+<td>U <code>.env</code> fajlu</td>
+<td>platform.deepseek.com</td>
+</tr>
+<tr>
+<td><strong>Ollama</strong> (opcionalno)</td>
+<td><code>http://localhost:11434</code></td>
+<td>Lokalni AI fallback ako nemate API ključ</td>
+</tr>
+</tbody>
+</table>
+<h3>Dva načina rada</h3>
+<ul>
+<li><strong>Gradite od nule</strong> — pratite ovaj vodič korak po korak i sami kucate svaki fajl u VS Code-u.</li>
+<li><strong>Otvorite gotov projekat</strong> — folder <code>projekti/dan2-saljivi-asistent</code> već postoji u
+                repozitoriju. Otvorite ga i koristite vodič da <em>razumijete</em> svaki dio koda.</li>
+</ul>
+<div class="ascii-box">ARHITEKTURA — Šaljivi Asistent (port 8017)
+
+┌────────────┐         ┌──────────────────────┐
+│  Browser   │  POST   │  FastAPI (main.py)    │
+│  index.html│────────▶│  /api/chat            │
+│            │◀────────│  persona + temperatura│
+└────────────┘  JSON   └───────────┬───────────┘
+                                   │
+                                   ▼
+                        ┌──────────────────────┐
+                        │  DeepSeek API / Ollama│
+                        │  messages: [          │
+                        │    {system: persona}, │
+                        │    {user: poruka}     │
+                        │  ]                    │
+                        │  ← SAMO 2 PORUKE! →   │
+                        └──────────────────────┘</div>
+<div class="concept"><strong>Ključni koncept — System prompt:</strong> Jedna rečenica instrukcije potpuno mijenja
+            stil odgovora. Isti model (DeepSeek ili Llama) može biti mrgodni djed, pirat ili sportski komentator —
+            samo na osnovu system poruke u <code>messages</code> nizu.</div>
+<h3>Šta ćemo naučiti?</h3>
+<ul>
+<li><strong>Chat API</strong> — kako funkcioniše <code>messages</code> array s rolama <code>system</code> i <code>user</code></li>
+<li><strong>System prompt</strong> — kako jedna instrukcija potpuno mijenja ponašanje modela</li>
+<li><strong>Temperatura</strong> — kako brojčana vrijednost (0.0–1.5) utiče na kreativnost odgovora</li>
+<li><strong>Stateless API</strong> — zašto model ne pamti prethodne poruke</li>
+<li><strong>FastAPI endpointe</strong> — GET i POST rute, automatska dokumentacija na <code>/docs</code></li>
+<li><strong>Frontend fetch</strong> — kako browser komunicira s backendom bez slanja historije</li>
+</ul>
+<h2 id="api">API dokumentacija</h2>
+<p>Server sluša na <code>http://localhost:8017</code>. Frontend i curl pozivaju ove URL adrese.</p>
+<table>
+<thead>
+<tr><th>Metoda</th><th>Putanja</th><th>Funkcija</th><th>Request</th><th>Response</th></tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/</code></td><td><code>root()</code></td><td>—</td><td>HTML (index.html)</td></tr>
+<tr><td>GET</td><td><code>/api/persone</code></td><td><code>get_persone()</code></td><td>—</td><td>JSON rječnik persona</td></tr>
+<tr><td>POST</td><td><code>/api/chat</code></td><td><code>chat()</code></td><td><code>ChatRequest</code> JSON</td><td><code>ChatResponse</code> JSON</td></tr>
+</tbody>
+</table>
+<h3>GET /api/persone</h3>
+<p><strong>Svrha:</strong> Vraća listu dostupnih persona za frontend dugmad.</p>
+<pre><code>curl http://localhost:8017/api/persone</code></pre>
+<p><strong>Primjer odgovora:</strong></p>
+<pre><code>{
+  "dedo": {"ime": "Mrgodni Djed", "opis": "Mrgodni dedo koji na sve gleda skeptično"},
+  "pirat": {"ime": "Jadranski Pirat", "opis": "Pirat s Jadranskog mora koji priča o pustolovinama"},
+  ...
+}</code></pre>
+<h3>POST /api/chat</h3>
+<p><strong>Svrha:</strong> Šalje poruku odabranoj personi; vraća LLM odgovor.</p>
+<pre><code>curl -X POST http://localhost:8017/api/chat ^
+  -H "Content-Type: application/json" ^
+  -d "{\"poruka\": \"Šta misliš o programiranju?\", \"persona\": \"dedo\", \"temperatura\": 0.7}"</code></pre>
+<p><strong>Primjer odgovora:</strong></p>
+<pre><code>{
+  "odgovor": "*uzdiše* Programiranje... u moje vrijeme...",
+  "persona": "dedo",
+  "persona_ime": "Mrgodni Djed",
+  "model": "deepseek-chat"
+}</code></pre>
+<h3>Swagger UI — /docs</h3>
+<p>FastAPI automatski generiše interaktivnu dokumentaciju:</p>
+<p><a href="http://localhost:8017/docs" target="_blank">http://localhost:8017/docs</a></p>
+<ol>
+<li>Pronađite <code>POST /api/chat</code></li>
+<li>Kliknite <strong>Try it out</strong></li>
+<li>Unesite JSON: <code>{"poruka": "Reci mi vic", "persona": "pirat", "temperatura": 0.7}</code></li>
+<li>Kliknite <strong>Execute</strong></li>
+</ol>
+<div class="ascii-box">TOK PODATAKA — jedan chat poziv
+
+Browser                    FastAPI                    LLM
+   │                          │                         │
+   │ POST /api/chat           │                         │
+   │ {poruka, persona, temp}  │                         │
+   │─────────────────────────▶│ PERSONE[persona].prompt │
+   │                          │────────────────────────▶│
+   │                          │ messages: [system,user] │
+   │                          │◀────────────────────────│
+   │◀─────────────────────────│ ChatResponse JSON       │
+   │ prikaži u chat oblasti   │                         │</div>
+<h2 id="pokretanje">Korak 6 — Pokretanje i testiranje</h2><p>Sada kada imate gotov kod, potrebno je da pokrenete projekat.</p><div class="step">
+<h3>1. Aktivacija i instalacija</h3>
+<p>U terminalu pozicionirajte se u folder projekta i kreirajte virtualno okruženje:</p>
+<pre><code>python -m venv venv
+venv\Scripts\activate  # Za Windows
+pip install -r requirements.txt</code></pre>
+</div><div class="step">
+<h3>2. Postavljanje API ključa</h3>
+<p>Kopirajte <code>.env.example</code> u <code>.env</code> i unesite vaš DeepSeek API ključ.</p>
+</div><div class="step">
+<h3>3. Pokretanje</h3>
+<pre><code>uvicorn main:app --reload --port 8017</code></pre>
+<p>Otvorite <a href="http://localhost:8017" target="_blank">http://localhost:8017</a> u browseru.</p>
+</div><h2 id="troubleshooting">Rješavanje problema</h2>
+<table>
+<thead><tr><th>Problem</th><th>Uzrok</th><th>Rješenje</th></tr></thead>
+<tbody>
+<tr><td><code>ModuleNotFoundError: fastapi</code></td><td>venv nije aktivan</td><td><code>.\venv\Scripts\Activate.ps1</code> pa ponovo uvicorn</td></tr>
+<tr><td>AI ne odgovara / timeout</td><td>Nema API ključa ni Ollame</td><td>Provjerite .env; pokrenite Ollama</td></tr>
+<tr><td><code>Address already in use</code></td><td>Port 8017 zauzet</td><td>Zatvorite drugi proces ili <code>--port 8019</code></td></tr>
+<tr><td><code>KeyError: 'djed'</code></td><td>Nekonzistentan ključ persone</td><td>Koristite <code>"dedo"</code> (ključ iz PERSONE), ne <code>"djed"</code></td></tr>
+<tr><td>Persona dugmad prazna</td><td>Server nije pokrenut</td><td>Pokrenite uvicorn na portu 8017</td></tr>
+<tr><td>Model ne pamti ime</td><td>Namjerno — nema historije</td><td>Ovo nije bug! Svaki poziv je stateless</td></tr>
+<tr><td>PowerShell blokira Activate.ps1</td><td>Execution policy</td><td><code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code></td></tr>
+<tr><td>.env promjena ne radi</td><td>Server nije restartovan</td><td>Ctrl+C pa ponovo uvicorn</td></tr>
+<tr><td>404 na /static</td><td>Nedostaje static folder</td><td>Provjerite <code>static/index.html</code> postoji</td></tr>
+</tbody>
+</table>
+<h2 id="eksperimenti">Eksperimenti (45 min)</h2>
+<p>Sada kada aplikacija radi, vrijeme je za eksperimentisanje — ovdje učite <em>zašto</em> stvari rade kako rade.</p>
+<div class="exp">
+<div class="exp-label">Eksperiment 1</div>
+<h3>Temperature slider</h3>
+<p>Pošaljite <strong>potpuno isto pitanje</strong> tri puta s različitim temperaturama:</p>
+<ol>
+<li><strong>Temperatura 0.0</strong> — "Reci mi vic" → zapišite odgovor</li>
+<li><strong>Temperatura 0.7</strong> — isto pitanje → uporedite</li>
+<li><strong>Temperatura 1.5</strong> — isto pitanje → uporedite</li>
+</ol>
+<ul>
+<li>Na 0.0 odgovor je gotovo <strong>identičan</strong> svaki put</li>
+<li>Na 0.7 ima <strong>malo varijacije</strong></li>
+<li>Na 1.5 odgovori su <strong>nepredvidivi</strong></li>
+</ul>
+<div class="tip"><strong>Zaključak:</strong> 0.0–0.3 za činjenice. 0.7–1.0 za kreativne odgovore. Iznad 1.2 rijetko u produkciji.</div>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 2</div>
+<h3>Kreirajte vlastitu personu</h3>
+<p>Dodajte 6. personu u <code>PERSONE</code> rječnik. Ideje: kuhar, detektiv, baka, rapper.</p>
+<pre><code>    "kuhar": {
+        "ime": "Bosanski Kuhar",
+        "opis": "Kuhar koji sve povezuje s hranom",
+        "prompt": (
+            "Ti si bosanski kuhar koji na svako pitanje odgovara kroz prizmu kuhanja i hrane. "
+            "Koristiš kulinarsku terminologiju i metafore iz kuhinje. "
+            "Svaki savjet završavaš s preporukom nekog bosanskog jela. "
+            "Odgovaraj na bosanskom, hrvatskom ili srpskom jeziku. Budi topao i srdačan."
+        )
+    }</code></pre>
+<p>Sačuvajte → server se restartuje (<code>--reload</code>) → osvježite browser.</p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 3</div>
+<h3>Šta se desi BEZ system prompta?</h3>
+<p>Zakomentirajte system poruku u <code>main.py</code>:</p>
+<pre><code>messages=[
+    # {"role": "system", "content": persona_data["prompt"]},
+    {"role": "user", "content": req.poruka},
+],</code></pre>
+<ul>
+<li>Bez system prompta: model odgovara <strong>generički</strong></li>
+<li>Sa system promptom: model ima <strong>ličnost</strong></li>
+</ul>
+<p><strong>Vratite system prompt nakon testa!</strong></p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 4</div>
+<h3>Dokaz da nema historije</h3>
+<ol>
+<li>Pošaljite: "Moje ime je Ahmet."</li>
+<li>Pošaljite: "Kako se zovem?"</li>
+</ol>
+<p>Model <strong>neće znati</strong> vaše ime — svaki poziv šalje samo system + user, bez prethodnog konteksta.</p>
+<p>U <code>dan2-film-chat</code> frontend šalje <strong>cijelu historiju</strong> u svakom pozivu.</p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 5</div>
+<h3>Uporedna tabela — ista poruka, 5 persona</h3>
+<p>Pošaljite <strong>istu poruku</strong> svim personama i uporedite stil odgovora:</p>
+<table>
+<thead>
+<tr><th>Persona</th><th>Test poruka</th><th>Šta očekujete</th><th>Primjer fraze</th></tr>
+</thead>
+<tbody>
+<tr>
+<td><code>dedo</code> — Mrgodni Djed</td>
+<td rowspan="5" style="vertical-align:middle"><code>"Šta misliš o umjetnoj inteligenciji?"</code></td>
+<td>Uzdah, skepticizam, životna lekcija</td>
+<td>"*uzdiše* U moje vrijeme..."</td>
+</tr>
+<tr>
+<td><code>pirat</code> — Jadranski Pirat</td>
+<td>Morske metafore, "arrr!"</td>
+<td>"Na moru smo imali..."</td>
+</tr>
+<tr>
+<td><code>pjesnik</code> — Dramatični Pjesnik</td>
+<td>Poetski, emotivan, rime</td>
+<td>"O, umjetna inteligencijo..."</td>
+</tr>
+<tr>
+<td><code>it_podrska</code> — IT Support</td>
+<td>Sarkazam, tehnički ton</td>
+<td>"Znači... opet ovo..."</td>
+</tr>
+<tr>
+<td><code>komentator</code> — Sportski Komentator</td>
+<td>Uzbuđenje, sportska terminologija</td>
+<td>"NEVJEROVATAN potez tehnologije!"</td>
+</tr>
+</tbody>
+</table>
+<div class="tip"><strong>Zaključak:</strong> Isti model, isto pitanje, potpuno drugačiji odgovor — samo zbog system prompta.
+                To je moć personalizacije LLM aplikacija.</div>
+</div>
+<h2 id="recnik">Rečnik pojmova</h2>
+<table>
+<thead><tr><th>Pojam</th><th>Objašnjenje</th></tr></thead>
+<tbody>
+<tr><td><strong>API</strong></td><td>Application Programming Interface — komunikacija programa preko HTTP</td></tr>
+<tr><td><strong>async / await</strong></td><td>Asinhrono čekanje bez blokiranja servera</td></tr>
+<tr><td><strong>BaseModel</strong></td><td>Pydantic klasa za validaciju request/response strukture</td></tr>
+<tr><td><strong>Chat API</strong></td><td>LLM prima niz poruka (roles) i vraća jedan odgovor</td></tr>
+<tr><td><strong>decorator (@app.get)</strong></td><td>Registruje funkciju kao HTTP handler</td></tr>
+<tr><td><strong>endpoint</strong></td><td>URL + HTTP metoda, npr. POST /api/chat</td></tr>
+<tr><td><strong>FastAPI</strong></td><td>Python framework za brzo pravljenje API-ja</td></tr>
+<tr><td><strong>fetch</strong></td><td>JavaScript funkcija za HTTP zahtjeve iz browsera</td></tr>
+<tr><td><strong>LLM</strong></td><td>Large Language Model — AI za tekst</td></tr>
+<tr><td><strong>messages</strong></td><td>Niz objekata s <code>role</code> i <code>content</code> za Chat API</td></tr>
+<tr><td><strong>persona</strong></td><td>System prompt koji daje modelu "ličnost"</td></tr>
+<tr><td><strong>Pydantic</strong></td><td>Validacija podataka pomoću Python tipova</td></tr>
+<tr><td><strong>stateless</strong></td><td>Server ne pamti prethodne zahtjeve — svaki poziv je nezavisan</td></tr>
+<tr><td><strong>system prompt</strong></td><td>Instrukcija koja definiše ulogu i ponašanje modela</td></tr>
+<tr><td><strong>temperature</strong></td><td>Parametar kreativnosti (0.0 = deterministički, 1.5 = haotičan)</td></tr>
+<tr><td><strong>tuple</strong></td><td>Nepromjenjiva lista, npr. <code>(client, model)</code></td></tr>
+<tr><td><strong>uvicorn</strong></td><td>ASGI server koji pokreće FastAPI</td></tr>
+<tr><td><strong>venv</strong></td><td>Virtualno okruženje — izolirane biblioteke po projektu</td></tr>
+</tbody>
+</table>
+<h2 id="zakljucak">Šta smo naučili?</h2>
+<table>
+<thead><tr><th>Koncept</th><th>Šta znači</th><th>Gdje u kodu</th></tr></thead>
+<tbody>
+<tr><td><strong>Chat API</strong></td><td>LLM prima array poruka, vraća jednu</td><td><code>messages=[{system}, {user}]</code></td></tr>
+<tr><td><strong>System prompt</strong></td><td>Kontrola ponašanja modela</td><td><code>PERSONE[key]["prompt"]</code></td></tr>
+<tr><td><strong>Temperatura</strong></td><td>Kontrola kreativnosti</td><td><code>temperature=req.temperatura</code></td></tr>
+<tr><td><strong>Stateless API</strong></td><td>Bez memorije razgovora</td><td>Samo 2 poruke u messages</td></tr>
+<tr><td><strong>Persona</strong></td><td>Ličnost kroz system prompt</td><td><code>PERSONE</code> rječnik</td></tr>
+<tr><td><strong>Pydantic</strong></td><td>Validacija request/response</td><td><code>ChatRequest</code>, <code>ChatResponse</code></td></tr>
+<tr><td><strong>Frontend fetch</strong></td><td>Browser → backend bez historije</td><td><code>send()</code> u index.html</td></tr>
+</tbody>
+</table>
+<h3>Progresija prema sljedećem projektu</h3>
+<div class="ascii-box">PROGRESIJA DANA 2
+
+Šaljivi Asistent          Kviz Majstor             dan2-film-chat
+(ovaj projekat)           (sljedeći mini)          (glavni projekat)
+─────────────             ─────────────            ─────────────────
+✓ Chat API               ✓ Chat API               ✓ Chat API
+✓ System prompt          ✓ System prompt          ✓ System prompt
+✓ Temperatura            ✓ JSON podaci            ✓ Temperatura
+✗ Historija              ✓ JSON output            ✓ JSON podaci + output
+✗ JSON podaci            ✓ Pydantic               ✓ Historija razgovora
+✗ JSON output            ✗ Historija              ✓ Token counting</div>
+<div class="concept"><strong>Sljedeći korak:</strong> Nastavite na
+            <a href="../dan2-kviz-majstor/uputstvo.html">Kviz Majstor uputstvo</a> — tamo učimo JSON podatke,
+            strukturirani LLM output i Pydantic validaciju ocjena.</div>
+<div class="checkpoint">
+<strong>Finalna kontrolna lista:</strong>
+<ul class="checklist">
+<li>Kreirali ste projekat u VS Code-u od nule</li>
+<li>Razumijete svaki import i funkciju u main.py</li>
+<li>Znate sva 3 API endpointa i testirate na portu 8017</li>
+<li>Frontend šalje poruke bez historije — stateless pattern</li>
+<li>Isprobali ste barem 3 persone i efekat temperature</li>
+<li>Razumijete razliku dedo/djed ključeva u ChatRequest</li>
+<li>Kreirali vlastitu personu (Eksperiment 2)</li>
+</ul>
+</div>
+</div>
+</body>
+</html>

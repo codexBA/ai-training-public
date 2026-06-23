@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Trening — Dokumentacija i Vodiči</title>
+    <meta name="description" content="Centralni portal za AI Trening: vodiči za postavljanje okruženja, projektna uputstva i sva dokumentacija za kurs.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0f1e;
+            --surface: #111827;
+            --surface2: #1a2235;
+            --border: #1e2d45;
+            --border-light: #2d3f5e;
+            --text: #e2e8f0;
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.15);
+            --accent: #10b981;
+            --accent-glow: rgba(16, 185, 129, 0.12);
+            --warning: #f59e0b;
+            --purple: #8b5cf6;
+            --purple-glow: rgba(139, 92, 246, 0.12);
+            --pink: #ec4899;
+            --cyan: #06b6d4;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* ===== HEADER ===== */
+        header {
+            position: relative;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0f1b35 40%, #091428 100%);
+            border-bottom: 1px solid var(--border);
+            padding: 4rem 2rem 3rem;
+            text-align: center;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -40%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.08) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        header::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            right: 10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(59, 130, 246, 0.12);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--primary);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+        }
+
+        .header-badge::before { content: '⚡ '; }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #ffffff 0%, #94a3b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+
+        .header-subtitle {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        main {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 1.5rem 5rem;
+        }
+
+        /* ===== SECTION TITLES ===== */
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .section-header:first-child { margin-top: 0; }
+
+        .section-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .section-icon.blue { background: rgba(59, 130, 246, 0.15); border: 1px solid rgba(59, 130, 246, 0.3); }
+        .section-icon.green { background: rgba(16, 185, 129, 0.15); border: 1px solid rgba(16, 185, 129, 0.3); }
+
+        .section-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .section-desc {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .section-divider {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2.5rem 0;
+        }
+
+        /* ===== CARDS GRID ===== */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.4rem 1.6rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: transparent;
+            transition: background 0.2s ease;
+        }
+
+        .card:hover {
+            border-color: var(--border-light);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        .card.blue:hover { border-color: rgba(59, 130, 246, 0.5); }
+        .card.blue:hover::before { background: linear-gradient(90deg, var(--primary), transparent); }
+
+        .card.green:hover { border-color: rgba(16, 185, 129, 0.5); }
+        .card.green:hover::before { background: linear-gradient(90deg, var(--accent), transparent); }
+
+        .card.purple:hover { border-color: rgba(139, 92, 246, 0.5); }
+        .card.purple:hover::before { background: linear-gradient(90deg, var(--purple), transparent); }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .card-icon.blue { background: rgba(59, 130, 246, 0.12); border: 1px solid rgba(59, 130, 246, 0.25); }
+        .card-icon.green { background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.25); }
+        .card-icon.purple { background: rgba(139, 92, 246, 0.12); border: 1px solid rgba(139, 92, 246, 0.25); }
+
+        .card-body { flex: 1; min-width: 0; }
+
+        .card-label {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .card-arrow {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            transition: transform 0.2s ease, color 0.2s ease;
+            flex-shrink: 0;
+            align-self: center;
+        }
+
+        .card:hover .card-arrow {
+            transform: translateX(4px);
+            color: var(--text);
+        }
+
+        /* ===== DAY BADGE ===== */
+        .day-tag {
+            display: inline-block;
+            font-size: 0.72rem;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+        }
+
+        .day-tag.dan1 { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+        .day-tag.dan2 { background: rgba(16, 185, 129, 0.15); color: #34d399; }
+        .day-tag.dan4 { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+
+        /* ===== PROJECTS WIDE CARDS ===== */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.75rem;
+        }
+
+        .project-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.2rem 1.6rem;
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .project-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            border-radius: 3px 0 0 3px;
+            transition: opacity 0.2s;
+            opacity: 0;
+        }
+
+        .project-card:hover {
+            border-color: var(--border-light);
+            transform: translateX(4px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-card:hover::before { opacity: 1; }
+
+        .project-card.dan1:hover { border-color: rgba(59, 130, 246, 0.4); }
+        .project-card.dan1::before { background: var(--primary); }
+
+        .project-card.dan2:hover { border-color: rgba(16, 185, 129, 0.4); }
+        .project-card.dan2::before { background: var(--accent); }
+
+        .project-card.dan4:hover { border-color: rgba(139, 92, 246, 0.4); }
+        .project-card.dan4::before { background: var(--purple); }
+
+        .project-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            flex-shrink: 0;
+        }
+
+        .project-card-icon.dan1 { background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2); }
+        .project-card-icon.dan2a { background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .project-card-icon.dan2b { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .project-card-icon.dan4a { background: rgba(139, 92, 246, 0.1); border: 1px solid rgba(139, 92, 246, 0.2); }
+        .project-card-icon.dan4b { background: rgba(6, 182, 212, 0.1); border: 1px solid rgba(6, 182, 212, 0.2); }
+
+        .project-card-body { flex: 1; }
+
+        .project-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .project-card-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .project-card-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+        }
+
+        .project-card-folder {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .project-card-arrow {
+            color: var(--text-muted);
+            font-size: 1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .project-card:hover .project-card-arrow { transform: translateX(4px); }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 680px) {
+            header { padding: 2.5rem 1.2rem 2rem; }
+            main { padding: 2rem 1rem 4rem; }
+            .cards-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-badge">AI Trening Dokumentacija</div>
+        <h1>Vodiči i Uputstva</h1>
+        <p class="header-subtitle">Sve što vam treba za kurs — postavljanje okruženja, teorija i korak-po-korak vodiči za svaki projekat.</p>
+    </header>
+
+    <main>
+
+        <!-- ===== SECTION 1: DOKUMENTACIJA ===== -->
+        <div class="section-header">
+            <div class="section-icon blue">📚</div>
+            <div>
+                <div class="section-title">Dokumentacija i uputstva</div>
+                <div class="section-desc">Vodiči za postavljanje radnog okruženja</div>
+            </div>
+        </div>
+
+        <div class="cards-grid">
+            <a href="python-uputstvo.html" class="card blue" id="card-python">
+                <div class="card-icon blue">🐍</div>
+                <div class="card-body">
+                    <div class="card-label">Okruženje</div>
+                    <div class="card-title">Python Mini Uputstvo</div>
+                    <div class="card-desc">venv, pip, biblioteke, API pozivi i projektni obrasci u Pythonu</div>
+                </div>
+                <div class="card-arrow">&#8594;</div>
+            </a>
+
+            <a href="docker-uputstvo.html" class="card blue" id="card-docker">
+                <div class="card-icon blue">🐳</div>
+                <div class="card-body">
+                    <div class="card-label">Okruženje</div>
+                    <div class="card-title">Docker Uputstvo</div>
+                    <div class="card-desc">Instalacija Docker Desktopa, pokretanje kontejnera i Docker Compose</div>
+                </div>
+                <div class="card-arrow">&#8594;</div>
+            </a>
+
+            <a href="venv-uputstvo.html" class="card blue" id="card-venv">
+                <div class="card-icon blue">📦</div>
+                <div class="card-body">
+                    <div class="card-label">Okruženje</div>
+                    <div class="card-title">Virtualno okruženje (venv)</div>
+                    <div class="card-desc">Kreiranje i aktivacija venv-a, instalacija paketa, izolacija projekata</div>
+                </div>
+                <div class="card-arrow">&#8594;</div>
+            </a>
+
+            <a href="sta_je_ollama.html" class="card green" id="card-ollama">
+                <div class="card-icon green">🦙</div>
+                <div class="card-body">
+                    <div class="card-label">AI modeli</div>
+                    <div class="card-title">Šta je Ollama?</div>
+                    <div class="card-desc">Lokalni AI modeli bez interneta — instalacija i korištenje Ollame</div>
+                </div>
+                <div class="card-arrow">&#8594;</div>
+            </a>
+
+            <a href="prezentacija-dan0.html" class="card purple" id="card-prezentacija">
+                <div class="card-icon purple">📊</div>
+                <div class="card-body">
+                    <div class="card-label">Dan 0</div>
+                    <div class="card-title">Prezentacija — Dan 0</div>
+                    <div class="card-desc">Uvod u kurs, postavljanje okruženja i pregled plana obuke</div>
+                </div>
+                <div class="card-arrow">&#8594;</div>
+            </a>
+        </div>
+
+        <hr class="section-divider">
+
+        <!-- ===== SECTION 2: PROJEKTI ===== -->
+        <div class="section-header">
+            <div class="section-icon green">🚀</div>
+            <div>
+                <div class="section-title">Projektni vodiči</div>
+                <div class="section-desc">Korak-po-korak uputstva za svaki projekat kursa</div>
+            </div>
+        </div>
+
+        <div class="projects-grid">
+
+            <a href="../projekti/dan1-tokeni/uputstvo.html" class="project-card dan1" id="card-dan1-tokeni">
+                <div class="project-card-icon dan1">🎨</div>
+                <div class="project-card-body">
+                    <div class="project-card-meta">
+                        <span class="day-tag dan1">Dan 1</span>
+                    </div>
+                    <div class="project-card-title">Token Vizualizator &amp; Temperature Playground</div>
+                    <div class="project-card-desc">Kako AI vidi tekst — tokenizacija, temperatura i prvi API pozivi. Web app + CLI + Jupyter notebook.</div>
+                    <div class="project-card-folder">projekti/dan1-tokeni/</div>
+                </div>
+                <div class="project-card-arrow">&#8594;</div>
+            </a>
+
+            <a href="../projekti/dan2-saljivi-asistent/uputstvo.html" class="project-card dan2" id="card-dan2-saljivi">
+                <div class="project-card-icon dan2a">😄</div>
+                <div class="project-card-body">
+                    <div class="project-card-meta">
+                        <span class="day-tag dan2">Dan 2 &middot; Projekat A</span>
+                    </div>
+                    <div class="project-card-title">Šaljivi Asistent</div>
+                    <div class="project-card-desc">Chat API, system prompt i persona — chatbot koji mijenja ličnost (pirat, djed, sportski komentator). Port 8017.</div>
+                    <div class="project-card-folder">projekti/dan2-saljivi-asistent/</div>
+                </div>
+                <div class="project-card-arrow">&#8594;</div>
+            </a>
+
+            <a href="../projekti/dan3-kviz-majstor/uputstvo.html" class="project-card dan2" id="card-dan2-kviz">
+                <div class="project-card-icon dan2b">🧠</div>
+                <div class="project-card-body">
+                    <div class="project-card-meta">
+                        <span class="day-tag dan2">Dan 2 &middot; Projekat B</span>
+                    </div>
+                    <div class="project-card-title">Kviz Majstor</div>
+                    <div class="project-card-desc">JSON baza pitanja, AI ocjenjivanje s strukturiranim JSON outputom, Pydantic validacija. Port 8018.</div>
+                    <div class="project-card-folder">projekti/dan3-kviz-majstor/</div>
+                </div>
+                <div class="project-card-arrow">&#8594;</div>
+            </a>
+
+            <a href="../projekti/dan4-mini-adresar/uputstvo.html" class="project-card dan4" id="card-dan4-adresar">
+                <div class="project-card-icon dan4a">📇</div>
+                <div class="project-card-body">
+                    <div class="project-card-meta">
+                        <span class="day-tag dan4">Dan 4 &middot; Projekat A</span>
+                    </div>
+                    <div class="project-card-title">Mini Adresar</div>
+                    <div class="project-card-desc">Function calling — AI koristi alate da pretražuje bazu korisnika. Teorija i kompletan walkthrough koda. Port 8019.</div>
+                    <div class="project-card-folder">projekti/dan4-mini-adresar/</div>
+                </div>
+                <div class="project-card-arrow">&#8594;</div>
+            </a>
+
+            <a href="../projekti/dan4-prognoza/uputstvo.html" class="project-card dan4" id="card-dan4-prognoza">
+                <div class="project-card-icon dan4b">🌤️</div>
+                <div class="project-card-body">
+                    <div class="project-card-meta">
+                        <span class="day-tag dan4">Dan 4 &middot; Projekat B</span>
+                    </div>
+                    <div class="project-card-title">AI Prognoza s Function Calling-om</div>
+                    <div class="project-card-desc">Function calling s pravim vanjskim API-jem — Open-Meteo vremenska prognoza, cache, tool trace. Port 8004.</div>
+                    <div class="project-card-folder">projekti/dan4-prognoza/</div>
+                </div>
+                <div class="project-card-arrow">&#8594;</div>
+            </a>
+
+        </div>
+
+    </main>
+
+    <footer>
+        AI Trening &mdash; Svi materijali
+    </footer>
+
+</body>
+</html>

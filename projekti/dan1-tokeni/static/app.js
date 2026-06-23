@@ -85,7 +85,7 @@ function tokenize() {
 
 /**
  * Šalje prompt na backend API koji ga prosljeđuje LLM-u na tri temperature.
- * Prikazuje rezultate u tri kartice za usporedbu.
+ * Prikazuje rezultate u tri kartice za poređenje.
  */
 async function temperatureDemo() {
   var promptElement = document.getElementById('temp-prompt');

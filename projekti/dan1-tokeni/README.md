@@ -82,7 +82,7 @@ Otvorite browser: **http://localhost:8001**
 Otvorite http://localhost:8001 u browseru. Trebate vidjeti:
 - Token Vizualizator — unesite tekst, kliknite "Analiziraj tokene"
 - Temperature Playground — unesite prompt, kliknite "Pokreni eksperiment"
-- Tabela usporedbe modela na dnu stranice
+- Tabela poredjenja modela na dnu stranice
 
 ### 2. API endpoints
 
@@ -175,4 +175,4 @@ pip install -r requirements.txt
 - Temperatura kontroliše kreativnost vs konzistentnost odgovora
 - API fallback osigurava da vježbe rade i bez cloud API-ja
 
-**Sljedeće:** Dan 2 — Chat aplikacija s historijom razgovora, JSON baza filmova i usporedba modela.
+**Sljedeće:** Dan 2 — Chat aplikacija s historijom razgovora, JSON baza filmova i poređenje modela.

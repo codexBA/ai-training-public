@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+
+<html lang="bs">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Uputstvo — Kviz Majstor | Dan 2 — Detaljno</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: #334155;
+            --fun: #8b5cf6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 0 0 40px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            margin: 40px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            color: var(--accent);
+            scroll-margin-top: 80px;
+        }
+
+        h3 {
+            font-size: 1.15em;
+            margin: 24px 0 10px;
+            color: #fff;
+        }
+
+        h4 {
+            font-size: 1.05em;
+            margin: 16px 0 8px;
+            color: #bfdbfe;
+        }
+
+        p {
+            margin-bottom: 12px;
+        }
+
+        ul,
+        ol {
+            margin: 0 0 16px 24px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        kbd {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0 16px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88em;
+            line-height: 1.6;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        nav.top-nav {
+            background: #0f172a;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav.top-nav a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        nav.top-nav a:hover {
+            text-decoration: underline;
+        }
+
+        nav.top-nav .sep {
+            color: var(--border);
+        }
+
+        nav.toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+
+        nav.toc h3 {
+            margin-top: 0;
+            font-size: 1em;
+            color: var(--accent);
+        }
+
+        nav.toc ol {
+            margin-bottom: 0;
+            columns: 2;
+            column-gap: 30px;
+        }
+
+        nav.toc a {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.95em;
+        }
+
+        nav.toc a:hover {
+            text-decoration: underline;
+        }
+
+        .step {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            border-left: 4px solid var(--accent);
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .step h3 {
+            display: inline;
+            margin: 0;
+        }
+
+        .sub-step {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            border: 1px solid var(--border);
+        }
+
+        .sub-step-label {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 2px 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tip {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .tip strong {
+            color: var(--accent);
+        }
+
+        .warning {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid var(--warning);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .warning strong {
+            color: var(--warning);
+        }
+
+        .checkpoint {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 16px 0;
+            font-size: 0.95em;
+        }
+
+        .checkpoint strong {
+            color: var(--accent);
+        }
+
+        .concept {
+            background: rgba(139, 92, 246, 0.08);
+            border-left: 3px solid var(--fun);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .concept strong {
+            color: #a78bfa;
+        }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.08);
+            border-left: 3px solid var(--primary);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+
+        .alert-info strong {
+            color: var(--primary);
+        }
+
+        .expected-output {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+
+        .expected-output::before {
+            content: "Očekivani output:";
+            display: block;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .expected-output pre {
+            margin: 0;
+            border: none;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .ascii-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 16px;
+            font-size: 0.92em;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 8px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .exp {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            border-left: 4px solid var(--warning);
+        }
+
+        .exp-label {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .checklist li::before {
+            content: "✓ ";
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 700px) {
+            nav.toc ol {
+                columns: 1;
+            }
+
+            .step,
+            .exp {
+                padding: 16px;
+            }
+
+            pre {
+                font-size: 0.78em;
+            }
+        }
+    </style>
+</head>
+<body>
+<nav class="top-nav">
+<a href="../../docs/index.html">← AI Trening Dokumentacija</a>
+<span class="sep">›</span>
+<span style="color: var(--text-dim);">Dan 2 — Kviz Majstor</span>
+</nav>
+<div class="container">
+<div class="badge">Dan 2 — Mini-projekat B</div>
+<h1>Uputstvo: Kviz Majstor</h1>
+<p class="subtitle">Potpuni korak-po-korak vodič — od kreiranja projekta u VS Code-u do testiranja API-ja.
+            Napisano za početnike koji nikada nisu programirali u Pythonu.</p>
+<div class="alert-info">
+<strong>Za koga je ovaj vodič?</strong>
+<p style="margin:8px 0 0">Za svakoga ko želi <em>od nule</em> napraviti kviz aplikaciju i razumjeti svaku
+                liniju koda — uključujući imports, API endpointe, JSON podatke, AI ocjenjivanje i frontend. Možete
+                pratiti vodič iako niste bili na predavanju.</p>
+</div>
+<nav class="toc">
+<h3>Sadržaj</h3>
+<ol>
+<li><a href="#uvod">Uvod i preduslovi</a></li>
+
+
+
+
+
+<li><a href="#api">API dokumentacija</a></li>
+
+<li><a href="#pokretanje">Pokretanje i testiranje</a></li>
+<li><a href="#troubleshooting">Rješavanje problema</a></li>
+<li><a href="#eksperimenti">Eksperimenti</a></li>
+<li><a href="#recnik">Rečnik pojmova</a></li>
+<li><a href="#zakljucak">Šta smo naučili</a></li>
+</ol>
+</nav>
+<!-- ===== UVOD ===== -->
+<h2 id="uvod">Uvod — Šta ćemo napraviti?</h2>
+<p>
+            Kviz aplikacija koja čita pitanja iz <strong>JSON fajla</strong> (<code>kviz.json</code>), nasumično ih
+            prikazuje studentu,
+            a zatim koristi AI da <strong>ocijeni slobodne tekstualne odgovore</strong>. AI vraća ocjenu kao
+            <strong>strukturirani JSON</strong>
+            umjesto slobodnog teksta — to nam omogućava da program prikaže bodove, komentar i tačan odgovor bez
+            parsiranja teksta.
+        </p>
+<h3>Preduslovi</h3>
+<table>
+<thead>
+<tr>
+<th>Šta vam treba</th>
+<th>Kako provjeriti</th>
+<th>Gdje nabaviti</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Python 3.11+</strong></td>
+<td><code>python --version</code></td>
+<td><a href="https://python.org" target="_blank">python.org</a></td>
+</tr>
+<tr>
+<td><strong>VS Code</strong></td>
+<td>Otvorite program</td>
+<td><a href="https://code.visualstudio.com" target="_blank">code.visualstudio.com</a></td>
+</tr>
+<tr>
+<td><strong>Python ekstenzija</strong></td>
+<td>Extensions → tražite "Python"</td>
+<td>Microsoft Python ekstenzija u VS Code-u</td>
+</tr>
+<tr>
+<td><strong>DeepSeek API ključ</strong> (opcionalno)</td>
+<td>U <code>.env</code> fajlu</td>
+<td>platform.deepseek.com</td>
+</tr>
+<tr>
+<td><strong>Ollama</strong> (opcionalno)</td>
+<td><code>http://localhost:11434</code></td>
+<td>Lokalni AI fallback ako nemate API ključ</td>
+</tr>
+</tbody>
+</table>
+<h3>Dva načina rada</h3>
+<ul>
+<li><strong>Gradite od nule</strong> — pratite ovaj vodič korak po korak i sami kucate svaki fajl u VS
+                Code-u.</li>
+<li><strong>Otvorite gotov projekat</strong> — folder <code>projekti/dan3-kviz-majstor</code> već postoji u
+                repozitoriju. Otvorite ga i koristite vodič da <em>razumijete</em> svaki dio koda.</li>
+</ul>
+<h3>Razlika u odnosu na Šaljivi Asistent</h3>
+<table>
+<thead>
+<tr>
+<th>Aspekt</th>
+<th>Šaljivi Asistent</th>
+<th>Kviz Majstor</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Izvor podataka</td>
+<td>Nema (samo system prompt)</td>
+<td><strong>kviz.json</strong> — 15 pitanja</td>
+</tr>
+<tr>
+<td>LLM output format</td>
+<td>Slobodan tekst</td>
+<td><strong>Strukturirani JSON</strong></td>
+</tr>
+<tr>
+<td>Validacija</td>
+<td>Nema</td>
+<td><strong>Pydantic model</strong></td>
+</tr>
+<tr>
+<td>response_format</td>
+<td>Ne koristi</td>
+<td><strong>{"type": "json_object"}</strong></td>
+</tr>
+<tr>
+<td>Temperatura</td>
+<td>Konfigurabilna (slider)</td>
+<td>Fiksna 0.0 (deterministička ocjena)</td>
+</tr>
+</tbody>
+</table>
+<div class="ascii-box">ARHITEKTURA — Kviz Majstor (port 8018)
+
+            ┌────────────┐ GET /api/pitanje ┌────────────────────────┐
+            │ Browser │────────────────────▶│ FastAPI (main.py) │
+            │ index.html│◀────────────────────│ │
+            │ │ {pitanje, kat.} │ random.choice(PITANJA)│◀── kviz.json
+            │ │ │ │ (15 pitanja)
+            │ │ POST /api/provjeri │ │
+            │ │────────────────────▶│ system prompt: │
+            │ │◀────────────────────│ pitanje + tačan odg. │
+            │ │ Strukturirani JSON │ + odgovor studenta │
+            └────────────┘ {tacno, bodovi, │ │ │
+            komentar, │ ▼ │
+            tacan_odgovor} │ DeepSeek / Ollama │
+            │ response_format: │
+            │ {"type":"json_object"}│
+            │ temperature: 0.0 │
+            └────────────────────────┘</div>
+<div class="concept"><strong>Ključni koncept — Strukturirani output:</strong> Umjesto da model vrati slobodan
+            tekst ("Bravo, to je tačno..."), mi <em>zahtijevamo</em> da vrati JSON s tačno definiranim poljima. To
+            omogućava programskoj obradi odgovora (bodovi, rezultat, itd.).</div>
+<h3>Šta ćemo naučiti?</h3>
+<ul>
+<li><strong>JSON kao izvor podataka</strong> — učitavanje i korištenje JSON fajla u Python aplikaciji</li>
+<li><strong>Prosljeđivanje podataka LLM-u</strong> — kako staviti podatke u system prompt</li>
+<li><strong>response_format</strong> — kako natjerati model da vrati validan JSON umjesto slobodnog teksta
+            </li>
+<li><strong>Pydantic validacija</strong> — kako definirati shemu i validirati LLM odgovor</li>
+<li><strong>FastAPI endpointe</strong> — GET i POST rute, automatska dokumentacija na /docs</li>
+<li><strong>Frontend fetch</strong> — kako browser komunicira s backendom</li>
+<li><strong>Fallback pattern</strong> — što raditi kad AI ne poštuje JSON format</li>
+</ul>
+<!-- ===== VS CODE ===== -->
+<h2 id="api">API dokumentacija</h2>
+<p>API (Application Programming Interface) je skup URL adresa koje frontend (ili curl) poziva da dobije podatke.
+            Naš server sluša na <code>http://localhost:8018</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Metoda</th>
+<th>Putanja</th>
+<th>Funkcija u kodu</th>
+<th>Request body</th>
+<th>Response</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/</code></td>
+<td><code>root()</code></td>
+<td>—</td>
+<td>HTML stranica (index.html)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/pitanje</code></td>
+<td><code>daj_pitanje()</code></td>
+<td>—</td>
+<td>JSON s pitanjem (bez tačnog odgovora)</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/kategorije</code></td>
+<td><code>get_kategorije()</code></td>
+<td>—</td>
+<td>JSON niz kategorija</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/provjeri</code></td>
+<td><code>provjeri()</code></td>
+<td><code>{pitanje_id, odgovor_studenta}</code></td>
+<td><code>OcjenaResponse</code> JSON</td>
+</tr>
+</tbody>
+</table>
+<h3>GET /api/pitanje</h3>
+<p><strong>Svrha:</strong> Dohvata jedno nasumično pitanje i pamti ga na serveru.</p>
+<p><strong>Primjer curl (PowerShell):</strong></p>
+<pre><code>curl http://localhost:8018/api/pitanje</code></pre>
+<p><strong>Primjer odgovora:</strong></p>
+<pre><code>{
+  "id": 3,
+  "pitanje": "Na kojoj rijeci se nalazi Stari Most u Mostaru?",
+  "kategorija": "geografija",
+  "tezina": 1
+}</code></pre>
+<div class="tip">Primijetite: nema polja <code>tacan_odgovor</code> — namjerno!</div>
+<h3>GET /api/kategorije</h3>
+<p><strong>Svrha:</strong> Vraća listu svih jedinstvenih kategorija iz kviz.json.</p>
+<pre><code>curl http://localhost:8018/api/kategorije</code></pre>
+<pre><code>["zabava", "kultura", "geografija", "tech", "hrana"]</code></pre>
+<p>Redoslijed može varirati jer koristimo set.</p>
+<h3>POST /api/provjeri</h3>
+<p><strong>Svrha:</strong> Šalje studentski odgovor; AI ocjenjuje i vraća strukturirani JSON.</p>
+<p><strong>Sekvenca:</strong> Prvo GET /api/pitanje → zapamtite <code>id</code> → zatim POST s tim id-jem.</p>
+<pre><code>curl -X POST http://localhost:8018/api/provjeri ^
+  -H "Content-Type: application/json" ^
+  -d "{\"pitanje_id\": 3, \"odgovor_studenta\": \"Neretva\"}"</code></pre>
+<p><strong>Primjer odgovora:</strong></p>
+<pre><code>{
+  "tacno": true,
+  "bodovi": 10,
+  "komentar": "Odličan odgovor! Neretva je rijeka na kojoj stoji Stari Most.",
+  "tacan_odgovor": "Neretva"
+}</code></pre>
+<h3>Swagger UI — /docs</h3>
+<p>FastAPI automatski generiše interaktivnu dokumentaciju. Otvorite u browseru:</p>
+<p><a href="http://localhost:8018/docs" target="_blank">http://localhost:8018/docs</a></p>
+<ol>
+<li>Pronađite <code>POST /api/provjeri</code></li>
+<li>Kliknite <strong>Try it out</strong></li>
+<li>Unesite JSON: <code>{"pitanje_id": 1, "odgovor_studenta": "Bosna"}</code></li>
+<li>Kliknite <strong>Execute</strong> — vidite odgovor ispod</li>
+</ol>
+<div class="warning">Prije POST /api/provjeri morate pozvati GET /api/pitanje s istim id-jem u istoj sesiji
+            servera — inače dobijate "Pitanje nije pronađeno".</div>
+<div class="ascii-box">TOK PODATAKA — odgovor na pitanje
+
+            Browser FastAPI AI (DeepSeek/Ollama)
+            │ │ │
+            │ POST /api/provjeri │ │
+            │ {id:3, odgovor:"Neretva"}│ │
+            │─────────────────────────▶│ pop(id) → pitanje_data │
+            │ │ system_prompt s podacima │
+            │ │─────────────────────────────▶│
+            │ │◀─────────────────────────────│
+            │ │ JSON {tacno, bodovi, ...} │
+            │◀─────────────────────────│ OcjenaResponse (Pydantic) │
+            │ prikaži rezultat │ │</div>
+<!-- ===== FRONTEND ===== -->
+<h2 id="pokretanje">Korak 7 — Pokretanje i testiranje</h2><p>Ovaj projekat koristi istu strukturu kao prethodni.</p><div class="step">
+<h3>1. Instalacija i API ključ</h3>
+<pre><code>python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt</code></pre>
+<p>Postavite <code>.env</code> fajl sa vašim API ključem.</p>
+</div><div class="step">
+<h3>2. Pokretanje</h3>
+<pre><code>uvicorn main:app --reload --port 8018</code></pre>
+<p>Otvorite <a href="http://localhost:8018" target="_blank">http://localhost:8018</a> u browseru.</p>
+</div><h2 id="troubleshooting">Rješavanje problema</h2>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Vjerovatni uzrok</th>
+<th>Rješenje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ModuleNotFoundError: fastapi</code></td>
+<td>venv nije aktivan</td>
+<td><code>.\venv\Scripts\Activate.ps1</code> pa ponovo uvicorn</td>
+</tr>
+<tr>
+<td>Server ne startuje pri učitavanju</td>
+<td>Neispravan JSON u kviz.json</td>
+<td>Provjerite zareze i navodnike na jsonlint.com</td>
+</tr>
+<tr>
+<td><code>Pitanje nije pronađeno</code></td>
+<td>Restart servera, pogrešan id, dupli POST</td>
+<td>Kliknite "Novo pitanje" i odgovorite ponovo</td>
+</tr>
+<tr>
+<td>AI ne odgovara / timeout</td>
+<td>Nema API ključa ni Ollame</td>
+<td>Provjerite .env; pokrenite Ollama</td>
+</tr>
+<tr>
+<td><code>Address already in use</code></td>
+<td>Port 8018 zauzet</td>
+<td>Zatvorite drugi proces ili koristite <code>--port 8019</code></td>
+</tr>
+<tr>
+<td>PowerShell blokira Activate.ps1</td>
+<td>Execution policy</td>
+<td><code>Set-ExecutionPolicy RemoteSigned -Scope CurrentUser</code></td>
+</tr>
+<tr>
+<td>JSON preview prazan</td>
+<td>Greška u POST zahtjevu</td>
+<td>Pogledajte status div i Network tab</td>
+</tr>
+<tr>
+<td>.env promjena ne radi</td>
+<td>Server nije restartovan</td>
+<td>Ctrl+C pa ponovo uvicorn</td>
+</tr>
+</tbody>
+</table>
+<!-- ===== EKSPERIMENTI ===== -->
+<h2 id="eksperimenti">Eksperimenti (55 min)</h2>
+<div class="exp">
+<div class="exp-label">Eksperiment 1</div>
+<h3>Dodajte vlastita pitanja</h3>
+<p>Otvorite <code>kviz.json</code> i dodajte 3 nova pitanja:</p>
+<pre><code>{
+  "id": 16,
+  "pitanje": "Vaše pitanje ovdje?",
+  "tacan_odgovor": "Vaš odgovor",
+  "kategorija": "zabava",
+  "tezina": 1
+}</code></pre>
+<p>Sačuvajte → restartujte server → testirajte.</p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 2</div>
+<h3>Promijenite scoring shemu (0–100)</h3>
+<pre><code>class OcjenaResponse(BaseModel):
+    bodovi: int = Field(ge=0, le=100)  # Promjena!</code></pre>
+<p>Ažurirajte system prompt: <code>"Bodovi: 100=savršen..."</code></p>
+<p><strong>Bonus:</strong> Vratite Pydantic na 0–10 ali ostavite prompt na 0–100 — šta se desi kad model
+                vrati 85?</p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 3</div>
+<h3>Filter po kategoriji</h3>
+<pre><code>@app.get("/api/pitanje")
+async def daj_pitanje(kategorija: str = None):
+    if kategorija:
+        filtrirano = [p for p in PITANJA if p["kategorija"] == kategorija]
+        pitanje = random.choice(filtrirano) if filtrirano else random.choice(PITANJA)
+    else:
+        pitanje = random.choice(PITANJA)
+    # ... ostatak isti ...</code></pre>
+<p>Test: <code>http://localhost:8018/api/pitanje?kategorija=tech</code></p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 4</div>
+<h3>Testirajte s Ollama</h3>
+<p>Zakomentarišite <code>DEEPSEEK_API_KEY</code> u <code>.env</code>, restartujte server. Primijetite češći
+                fallback na string matching — manji modeli lošije poštuju JSON format.</p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 5</div>
+<h3>Povežite frontend s GET /api/kategorije</h3>
+<p>Dodajte dropdown u <code>index.html</code> koji poziva <code>fetch('/api/kategorije')</code> i šalje
+                odabrani filter na <code>/api/pitanje?kategorija=...</code> (nakon Eksperimenta 3).</p>
+</div>
+<!-- ===== REČNIK ===== -->
+<h2 id="recnik">Rečnik pojmova</h2>
+<table>
+<thead>
+<tr>
+<th>Pojam</th>
+<th>Objašnjenje</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>API</strong></td>
+<td>Application Programming Interface — način da programi komuniciraju preko HTTP zahtjeva</td>
+</tr>
+<tr>
+<td><strong>async / await</strong></td>
+<td>Asinhrono programiranje — čekanje bez blokiranja cijelog servera</td>
+</tr>
+<tr>
+<td><strong>BaseModel</strong></td>
+<td>Pydantic klasa za definisanje i validaciju strukture podataka</td>
+</tr>
+<tr>
+<td><strong>decorator (@app.get)</strong></td>
+<td>Python sintaksa koja registruje funkciju kao HTTP handler</td>
+</tr>
+<tr>
+<td><strong>dict</strong></td>
+<td>Rječnik — par ključ:vrijednost, npr. <code>{"id": 1}</code></td>
+</tr>
+<tr>
+<td><strong>endpoint</strong></td>
+<td>URL putanja + HTTP metoda, npr. GET /api/pitanje</td>
+</tr>
+<tr>
+<td><strong>FastAPI</strong></td>
+<td>Moderni Python framework za brzo pravljenje API-ja</td>
+</tr>
+<tr>
+<td><strong>f-string</strong></td>
+<td><code>f"Tekst {varijabla}"</code> — ubacuje vrijednosti u string</td>
+</tr>
+<tr>
+<td><strong>fetch</strong></td>
+<td>JavaScript funkcija za HTTP zahtjeve iz browsera</td>
+</tr>
+<tr>
+<td><strong>Field(ge=, le=)</strong></td>
+<td>Pydantic ograničenje: greater/less or equal — min i max vrijednost</td>
+</tr>
+<tr>
+<td><strong>JSON</strong></td>
+<td>JavaScript Object Notation — tekstualni format za podatke</td>
+</tr>
+<tr>
+<td><strong>LLM</strong></td>
+<td>Large Language Model — AI model za razumijevanje i generisanje teksta</td>
+</tr>
+<tr>
+<td><strong>Path</strong></td>
+<td>Python klasa za rad s putanjama fajlova</td>
+</tr>
+<tr>
+<td><strong>Pydantic</strong></td>
+<td>Biblioteka za validaciju podataka pomoću Python tipova</td>
+</tr>
+<tr>
+<td><strong>response_format</strong></td>
+<td>Parametar koji forsira LLM da vrati JSON objekat</td>
+</tr>
+<tr>
+<td><strong>system prompt</strong></td>
+<td>Upute koje definišu ulogu i ponašanje AI modela</td>
+</tr>
+<tr>
+<td><strong>temperature</strong></td>
+<td>Parametar kreativnosti (0.0 = deterministički, 1.0+ = kreativniji)</td>
+</tr>
+<tr>
+<td><strong>tuple</strong></td>
+<td>Nepromjenjiva lista vrijednosti, npr. <code>(client, model)</code></td>
+</tr>
+<tr>
+<td><strong>uvicorn</strong></td>
+<td>ASGI server koji pokreće FastAPI aplikaciju</td>
+</tr>
+<tr>
+<td><strong>venv</strong></td>
+<td>Virtualno okruženje — izolirane Python biblioteke po projektu</td>
+</tr>
+</tbody>
+</table>
+<!-- ===== ZAKLJUČAK ===== -->
+<h2 id="zakljucak">Šta smo naučili?</h2>
+<table>
+<thead>
+<tr>
+<th>Koncept</th>
+<th>Šta znači</th>
+<th>Gdje u kodu</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>JSON kao baza</strong></td>
+<td>Učitavanje podataka iz fajla za LLM kontekst</td>
+<td><code>json.load(f)</code></td>
+</tr>
+<tr>
+<td><strong>response_format</strong></td>
+<td>Forsiranje JSON outputa od LLM-a</td>
+<td><code>{"type": "json_object"}</code></td>
+</tr>
+<tr>
+<td><strong>Pydantic</strong></td>
+<td>Validacija tipa i raspona LLM odgovora</td>
+<td><code>Field(ge=0, le=10)</code></td>
+</tr>
+<tr>
+<td><strong>System prompt s podacima</strong></td>
+<td>Ubacivanje pitanja i odgovora u prompt</td>
+<td><code>f'Pitanje: "{pitanje}"...'</code></td>
+</tr>
+<tr>
+<td><strong>Fallback pattern</strong></td>
+<td>Plan B kad LLM ne poštuje format</td>
+<td><code>try/except JSONDecodeError</code></td>
+</tr>
+<tr>
+<td><strong>Temperatura 0.0</strong></td>
+<td>Deterministička evaluacija</td>
+<td><code>temperature=0.0</code></td>
+</tr>
+<tr>
+<td><strong>Anti-varanje</strong></td>
+<td>Tačan odgovor samo na serveru</td>
+<td><code>postavljena_pitanja</code> dict</td>
+</tr>
+</tbody>
+</table>
+<h3>Progresija prema glavnom projektu</h3>
+<div class="ascii-box">PROGRESIJA DANA 2
+
+            Šaljivi Asistent Kviz Majstor dan2-film-chat
+            (prethodni) (ovaj projekat) (sljedeći — glavni)
+            ───────────── ───────────── ─────────────────
+            ✓ Chat API ✓ Chat API ✓ Chat API
+            ✓ System prompt ✓ System prompt ✓ System prompt
+            ✓ Temperatura ✓ JSON podaci ✓ Temperatura
+            ✗ Historija ✓ JSON output ✓ JSON podaci + output
+            ✗ JSON podaci ✓ Pydantic ✓ Historija razgovora
+            ✗ JSON output ✗ Historija ✓ Token counting
+            ✓ CLI alati</div>
+<div class="concept"><strong>Sljedeći korak:</strong> U glavnom projektu (<code>dan2-film-chat</code>)
+            kombinujemo sve naučeno: system prompt + JSON podaci (40 filmova) + strukturirani output + <strong>historija
+                razgovora</strong>.</div>
+<div class="checkpoint">
+<strong>Finalna kontrolna lista:</strong>
+<ul class="checklist">
+<li>Kreirali ste projekat u VS Code-u od nule</li>
+<li>Razumijete svaki import i funkciju u main.py</li>
+<li>Znate sva 4 API endpointa i kako ih testirati</li>
+<li>Frontend šalje fetch zahtjeve i prikazuje JSON preview</li>
+<li>Dodali ste vlastito pitanje u kviz.json</li>
+<li>Razlikujete slobodan tekst i strukturirani JSON output</li>
+</ul>
+</div>
+</div>
+</body>
+</html>

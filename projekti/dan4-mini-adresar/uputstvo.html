@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+
+<html lang="bs">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dan 4 — Teorija + Mini Adresar | Function Calling</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: #334155;
+            --fun: #8b5cf6;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            padding: 0 0 40px;
+        }
+
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+        .badge {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        h1 { font-size: 2.2em; margin-bottom: 8px; }
+        .subtitle { color: var(--text-dim); font-size: 1.1em; margin-bottom: 30px; }
+
+        h2 {
+            font-size: 1.5em;
+            margin: 40px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            color: var(--primary);
+            scroll-margin-top: 80px;
+        }
+
+        h3 { font-size: 1.15em; margin: 24px 0 10px; color: #fff; }
+        h4 { font-size: 1.05em; margin: 16px 0 8px; color: #bfdbfe; }
+        p { margin-bottom: 12px; }
+        ul, ol { margin: 0 0 16px 24px; }
+        li { margin-bottom: 6px; }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        kbd {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 2px 6px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+        }
+
+        pre {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0 16px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.88em;
+            line-height: 1.6;
+        }
+
+        pre code { background: none; padding: 0; }
+
+        nav.top-nav {
+            background: #0f172a;
+            border-bottom: 1px solid var(--border);
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav.top-nav a { color: var(--primary); text-decoration: none; }
+        nav.top-nav a:hover { text-decoration: underline; }
+        nav.top-nav .sep { color: var(--border); }
+
+        nav.toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 24px 0;
+        }
+
+        nav.toc h3 { margin-top: 0; font-size: 1em; color: var(--primary); }
+        nav.toc h4 {
+            margin: 16px 0 8px;
+            font-size: 0.85em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        nav.toc h4:first-of-type { margin-top: 0; }
+        nav.toc ol { margin-bottom: 12px; columns: 2; column-gap: 30px; }
+        nav.toc ol:last-child { margin-bottom: 0; }
+        nav.toc a { color: var(--primary); text-decoration: none; font-size: 0.95em; }
+        nav.toc a:hover { text-decoration: underline; }
+
+        .narrator {
+            background: rgba(3, 105, 161, 0.08);
+            border-left: 3px solid #0369a1;
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .narrator strong { color: #38bdf8; }
+
+        .part-divider {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin: 32px 0 8px;
+            text-align: center;
+        }
+
+        .part-divider h2 {
+            margin: 0;
+            border: none;
+            padding: 0;
+            font-size: 1.3em;
+        }
+
+        .step {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            border-left: 4px solid var(--primary);
+        }
+
+        .step-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            background: var(--primary);
+            color: white;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 0.9em;
+            margin-right: 10px;
+        }
+
+        .step h3 { display: inline; margin: 0; }
+
+        .sub-step {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin: 12px 0;
+            border: 1px solid var(--border);
+        }
+
+        .sub-step-label {
+            display: inline-block;
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--primary);
+            padding: 2px 10px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .tip {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .tip strong { color: var(--accent); }
+
+        .warning {
+            background: rgba(245, 158, 11, 0.08);
+            border-left: 3px solid var(--warning);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .warning strong { color: var(--warning); }
+
+        .checkpoint {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 16px 0;
+            font-size: 0.95em;
+        }
+
+        .checkpoint strong { color: var(--primary); }
+
+        .concept {
+            background: rgba(139, 92, 246, 0.08);
+            border-left: 3px solid var(--fun);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+            font-size: 0.95em;
+        }
+
+        .concept strong { color: #a78bfa; }
+
+        .alert-info {
+            background: rgba(59, 130, 246, 0.08);
+            border-left: 3px solid var(--primary);
+            border-radius: 0 8px 8px 0;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+
+        .alert-info strong { color: var(--primary); }
+
+        .expected-output {
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 14px 0;
+        }
+
+        .expected-output::before {
+            content: "Očekivani output:";
+            display: block;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .expected-output pre {
+            margin: 0;
+            border: none;
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .ascii-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0 16px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85em;
+            line-height: 1.5;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0 16px;
+            font-size: 0.92em;
+        }
+
+        th {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 8px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        tr:hover td { background: rgba(255, 255, 255, 0.02); }
+
+        .exp {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            border-left: 4px solid var(--warning);
+        }
+
+        .exp-label {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .checklist { list-style: none; margin-left: 0; }
+        .checklist li::before { content: "✓ "; color: var(--primary); font-weight: bold; }
+
+        a { color: var(--primary); text-decoration: none; }
+        a:hover { text-decoration: underline; }
+
+        @media (max-width: 700px) {
+            nav.toc ol { columns: 1; }
+            .step, .exp { padding: 16px; }
+            pre { font-size: 0.78em; }
+        }
+    </style>
+</head>
+<body>
+<nav class="top-nav">
+<a href="../../docs/index.html">← AI Trening Dokumentacija</a>
+<span class="sep">›</span>
+<span style="color: var(--text-dim);">Mini Adresar — Uputstvo</span>
+</nav>
+<div class="container">
+<div class="badge">Dan 4 — Function Calling (teorija + praksa)</div>
+<h1>Uputstvo: Mini Adresar</h1>
+<p class="subtitle">Kompletan vodič za Dan 4 — teorija function callinga i korak-po-korak objašnjenje koda
+            u backendu, sim-API-ju, frontendu i CLI klijentu. Port <strong>8019</strong>.
+            Teoriju i demonstraciju možete voditi iz ovog jednog fajla.</p>
+<div class="alert-info">
+<strong>Za koga je ovaj vodič?</strong>
+<p style="margin:8px 0 0">Za polaznike koji žele razumjeti <em>function calling</em> na jednostavnom primjeru —
+            <strong>Dio 1</strong> pokriva teoriju function callinga, <strong>Dio 2</strong> objašnjava svaki fajl u projektu.</p>
+</div>
+<nav class="toc">
+<h3>Sadržaj</h3>
+<h4>Deo 1 — Teorija Dana 4</h4>
+<ol>
+<li><a href="#agentic-ai">Od chatbota do agenta</a></li>
+<li><a href="#analogija">Analogija šef i asistent</a></li>
+<li><a href="#petlja-detaljno">Petlja function callinga (5 koraka)</a></li>
+<li><a href="#odluka-modela">Kako model odlučuje</a></li>
+<li><a href="#zasto-alati">Zašto alati, a ne JSON u promptu</a></li>
+<li><a href="#json-schema">JSON Schema alata</a></li>
+<li><a href="#schema-anatomija">Anatomija sheme</a></li>
+<li><a href="#schema-tipovi">Tipovi parametara</a></li>
+<li><a href="#tool-choice">Tool choice</a></li>
+<li><a href="#uloge-poruka">Uloge poruka</a></li>
+<li><a href="#obrazac-projekta">Obrazac u projektima</a></li>
+<li><a href="#fc-vs-rag">Function calling vs RAG</a></li>
+<li><a href="#provajderi">Provajderi i pouzdanost</a></li>
+<li><a href="#paralelni-pozivi">Paralelni tool pozivi</a></li>
+<li><a href="#error-handling">Error handling</a></li>
+<li><a href="#sigurnost">Sigurnost i Human-in-the-Loop</a></li>
+</ol>
+<h4>Deo 2 — Mini Adresar (praksa i kod)</h4>
+<ol>
+<li><a href="#uvod">Uvod — šta gradimo i zašto</a></li>
+<li><a href="#function-calling">Function calling u projektu</a></li>
+<li><a href="#arhitektura">Arhitektura projekta</a></li>
+
+
+
+
+
+
+<li><a href="#api">API dokumentacija</a></li>
+
+
+<li><a href="#pokretanje">Pokretanje i testiranje</a></li>
+<li><a href="#troubleshooting">Rješavanje problema</a></li>
+<li><a href="#eksperimenti">Eksperimenti</a></li>
+<li><a href="#poredjenje">Poređenje s dan4-prognoza</a></li>
+<li><a href="#recnik">Rečnik pojmova</a></li>
+<li><a href="#zakljucak">Šta smo naučili</a></li>
+</ol>
+</nav>
+<!-- ========== DEO 1 — TEORIJA DANA 4 ========== -->
+<h2 id="teorija-dana4">Deo 1 — Teorija function callinga</h2>
+<h3 id="agentic-ai">Od chatbota do agenta</h3>
+<p>
+            Do sada smo LLM posmatrali kao izuzetno pametnu, ali izolovanu „enciklopediju". Mogli ste mu postaviti pitanje i on bi generisao tekst.
+            Međutim, šta ako korisnik pita: <em>"Gdje radi Emin?"</em> ili <em>"Koji je status mog poreskog predmeta broj 12345?"</em>
+</p>
+<p>
+            Standardni LLM to <strong>ne može znati</strong> — nema pristup vašoj bazi ni internim API-jima.
+            Kada bi model pokušao direktno odgovoriti, najvjerovatnije bi <strong>halucinirao</strong> (npr. izmislio posao ili ustanovu).
+        </p>
+<p>
+<strong>Function calling</strong> (ili <strong>Tool Use</strong>) je ključna razlika između običnog chatbota i <strong>AI agenta</strong> —
+            model može zatražiti da aplikacija izvrši funkciju i vrati mu stvarne podatke.
+        </p>
+<div class="concept">
+<strong>Industrijski nazivi:</strong> OpenAI zove ovo <strong>Function Calling</strong>.
+            Anthropic koristi <strong>Tool Use</strong>. U kodu često vidite <code>tools</code>, <code>tool_calls</code>, <code>tool_choice</code>.
+            Sve se odnosi na isti obrazac: model bira alat, aplikacija izvršava.
+        </div>
+<h3 id="analogija">Analogija: šef i asistent</h3>
+<div class="concept">
+<p><strong>Zamislimo da je LLM šef zatvoren u sobi bez interneta, a vaša Python aplikacija asistent s telefonom i pristupom bazama.</strong></p>
+<ol>
+<li>Korisnik pita šefa: <em>"Gdje radi Emin?"</em></li>
+<li>Šef zna da to ne zna iz glave. Okreće se asistentu: <strong>"Iskoristi alat lookup_person za ime Emin."</strong> (ovo je <em>tool_call</em>).</li>
+<li>Asistent (vaš Python kod) poziva HTTP API, dohvaća JSON i vraća šefu: <strong>"Emin Hadžić, softverski inženjer, FZZA Sarajevo."</strong></li>
+<li>Šef (LLM) oblikuje lijepu rečenicu korisniku: <strong>"Emin Hadžić radi kao softverski inženjer u FZZA Sarajevo."</strong></li>
+</ol>
+</div>
+<div class="warning">
+<strong>Ključna zabluda: LLM ne izvršava kod!</strong>
+            LLM je jezični model — prima i vraća tekst. Kad želi alat, generiše JSON: <em>"Pozovi funkciju X s argumentom Y"</em>.
+            <strong>Na vama je backend petlja</strong> koja taj JSON pročita, izvrši HTTP/SQL u aplikaciji i pošalje rezultat nazad modelu.
+        </div>
+<h3 id="petlja-detaljno">Puna petlja function callinga — 5 koraka</h3>
+<div class="ascii-box">FUNCTION CALLING PETLJA — detaljno (Mini Adresar)
+
+KORISNIK: "Gdje radi Emin?"
+   │
+   ▼
+┌──────────────────────────────────────────────────────────────┐
+│ KORAK 1: Python backend priprema API poziv                   │
+│   messages = [                                               │
+│     {"role": "system", "content": "MORAŠ koristiti alate..."},│
+│     {"role": "user", "content": "Gdje radi Emin?"}           │
+│   ]                                                          │
+│   tools = [TOOLS schema]                                     │
+│   response = client.chat.completions.create(                 │
+│       messages=messages, tools=tools, tool_choice="auto")   │
+└──────────────────────────────┬───────────────────────────────┘
+                               ▼
+┌──────────────────────────────────────────────────────────────┐
+│ KORAK 2: LLM analizira pitanje + tools schema                │
+│   "Korisnik pita gdje neko radi → imam lookup_person"        │
+│   VRAĆA: tool_calls = [{                                     │
+│     "id": "call_abc123",                                     │
+│     "function": {                                            │
+│       "name": "lookup_person",                               │
+│       "arguments": "{\"name\": \"Emin\"}"                   │
+│     }                                                        │
+│   }]                                                         │
+│   NAPOMENA: Model NE generiše tekst — vraća JSON instrukciju!│
+└──────────────────────────────┬───────────────────────────────┘
+                               ▼
+┌──────────────────────────────────────────────────────────────┐
+│ KORAK 3: Python izvršava funkciju                            │
+│   execute_tool("lookup_person", '{"name": "Emin"}')          │
+│   → HTTP GET /sim-api/osoba/Emin                             │
+│   → {"pronadjen": true, "osoba": {...}}                      │
+│   messages.append({"role": "tool", "content": result_json,    │
+│                    "tool_call_id": "call_abc123"})           │
+└──────────────────────────────┬───────────────────────────────┘
+                               ▼
+┌──────────────────────────────────────────────────────────────┐
+│ KORAK 4: LLM formira odgovor                                 │
+│   VRAĆA: "Emin Hadžić radi kao softverski inženjer u        │
+│   FZZA Sarajevo."                                            │
+└──────────────────────────────┬───────────────────────────────┘
+                               ▼
+┌──────────────────────────────────────────────────────────────┐
+│ KORAK 5: Backend vraća odgovor korisniku                     │
+│   return {odgovor, tool_trace, model, iteracije, trajanje_ms}│
+└──────────────────────────────────────────────────────────────┘</div>
+<h3 id="odluka-modela">Kako model odlučuje da li treba alat?</h3>
+<p>
+            Model ne koristi magiju — koristi <strong>pattern matching</strong> na tekstu pitanja i upoređuje ga s
+            <code>description</code> poljem u JSON schema svakog alata.
+        </p>
+<table>
+<thead><tr><th>Pitanje korisnika</th><th>Model odlučuje</th><th>Razlog</th></tr></thead>
+<tbody>
+<tr><td>"Gdje radi Emin?"</td><td>Poziva <code>lookup_person</code></td><td>"radi" + ime → match s opisom alata</td></tr>
+<tr><td>"Koga sve poznaješ?"</td><td>Poziva <code>list_people</code></td><td>"koga" + lista → drugi alat</td></tr>
+<tr><td>"Koliko je 2+2?"</td><td>Odgovara direktno: "4"</td><td>Nema alata za matematiku</td></tr>
+<tr><td>"Šta je Python?"</td><td>Odgovara direktno</td><td>Opšte znanje — nijedan alat nije relevantan</td></tr>
+<tr><td>"Zdravo, kako si?"</td><td>Odgovara direktno</td><td>Nema veze s adresarom</td></tr>
+</tbody>
+</table>
+<div class="tip">
+<strong>Zašto je description KRITIČAN:</strong> <code>description</code> u JSON Schema je zapravo <strong>prompt za alat</strong>.
+            Loš opis ("Dohvata podatke") = model ne zna KADA ga koristiti.
+            Dobar opis: "Dohvata podatke o osobi iz adresara. Koristi SAMO kada korisnik pita gdje neko radi, živi ili čime se bavi."
+        </div>
+<h3 id="zasto-alati">Zašto ne staviti JSON direktno u prompt?</h3>
+<p>Mogli biste u system prompt ubaciti cijeli adresar od 10 osoba. Za mali primjer bi radilo, ali:</p>
+<ul>
+<li><strong>Tokeni</strong> — veliki adresar troši kontekst i košta više</li>
+<li><strong>Zastarjelost</strong> — promjena u bazi zahtijeva ažuriranje prompta</li>
+<li><strong>Sigurnost</strong> — model vidi sve odjednom; alati omogućavaju kontrolu pristupa</li>
+<li><strong>Skalabilnost</strong> — u produkciji imate milione redova; alat dohvaća samo što treba</li>
+</ul>
+<p>Function calling je industrijski standard za povezivanje LLM-a s <em>live</em> podacima — CRM, eUprava, interni API-ji.</p>
+<h3 id="json-schema">JSON Schema — kako modelu objašnjavamo alate</h3>
+<p>
+            Da bi model znao koje alate ima, moramo mu to precizno opisati kroz <strong>JSON Schema</strong>.
+            Taj JSON šaljemo uz svaki upit kroz parametar <code>tools</code>.
+        </p>
+<pre><code>{
+  "type": "function",
+  "function": {
+    "name": "lookup_person",
+    "description": "Dohvata podatke o osobi iz adresara. Koristi SAMO kada korisnik pita gdje neko radi, živi ili čime se bavi.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Ime ili puno ime osobe, npr. Emin"
+        }
+      },
+      "required": ["name"]
+    }
+  }
+}</code></pre>
+<p>U mini-adresar projektu ova definicija živi u listi <code>TOOLS</code> u <code>main.py</code> — detaljno u <a href="#main-py">Koraku 5</a>.</p>
+<h3 id="schema-anatomija">Anatomija Schema — polje po polje</h3>
+<table>
+<thead><tr><th>Polje</th><th>Važnost</th><th>Objašnjenje</th></tr></thead>
+<tbody>
+<tr><td><code>name</code></td><td>Visoka</td><td>Identifikator koji model vraća — mora se poklapati s <code>if name == "lookup_person"</code> u <code>execute_tool</code></td></tr>
+<tr><td><code>description</code> (funkcije)</td><td><strong>Kritična</strong></td><td>Prompt za funkciju — LLM čita ovo da odluči DA LI i KADA pozvati alat</td></tr>
+<tr><td><code>parameters.properties</code></td><td>Visoka</td><td>Argumenti koje model popunjava iz pitanja korisnika</td></tr>
+<tr><td><code>description</code> (parametra)</td><td>Srednja</td><td>Instrukcije modelu kako formatirati argument (npr. "samo puno ime")</td></tr>
+<tr><td><code>required</code></td><td>Visoka</td><td>Parametri bez kojih se alat ne smije pozvati</td></tr>
+</tbody>
+</table>
+<h3 id="schema-tipovi">Tipovi parametara u JSON Schema</h3>
+<table>
+<thead><tr><th>Tip</th><th>Primjer</th><th>Kada koristiti</th></tr></thead>
+<tbody>
+<tr><td><code>string</code></td><td><code>"name": {"type": "string"}</code></td><td>Tekst (ime, grad, upit)</td></tr>
+<tr><td><code>integer</code></td><td><code>"limit": {"type": "integer"}</code></td><td>Cijeli broj (ID, limit)</td></tr>
+<tr><td><code>number</code></td><td><code>"amount": {"type": "number"}</code></td><td>Decimalni broj</td></tr>
+<tr><td><code>boolean</code></td><td><code>"include_details": {"type": "boolean"}</code></td><td>Da/Ne</td></tr>
+<tr><td><code>enum</code></td><td><code>"status": {"enum": ["aktivan","neaktivan"]}</code></td><td>Fiksna lista vrijednosti</td></tr>
+<tr><td><code>array</code></td><td><code>"names": {"type":"array","items":{"type":"string"}}</code></td><td>Lista stavki</td></tr>
+</tbody>
+</table>
+<div class="tip">
+<strong>Savjet za Ollama:</strong> Mali lokalni modeli (Llama 3.2 1B) loše generišu JSON argumente.
+            Sheme moraju biti jednostavne. Za obuku preporučujemo DeepSeek cloud.
+        </div>
+<h3 id="tool-choice">Tool choice — kontrola ponašanja modela</h3>
+<p>Preko parametra <code>tool_choice</code> kontrolišete kako se model ponaša prema alatima:</p>
+<table>
+<thead><tr><th>Vrijednost</th><th>Ponašanje</th><th>Kada koristiti</th></tr></thead>
+<tbody>
+<tr><td><code>"auto"</code></td><td>Model sam odlučuje — alat ako treba, tekst ako ne treba</td><td><strong>Default</strong> za chatbotove</td></tr>
+<tr><td><code>"required"</code></td><td>Model MORA pozvati barem jedan alat</td><td>Automatizacije, pipelines</td></tr>
+<tr><td><code>{"type":"function","function":{"name":"X"}}</code></td><td>Model MORA pozvati tačno taj alat</td><td>Ekstrakcija strukturiranih podataka</td></tr>
+<tr><td><code>"none"</code></td><td>Model NE SMIJE koristiti alate</td><td>Test — da li model halucinira bez alata</td></tr>
+</tbody>
+</table>
+<div class="concept">
+<strong>Analogija — autopilot:</strong> <code>"auto"</code> = pametni autopilot;
+            <code>"required"</code> = „moraš stati na svakom semaforu";
+            <code>"none"</code> = ručna vožnja.
+        </div>
+<h3 id="uloge-poruka">Uloge poruka u function calling chatu</h3>
+<table>
+<thead><tr><th>role</th><th>Tko šalje</th><th>Primjer u Mini Adresaru</th></tr></thead>
+<tbody>
+<tr><td><code>system</code></td><td>Vi (aplikacija)</td><td>"MORAŠ koristiti alate — ne izmišljaj podatke"</td></tr>
+<tr><td><code>user</code></td><td>Korisnik</td><td>"Gdje radi Emin?"</td></tr>
+<tr><td><code>assistant</code></td><td>LLM</td><td>Poruka s <code>tool_calls</code> ili finalni tekst</td></tr>
+<tr><td><code>tool</code></td><td>Vi (aplikacija)</td><td>JSON rezultat iz <code>execute_tool()</code> — mora imati <code>tool_call_id</code></td></tr>
+</tbody>
+</table>
+<h3 id="obrazac-projekta">Tipičan obrazac u projektima</h3>
+<p>Gotovo svaki function calling projekat u ovom treningu (i u industriji) slijedi isti slojeviti obrazac:</p>
+<div class="ascii-box">GENERIČKI OBLIK — function calling aplikacija
+
+┌─────────────┐     POST /api/ask      ┌──────────────────────────────┐
+│ Web / CLI   │───────────────────────▶│ main.py                       │
+│ klijent     │◀───────────────────────│  TOOLS = [...]                │
+└─────────────┘     odgovor + trace    │  run_tool_loop()              │
+                                       │    → LLM (tools=TOOLS)        │
+                                       │    → execute_tool(name, args) │
+                                       └──────────────┬───────────────┘
+                                                      │
+                                                      ▼
+                                       ┌──────────────────────────────┐
+                                       │ tools/*.py                    │
+                                       │  HTTP poziv / SQL / logika    │
+                                       └──────────────┬───────────────┘
+                                                      │
+                                                      ▼
+                                       ┌──────────────────────────────┐
+                                       │ Vanjski servis / baza / fajl  │
+                                       └──────────────────────────────┘
+
+Slojevi odgovornosti:
+  1. TOOLS schema     → opis alata za model (šta postoji)
+  2. run_tool_loop    → petlja LLM ↔ alat (kada i koliko puta)
+  3. execute_tool     → mapiranje imena alata na Python funkciju
+  4. tools/*.py       → stvarna integracija (HTTP, baza)
+  5. Klijenti         → web, CLI — samo šalju pitanje, prikazuju trace</div>
+<p>U mini-adresar projektu: <code>main.py</code> = slojevi 1–2, <code>tools/adresar.py</code> = slojevi 3–4 (HTTP na sim-API),
+            <code>sim_api.py</code> + <code>data_store.py</code> = simulirani vanjski servis.</p>
+<h3 id="fc-vs-rag">Function calling vs RAG (preview Dana 5)</h3>
+<table>
+<thead><tr><th>Aspekt</th><th>Function Calling (Dan 4)</th><th>RAG (Dan 5)</th></tr></thead>
+<tbody>
+<tr><td>Izvor podataka</td><td>Live API, baza, vanjski servis</td><td>Statični dokumenti (PDF, pravilnici)</td></tr>
+<tr><td>Podaci su</td><td>Dinamički (realno vrijeme)</td><td>Statički (ažuriraju se rijetko)</td></tr>
+<tr><td>Primjer</td><td>"Gdje radi Emin?" → lookup u adresaru</td><td>"Koliki je porez?" → pretraga u pravilniku</td></tr>
+<tr><td>Mehanizam</td><td>LLM eksplicitno poziva funkciju</td><td>Semantic search + embedding sličnost</td></tr>
+<tr><td>Preciznost</td><td>Deterministička (API vraća tačan podatak)</td><td>Probabilistička (zavisi od pretrage)</td></tr>
+</tbody>
+</table>
+<h3 id="provajderi">Function calling kod različitih provajdera</h3>
+<table>
+<thead><tr><th>Provajder</th><th>Format</th><th>Pouzdanost FC</th><th>Paralelni pozivi</th><th>Napomena</th></tr></thead>
+<tbody>
+<tr><td>OpenAI (GPT-4o)</td><td><code>tools=</code></td><td>Visoka</td><td>Da</td><td>Originalni izumitelj function callinga</td></tr>
+<tr><td>DeepSeek (V3)</td><td><code>tools=</code> (OpenAI-kompatibilan)</td><td>Visoka</td><td>Da</td><td>Koristimo u projektu — isti format</td></tr>
+<tr><td>Anthropic (Claude)</td><td><code>tools=</code></td><td>Visoka</td><td>Da</td><td><code>tool_use</code> blok umjesto <code>tool_calls</code></td></tr>
+<tr><td>Google (Gemini)</td><td><code>tools=</code></td><td>Srednja–Visoka</td><td>Da</td><td>Drugačiji SDK, isti koncept</td></tr>
+<tr><td>Ollama (lokalni)</td><td><code>tools=</code></td><td>Niska–Srednja</td><td>Zavisi</td><td>Mali modeli (1–3B) griješe u JSON-u</td></tr>
+</tbody>
+</table>
+<div class="tip">
+<strong>Zašto DeepSeek na obuci?</strong> OpenAI-kompatibilan API — isti Python kod.
+            Jeftiniji od GPT-4o, dovoljno pouzdan za function calling.
+        </div>
+<h3 id="paralelni-pozivi">Paralelni tool pozivi</h3>
+<p>Kada korisnik pita za više stavki odjednom (npr. <em>"Uporedi gdje rade Emin i Amra"</em>),
+            model može vratiti <strong>više tool_calls u jednom koraku</strong>:</p>
+<div class="ascii-box">SEKVENCIJALNO vs PARALELNO
+
+SEKVENCIJALNO:
+  Iteracija 1: tool_calls = [lookup_person("Emin")]
+  Iteracija 2: tool_calls = [lookup_person("Amra")]
+  Iteracija 3: LLM kombinira → finalni odgovor
+
+PARALELNO (DeepSeek/GPT-4o):
+  Iteracija 1: tool_calls = [lookup_person("Emin"), lookup_person("Amra")]
+  → Oba se izvršavaju → Oba rezultata
+  Iteracija 2: LLM kombinira → finalni odgovor</div>
+<p>Naš <code>run_tool_loop</code> podržava paralelne pozive jer iterira kroz cijelu listu <code>msg.tool_calls</code>.</p>
+<h3 id="error-handling">Šta može poći po zlu (error handling)</h3>
+<table>
+<thead><tr><th>Greška</th><th>Uzrok</th><th>Kako se brani</th></tr></thead>
+<tbody>
+<tr><td>Model ne poziva alat</td><td>Loš description ili slab model</td><td>Poboljšajte description; koristite DeepSeek</td></tr>
+<tr><td>Model halucinira ime alata</td><td>Pozove "search_web" koji ne postoji</td><td><code>else</code> grana u <code>execute_tool</code></td></tr>
+<tr><td>Nevalidan JSON argumenti</td><td>Mali model pogriješio JSON</td><td><code>try/except json.JSONDecodeError</code></td></tr>
+<tr><td>Alat vratio grešku</td><td>sim-API 404, timeout</td><td>JSON s <code>greska</code>; LLM objašnjava korisniku</td></tr>
+<tr><td>Beskonačna petlja</td><td>Model stalno poziva alate</td><td><code>MAX_TOOL_ITERATIONS = 3</code></td></tr>
+<tr><td>LLM API timeout</td><td>DeepSeek/Ollama ne odgovara</td><td><code>try/except</code> oko <code>chat.completions.create</code></td></tr>
+</tbody>
+</table>
+<div class="concept">
+<strong>Graceful degradation:</strong> Kada alat vrati <code>{"greska": "..."}</code>, ta poruka ide nazad LLM-u kao
+            <code>role: tool</code>. Model formira pristojan odgovor: "Osoba nije u adresaru" — korisnik ne vidi stack trace.
+        </div>
+<h3 id="sigurnost">Primjena i sigurnost — Human-in-the-Loop</h3>
+<p>Adresar je pokazni primjer, ali stvarna moć function callinga u javnom sektoru leži u integraciji s postojećim sistemima.
+            Agent nije zamjena za softver — <strong>pametni interfejs</strong> na vrhu softvera.</p>
+<table>
+<thead><tr><th>Alat</th><th>Opis</th><th>Tip</th></tr></thead>
+<tbody>
+<tr><td><code>provjeri_status_predmeta(broj)</code></td><td>SELECT u SQL bazi</td><td>Read (sigurno)</td></tr>
+<tr><td><code>izracunaj_porez(...)</code></td><td>Precizna matematika po formulama</td><td>Read (sigurno)</td></tr>
+<tr><td><code>obrisi_predmet(id)</code></td><td>DELETE u bazi</td><td>Write (<strong>OPASNO</strong>)</td></tr>
+<tr><td><code>posalji_email(...)</code></td><td>Slanje službenog emaila</td><td>Write (<strong>OPASNO</strong>)</td></tr>
+</tbody>
+</table>
+<div class="warning">
+<strong>Human-in-the-Loop:</strong> Read operacije su uglavnom sigurne.
+            Write/Update/Delete <strong>nikada ne smiju biti potpuno prepušteni modelu</strong> — model može pogriješiti argumente
+            (npr. id=55 umjesto id=5). Destruktivni alat treba pripremiti akciju i tražiti odobrenje čovjeka u UI.
+        </div>
+<div class="ascii-box">HUMAN IN THE LOOP — destruktivne operacije
+
+BEZ HITL (OPASNO):
+  Korisnik → LLM → tool_call: obrisi(id=55) → SQL DELETE
+
+SA HITL (SIGURNO):
+  Korisnik → LLM → tool_call: pripremi_brisanje(id=55)
+       → UI: "AI predlaže brisanje #55. [Odobri] [Odbij]"
+       → Čovjek provjerava prije izvršenja</div>
+<h4>Šta ako model pozove nepostojeći alat?</h4>
+<pre><code>def execute_tool(name: str, arguments: str) -&gt; str:
+    if name == "lookup_person":
+        ...
+    elif name == "list_people":
+        ...
+    else:
+        return json.dumps({"greska": f"Nepoznat alat: {name}"})</code></pre>
+<div class="checkpoint">
+<strong>Kontrolna tačka — teorija:</strong>
+<ul class="checklist">
+<li>Možete objasniti 5 koraka function calling petlje</li>
+<li>Razumijete zašto LLM ne izvršava kod sam</li>
+<li>Možete napisati JSON Schema za novi alat</li>
+<li>Znate razliku Read vs Write operacija i zašto je HITL obavezan</li>
+<li>Znate 6 tipičnih grešaka i kako ih obraditi</li>
+</ul>
+</div>
+<!-- ========== DEO 2 — PRAKSA ========== -->
+<div class="part-divider" id="praksa">
+<h2>Deo 2 — Mini Adresar (praksa i kod)</h2>
+</div>
+<h2 id="uvod">Teorijski uvod — Zašto ovaj projekat i šta gradimo?</h2>
+<p>
+<strong>Mini Adresar</strong> je edukativni projekat koji demonstrira <strong>function calling</strong> —
+            mehanizam gdje AI model ne odgovara samo tekstom, već može <em>zatražiti</em> da aplikacija izvrši funkciju
+            (alat) i vrati mu rezultat. Korisnik pita prirodnim jezikom: <em>"Gdje radi Emin?"</em>, a sistem:
+        </p>
+<ol>
+<li>Prepozna da treba podatak iz adresara</li>
+<li>Pozove alat <code>lookup_person</code> s argumentom <code>{"name": "Emin"}</code></li>
+<li>Alat pošalje HTTP GET na simulirani API</li>
+<li>Rezultat se vrati modelu kao <code>role: tool</code> poruka</li>
+<li>Model generiše finalni odgovor na bosanskom</li>
+</ol>
+<h3>Zašto radimo ovaj projekat i čemu služi?</h3>
+<p>
+            U <a href="../dan4-prognoza/uputstvo.html">dan4-prognoza</a> radite isti function calling obrazac s pravim
+            vanjskim API-jem (Open-Meteo), cache-om i HTTP integracijom. <strong>Mini Adresar</strong> skraćuje koncept
+            na minimum — lokalni JSON adresar, simulirani HTTP servis unutar iste aplikacije, bez interneta.
+            Oba projekta koriste <strong>stateless</strong> <code>/api/ask</code> (bez chat historije na serveru).
+        </p>
+<p>
+            Cilj je da jasno vidite granicu odgovornosti: <strong>LLM odlučuje KADA pozvati alat</strong>, ali
+            <strong>vaš Python kod izvršava alat</strong> i vraća rezultat. Model nikad ne čita fajl
+            <code>data/korisnici.json</code> direktno — vidi samo ono što alat vrati preko HTTP-a.
+        </p>
+<h3>Šta problem rješava function calling?</h3>
+<table>
+<thead>
+<tr><th>Problem bez alata</th><th>Rješenje s function callingom</th></tr>
+</thead>
+<tbody>
+<tr>
+<td>Model <strong>izmišlja</strong> podatke (halucinacije) — npr. kaže da Emin radi u Googleu</td>
+<td>Model poziva <code>lookup_person</code> i odgovara samo na osnovu stvarnog JSON odgovora</td>
+</tr>
+<tr>
+<td>Model nema pristup vašoj bazi, fajlovima ili internim API-jima</td>
+<td>Vi definišete alate; model šalje strukturirani zahtjev, vi izvršavate</td>
+</tr>
+<tr>
+<td>Korisnik mora znati SQL, REST API ili komande</td>
+<td>Korisnik pita prirodnim jezikom; AI prevodi u poziv alata</td>
+</tr>
+<tr>
+<td>Podaci se mijenjaju (novi zaposlenik u adresaru)</td>
+<td>Alat uvijek čita aktuelne podatke — model ne mora biti re-treniran</td>
+</tr>
+</tbody>
+</table>
+<h3>Dva načina rada s projektom</h3>
+<ul>
+<li><strong>Gradite od nule</strong> — pratite vodič korak po korak i kucate svaki fajl u VS Code-u.</li>
+<li><strong>Otvorite gotov projekat</strong> — folder <code>projekti/mini-adresar</code> već postoji u repozitoriju.
+                Koristite vodič da <em>razumijete</em> svaki dio koda.</li>
+</ul>
+<h2 id="function-calling">Function calling u ovom projektu</h2>
+<p>
+            Teoriju function callinga (petlja, JSON Schema, sigurnost, provajderi) pokriva
+            <a href="#teorija-dana4">Deo 1</a> iznad. Ovdje je sažetak primijenjen na Mini Adresar:
+        </p>
+<div class="ascii-box">FUNCTION CALLING PETLJA — Mini Adresar (sažetak)
+
+1. Korisnik:     "Gdje radi Emin?"
+2. LLM odluči:   tool_call → lookup_person(name="Emin")
+3. Aplikacija:   execute_tool() → HTTP GET /sim-api/osoba/Emin
+4. Rezultat:     role: "tool" → {"pronadjen": true, "osoba": {...}}
+5. LLM:          "Emin Hadžić radi kao softverski inženjer u FZZA Sarajevo."</div>
+<p>Detaljan dijagram petlje s API pozivima: <a href="#petlja-detaljno">Petlja — 5 koraka</a>.
+            Uloge poruka: <a href="#uloge-poruka">system / user / assistant / tool</a>.</p>
+<div class="warning">
+<strong>Važno:</strong> Kada vidite <code>[TOOL CALL] lookup_person</code> u CLI-ju, model <em>traži</em> da vi
+            pokrenete Python funkciju — vi kontrolišete šta se smije izvršiti. Više u <a href="#analogija">analogiji šef/asistent</a>.
+        </div>
+<h2 id="arhitektura">Arhitektura projekta</h2>
+<div class="ascii-box">ARHITEKTURA — Mini Adresar (port 8019)
+
+┌────────────┐   POST /api/ask    ┌─────────────────────────────────────────┐
+│  Browser   │───────────────────▶│  main.py (FastAPI)                       │
+│  ili CLI   │◀───────────────────│  run_tool_loop() → execute_tool()        │
+└────────────┘   JSON + trace     └──────────────┬──────────────────────────┘
+                                                  │ HTTP (httpx)
+                                                  ▼
+                                   ┌─────────────────────────────────────────┐
+                                   │  /sim-api/*  (sim_api.py)               │
+                                   │  GET /osoba/Emin  →  data_store.py      │
+                                   └──────────────┬──────────────────────────┘
+                                                  │ čita fajl
+                                                  ▼
+                                   ┌─────────────────────────────────────────┐
+                                   │  data/korisnici.json                    │
+                                   └─────────────────────────────────────────┘
+
+Paralelno: main.py ──▶ DeepSeek API / Ollama (function calling + tools=TOOLS)</div>
+<div class="ascii-box">STRUKTURA FOLDERA
+
+mini-adresar/
+├── main.py              ← FastAPI, TOOLS, run_tool_loop, /api/ask
+├── sim_api.py           ← Simulirani vanjski API (/sim-api/...)
+├── data_store.py        ← Čitanje i pretraga JSON-a
+├── data/
+│   └── korisnici.json   ← Fiktivni adresar (10 osoba)
+├── tools/
+│   └── adresar.py       ← HTTP klijent + execute_tool()
+├── cli/
+│   ├── lookup_direct.py ← Test sim-API bez AI
+│   └── adresar_agent.py ← Interaktivni chat u terminalu
+├── static/
+│   ├── index.html
+│   ├── app.js
+│   └── style.css
+├── requirements.txt
+├── .env.example
+└── uputstvo.html        ← ovaj vodič</div>
+<h2 id="api">API dokumentacija</h2>
+<p>Server sluša na <code>http://localhost:8019</code>.</p>
+<table>
+<thead>
+<tr><th>Metoda</th><th>Putanja</th><th>Funkcija</th><th>Opis</th></tr>
+</thead>
+<tbody>
+<tr><td>GET</td><td><code>/</code></td><td><code>root()</code></td><td>Frontend (index.html)</td></tr>
+<tr><td>GET</td><td><code>/uputstvo</code></td><td><code>uputstvo()</code></td><td>Ovaj vodič</td></tr>
+<tr><td>GET</td><td><code>/api/tools</code></td><td><code>api_tools()</code></td><td>JSON lista TOOLS definicija</td></tr>
+<tr><td>POST</td><td><code>/api/ask</code></td><td><code>ask()</code></td><td>Pitanje + function calling</td></tr>
+<tr><td>GET</td><td><code>/sim-api/zdravlje</code></td><td><code>zdravlje()</code></td><td>Health check</td></tr>
+<tr><td>GET</td><td><code>/sim-api/osobe</code></td><td><code>osobe()</code></td><td>Lista osoba</td></tr>
+<tr><td>GET</td><td><code>/sim-api/osoba/{ime}</code></td><td><code>osoba()</code></td><td>Lookup po imenu</td></tr>
+</tbody>
+</table>
+<h3>POST /api/ask</h3>
+<pre><code>curl -X POST http://localhost:8019/api/ask ^
+  -H "Content-Type: application/json" ^
+  -d "{\"pitanje\": \"Gdje radi Emin?\", \"tool_choice\": \"auto\"}"</code></pre>
+<p><strong>Primjer odgovora:</strong></p>
+<pre><code>{
+  "pitanje": "Gdje radi Emin?",
+  "odgovor": "Emin Hadžić radi kao softverski inženjer u FZZA Sarajevo.",
+  "model": "deepseek-chat",
+  "tool_trace": [
+    {
+      "korak": 1,
+      "alat": "lookup_person",
+      "argumenti": {"name": "Emin"},
+      "rezultat": {"pronadjen": true, "osoba": {...}},
+      "trajanje_ms": 12
+    }
+  ],
+  "iteracije": 2,
+  "trajanje_ms": 1850
+}</code></pre>
+<p>Swagger UI: <a href="http://localhost:8019/docs" target="_blank">http://localhost:8019/docs</a></p>
+<h2 id="pokretanje">Korak 8 — Pokretanje i testiranje</h2><p>Ovaj projekat je spreman za rad. Pokrenite server i posmatrajte kako se alati pozivaju.</p><div class="step">
+<h3>1. Pokretanje</h3>
+<pre><code>python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+uvicorn main:app --reload --port 8019</code></pre>
+<p>Otvorite <a href="http://localhost:8019" target="_blank">http://localhost:8019</a>. Unesite prompt i pratite terminal.</p>
+</div><h2 id="troubleshooting">Rješavanje problema</h2>
+<table>
+<thead><tr><th>Problem</th><th>Uzrok</th><th>Rješenje</th></tr></thead>
+<tbody>
+<tr><td>Ollama ne poziva alate</td><td>Mali model (llama3.2:1b) slab function calling</td><td>Postavite <code>DEEPSEEK_API_KEY</code> u .env</td></tr>
+<tr><td><code>tool_trace</code> prazan, AI izmišlja</td><td>Model nije pozvao alat</td><td>DeepSeek; provjerite DEFAULT_SYSTEM; pojačajte opis u TOOLS</td></tr>
+<tr><td>Sim-API timeout u CLI</td><td>Server nije pokrenut</td><td><code>uvicorn main:app --port 8019</code> u drugom terminalu</td></tr>
+<tr><td><code>ModuleNotFoundError</code></td><td>venv nije aktivan</td><td><code>.\venv\Scripts\Activate.ps1</code></td></tr>
+<tr><td><code>Address already in use</code></td><td>Port 8019 zauzet</td><td>Zatvorite drugi proces ili promijenite port</td></tr>
+<tr><td>Više osoba za isto ime</td><td>Nejednoznačan upit</td><td>Alat vraća <code>kandidati</code> — pitajte punim imenom</td></tr>
+</tbody>
+</table>
+<h2 id="eksperimenti">Eksperimenti</h2>
+<div class="exp">
+<div class="exp-label">Eksperiment 1</div>
+<h3>Dodajte osobu u adresar</h3>
+<p>Dodajte novi zapis u <code>korisnici.json</code>. Bez restarta servera pitajte AI o novoj osobi.
+                Provjerite da <code>tool_trace</code> pokazuje poziv alata, ne halucinaciju.</p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 2</div>
+<h3>Pogrešno ime</h3>
+<p>Pitajte: <em>"Gdje radi NePostoji?"</em> — alat vraća <code>pronadjen: false</code>, AI treba objasniti
+                da osoba nije u adresaru (ne izmišljati posao).</p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 3</div>
+<h3>Opšte pitanje bez alata</h3>
+<p>Pitajte: <em>"Šta je Python?"</em> — model ne bi trebao pozivati <code>lookup_person</code>.
+                <code>tool_trace</code> ostaje prazan; odgovor je opšte znanje.</p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 4</div>
+<h3>Stateless dokaz</h3>
+<ol>
+<li>Pošaljite: "Moje ime je Ahmet."</li>
+<li>Pošaljite: "Kako se zovem?"</li>
+</ol>
+<p>Server ne pamti prvo pitanje — svaki <code>/api/ask</code> je nezavisan (samo system + user).</p>
+</div>
+<div class="exp">
+<div class="exp-label">Eksperiment 5</div>
+<h3>Uporedite CLI i web</h3>
+<p>Isto pitanje u browseru i u <code>adresar_agent.py</code>. Argumenti alata i rezultati trebaju biti isti —
+                razlika je samo u prikazu.</p>
+</div>
+<h2 id="poredjenje">Poređenje s dan4-prognoza</h2>
+<table>
+<thead><tr><th>Aspekt</th><th>dan4-prognoza</th><th>mini-adresar</th></tr></thead>
+<tbody>
+<tr><td>Izvor podataka</td><td>Open-Meteo (pravi internet API)</td><td>Lokalni JSON via sim-API</td></tr>
+<tr><td>HTTP poziv alata</td><td>api.open-meteo.com</td><td>localhost:8019/sim-api</td></tr>
+<tr><td>Chat historija</td><td>Ne — stateless <code>/api/ask</code></td><td>Ne — stateless <code>/api/ask</code></td></tr>
+<tr><td>Broj alata</td><td>Više (prognoza, geokodiranje...)</td><td>2 (lookup, list)</td></tr>
+<tr><td>tool_trace u UI</td><td>Da</td><td>Da</td></tr>
+<tr><td>CLI</td><td>prognoza_agent.py</td><td>adresar_agent.py + lookup_direct.py</td></tr>
+<tr><td>Domena</td><td>Vremenska prognoza</td><td>Adresar osoba</td></tr>
+</tbody>
+</table>
+<div class="concept"><strong>Progresija:</strong> Mini Adresar je most između čistog Chat API-ja (Dan 2) i punog
+            dan4-prognoza projekta. Isti function calling pattern, manja složenost.</div>
+<h2 id="recnik">Rečnik pojmova</h2>
+<table>
+<thead><tr><th>Pojam</th><th>Objašnjenje</th></tr></thead>
+<tbody>
+<tr><td><strong>Function calling</strong></td><td>LLM vraća strukturirani zahtjev za poziv funkcije; aplikacija izvršava i vraća rezultat</td></tr>
+<tr><td><strong>Agentic AI</strong></td><td>AI koji može koristiti alate — function calling je temelj agentnog ponašanja</td></tr>
+<tr><td><strong>Tool / alat</strong></td><td>Funkcija koju definišete u TOOLS listi (lookup_person, list_people)</td></tr>
+<tr><td><strong>JSON Schema</strong></td><td>Strogi format opisa alata (name, description, parameters) koji šaljete modelu</td></tr>
+<tr><td><strong>TOOLS schema</strong></td><td>Lista JSON Schema definicija alata u <code>main.py</code></td></tr>
+<tr><td><strong>tool_choice</strong></td><td>Parametar koji kontroliše da li model mora/smije koristiti alate (auto, required, none)</td></tr>
+<tr><td><strong>tool_call</strong></td><td>Struktura u assistant poruci — koji alat i s kojim argumentima</td></tr>
+<tr><td><strong>execute_tool()</strong></td><td>Python funkcija koja mapira ime alata na HTTP poziv</td></tr>
+<tr><td><strong>run_tool_loop()</strong></td><td>Petlja: LLM → alat → LLM, max 3 iteracije</td></tr>
+<tr><td><strong>tool_trace</strong></td><td>Zapis poziva alata za debugging i učenje</td></tr>
+<tr><td><strong>sim-API</strong></td><td>HTTP rute koje simuliraju vanjski servis unutar iste aplikacije</td></tr>
+<tr><td><strong>stateless chat</strong></td><td>Server ne čuva prethodne poruke — svaki zahtjev je nezavisan</td></tr>
+<tr><td><strong>role: tool</strong></td><td>Poruka s rezultatom izvršenog alata, povezana s tool_call_id</td></tr>
+<tr><td><strong>halucinacija</strong></td><td>Model izmišlja činjenice — function calling je lijek za strukturirane podatke</td></tr>
+<tr><td><strong>Human-in-the-Loop (HITL)</strong></td><td>Čovjek odobrava destruktivne akcije prije izvršenja — obavezno za Write operacije</td></tr>
+<tr><td><strong>graceful degradation</strong></td><td>Greška alata se vraća modelu kao JSON; model objašnjava korisniku bez stack trace-a</td></tr>
+</tbody>
+</table>
+<h2 id="zakljucak">Šta smo naučili?</h2>
+<table>
+<thead><tr><th>Koncept</th><th>Šta znači</th><th>Gdje u kodu</th></tr></thead>
+<tbody>
+<tr><td><strong>Function calling</strong></td><td>Model traži alat, vi izvršavate</td><td><code>run_tool_loop</code>, <code>execute_tool</code></td></tr>
+<tr><td><strong>TOOLS schema</strong></td><td>Opis alata za model</td><td><code>TOOLS</code> u main.py</td></tr>
+<tr><td><strong>HTTP kao granica</strong></td><td>AI ne čita fajl direktno</td><td>tools/adresar.py → sim_api.py → data_store.py</td></tr>
+<tr><td><strong>tool poruka</strong></td><td>Rezultat alata nazad modelu</td><td><code>role: "tool"</code> u petlji</td></tr>
+<tr><td><strong>Stateless API</strong></td><td>Bez historije na serveru</td><td><code>messages = [system, user]</code> u ask()</td></tr>
+<tr><td><strong>CLI debug</strong></td><td>Test bez AI i s vidljivim trace-om</td><td>lookup_direct.py, adresar_agent.py</td></tr>
+</tbody>
+</table>
+<div class="checkpoint">
+<strong>Finalna kontrolna lista:</strong>
+<ul class="checklist">
+<li>Možete objasniti 5 koraka function calling petlje kolegi</li>
+<li>Razumijete zašto LLM ne izvršava kod sam (analogija šef/asistent)</li>
+<li>Možete napisati JSON Schema za novi alat s name, description, parameters, required</li>
+<li>Znate razliku Read vs Write operacija i zašto je Human-in-the-Loop obavezan</li>
+<li>Razumijete zašto LLM ne čita korisnici.json direktno</li>
+<li>Znate razliku između sim-API-ja, alata i run_tool_loop</li>
+<li>Testirali ste sim-API s lookup_direct.py prije AI testa</li>
+<li>Vidjeli ste [TOOL CALL] u CLI agentu ili tool_trace na webu</li>
+<li>Razumijete stateless chat — svaki /api/ask je nezavisan</li>
+<li>Znate 6 tipičnih grešaka u function callingu i kako ih obraditi</li>
+<li>Uporedili ste mini-adresar s dan4-prognoza</li>
+</ul>
+</div>
+<p style="margin-top:40px;color:var(--text-dim);font-size:0.9em;">
+            Mini Adresar | AI Trening | Nastavak: <a href="../dan4-prognoza/uputstvo.html">dan4-prognoza uputstvo</a>
+</p>
+</div>
+</body>
+</html>

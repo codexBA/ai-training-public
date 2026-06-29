@@ -1,7 +1,7 @@
 # osnovni chat - najjednostavnij LLM klijent
 
 import os # import operativnog sistema (za rad sa fajlovima)
-
+import json
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 
@@ -9,6 +9,9 @@ from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from openai import AsyncOpenAI
+from pydantic import BaseModel, Field
+
+from zaposlenici import ZAPOSLENICI, gdje_radi
 
 load_dotenv() # ucitavanje varijabli iz .env fajla
 
@@ -42,24 +45,101 @@ def get_llm_client():
     raise RuntimeError(f"Nepoznat provider: {provider}")
         
 SYSTEM_PROMPT = (
-    "Ti si ljubazni asistent koji odgovara na bosanskom, hrvatskom ili srpskom jeziku."
-    "Odgovaraj kratko i koncizno, maksimalno 4 recenice"
+    "Ti si nervozni asistent koji ne voli da radi ali ipak odgovori na pitanje." 
+    "Za ono sto ne znas nemoj izmisljati nego reci da ne znas." 
+    "Za pitanja gdje neka osoba radi trebas pozvati funkciju gdje_radi"    
 )
 
+# lista alata koji ce biti dostupni LLM modelu
+TOOLS = [
+    {
+        "type": "function",
+        "function": {
+            "name": "gdje_radi",
+            "description": "vraca gdje radi zaposlenik. koristi za pitanja gdje radi neka osoba",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "ime": {
+                        "type": "string",
+                        "description": "ime zaposlenika, npr. Denis, Ivana, Ajdin, Darko, Branislava, Anes, Mirsad, Belma"
+                    }
+                },
+                "required": ["ime"]
+            }
+        }
+    }
+]
+
 # asinhrona funkcija koja komunicira sa LLM
+# chat sa tools - odredjuje da li ce se pozvati funkcija ili ne
 async def pitaj_llm(poruka: str, temperature: float = 0.7) -> str:
     client, model = get_llm_client()
+
+    messages=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": poruka}
+        ]
 
     # ovim se salje zahtjev/pitanje modelu
     odgovor = await client.chat.completions.create(
         model=model, # model koji koristimo
-        messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
-            {"role": "user", "content": poruka}
-        ],
-        temperature=temperature,
-        max_tokens=512        
+        messages=messages,
+        tools=TOOLS,
+        tool_choice="auto", # model ce sam odluciti da li ce pozvati funkciju ili ne
+        temperature=temperature, # temperature je parametar koji kontrolise kreativnost odgovora,sto veca temperatura to je odgovor kreativniji
+        max_tokens=512 # maksimalan broj tokena koji ce model generisati
     )
 
-    # vraca odgovor modela, ako odgovor ne postoji, vrati prazan string
-    return odgovor.choices[0].message.content or ""
+    msg = odgovor.choices[0].message 
+
+    # ako model ne zatrazi pozivanje funkcije, vrati odgovor
+    if not msg.tool_calls:
+        return msg.content or ""
+
+    # ako model zatrazi pozivanje funkcije, pozovi je
+    tc  = msg.tool_calls[0]
+    # argumenti su u json formatu, treba ih konvertovati u python dictionary
+    args = json.loads(tc.function.arguments)
+    
+    rezultat_funkcije = gdje_radi(args.get("ime",""))
+    messages.append(msg.model_dump(exclude_none=True))
+    messages.append(
+        {
+            "role": "tool",
+            "tool_call_id": tc.id,
+            "content": rezultat_funkcije
+        }
+    )
+
+    odgovor_2 = await client.chat.completions.create(
+        model=model, 
+        messages=messages,
+        temperature=temperature,
+        max_tokens=512
+    )
+
+    return odgovor_2.choices[0].message.content or ""
+
+class ChatRequest(BaseModel):
+    poruka: str = Field(..., description="Korisnicka poruka", min_length=1, max_length=1024)
+    temperature: float = Field(0.7, ge=0.0, le=2.0, description="kreativnost odgovora")
+
+class ChatResponse(BaseModel):
+    odgovor: str = Field(..., description="Odgovor modela")
+
+@app.get('/')
+async def root():
+    return FileResponse('static/index.html') # kreira putanju do index.html
+
+# prima korisnicku poruku i zaduzen je za komunikaciju sa LLM modelom i salje odgovor nazad korisniku
+@app.post("/api/chat", response_model=ChatResponse)
+async def chat_endpoint(zahtjev: ChatRequest) -> ChatResponse:
+
+    """endpoint koji prima poruku i vraca odgovor"""
+    try:
+        odgovor = await pitaj_llm(zahtjev.poruka, zahtjev.temperature)
+        return ChatResponse(odgovor=odgovor)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+

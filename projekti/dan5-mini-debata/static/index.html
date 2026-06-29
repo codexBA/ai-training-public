@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="bs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Debata — Gradovi BiH</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --primary: #3b82f6;
+            --accent: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+            --text-dim: #94a3b8;
+            --border: #334155;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        h1 { font-size: 2.4em; margin-bottom: 6px; }
+        .subtitle { color: var(--text-dim); margin-bottom: 30px; font-size: 1.1em; text-align: center; }
+
+        .app {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 30px;
+            width: 100%;
+            max-width: 850px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Tab buttons */
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            background: rgba(0,0,0,0.2);
+            color: var(--text-dim);
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .tab-btn:hover { border-color: var(--primary); color: var(--text); }
+        .tab-btn.active {
+            background: rgba(59,130,246,0.15);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .section-label {
+            font-size: 0.85em;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        /* City pills */
+        .city-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .city-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: rgba(0,0,0,0.2);
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.95em;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+        .city-btn:hover { border-color: var(--primary); color: var(--text); }
+        .city-btn.active {
+            background: rgba(59,130,246,0.2);
+            border-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Style selector */
+        .style-grid {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .style-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: rgba(0,0,0,0.2);
+            color: var(--text-dim);
+            cursor: pointer;
+            font-size: 0.95em;
+            font-family: inherit;
+            font-weight: 500;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .style-btn:hover { border-color: var(--warning); color: var(--warning); }
+        .style-btn.active {
+            background: rgba(245,158,11,0.2);
+            border-color: var(--warning);
+            color: var(--warning);
+            font-weight: 600;
+        }
+
+        /* Action buttons */
+        .btn-row { display: flex; gap: 12px; margin-bottom: 20px; }
+        .action-btn {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: white;
+        }
+        .btn-kritika { background: #ea580c; }
+        .btn-kritika:hover { background: #c2410c; }
+        .btn-compliment { background: var(--accent); }
+        .btn-compliment:hover { background: #059669; }
+        .btn-debata { background: var(--danger); }
+        .btn-debata:hover { background: #dc2626; }
+        .action-btn:disabled { background: #475569 !important; cursor: not-allowed; }
+
+        /* Result cards */
+        .cards-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 15px;
+        }
+        .card {
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 120px;
+            line-height: 1.7;
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+        }
+        .card-header {
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .card-kritika { border-color: #ea580c; }
+        .card-kritika .card-header { color: #fb923c; }
+        .card-compliment { border-color: var(--accent); }
+        .card-compliment .card-header { color: #34d399; }
+        .card-debata1 { border-color: var(--danger); }
+        .card-debata1 .card-header { color: #f87171; }
+        .card-debata2 { border-color: var(--primary); }
+        .card-debata2 .card-header { color: #60a5fa; }
+        .card-body {
+            flex: 1;
+            color: var(--text);
+            font-size: 1.02em;
+        }
+        .card-body.empty {
+            color: var(--text-dim);
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        .card-temp {
+            margin-top: 10px;
+            font-size: 0.8em;
+            color: var(--text-dim);
+        }
+
+        /* Battle mode */
+        .battle-selectors {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .battle-side {
+            flex: 1;
+        }
+        .vs-text {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--danger);
+            text-shadow: 0 0 20px rgba(239,68,68,0.3);
+        }
+
+        /* Status */
+        .status { text-align: center; font-size: 0.9em; color: var(--text-dim); min-height: 1.4em; }
+        .status.error { color: var(--danger); }
+
+        /* Mode panels */
+        .mode-panel { display: none; }
+        .mode-panel.active { display: block; }
+
+        /* Keyboard hint */
+        .kbd-hint {
+            text-align: center;
+            font-size: 0.8em;
+            color: var(--text-dim);
+            margin-top: 8px;
+        }
+        kbd {
+            background: #334155;
+            border: 1px solid #475569;
+            border-radius: 4px;
+            padding: 2px 7px;
+            font-size: 0.9em;
+            color: var(--text);
+        }
+
+        .loading-indicator {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            background: rgba(59,130,246,0.1);
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: 10px;
+        }
+        .loading-indicator.active { display: flex; }
+        .spinner {
+            width: 22px; height: 22px;
+            border: 3px solid #334155;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: #3b82f6; font-weight: 500; }
+        .loading-timer { color: #94a3b8; font-size: 0.9em; font-variant-numeric: tabular-nums; }
+
+        @media (max-width: 650px) {
+            body { padding: 20px 10px; }
+            .app { padding: 20px; }
+            .cards-row { grid-template-columns: 1fr; }
+            .battle-selectors { flex-direction: column; }
+            .vs-text { font-size: 1.5em; }
+        }
+    </style>
+</head>
+<body>
+    <h1>AI Debata</h1>
+    <p class="subtitle">Neka AI kritikuje i hvali gradove Bosne i Hercegovine</p>
+
+    <div class="app">
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab-btn active" data-mode="solo" id="tab-solo">Solo</button>
+            <button class="tab-btn" data-mode="debata" id="tab-debata">Debata Gradova</button>
+        </div>
+
+        <!-- ===================== SOLO MODE ===================== -->
+        <div class="mode-panel active" id="panel-solo">
+            <div class="section-label">Odaberite grad</div>
+            <div class="city-grid" id="solo-cities"></div>
+
+            <div class="section-label">Stil kritike</div>
+            <div class="style-grid" id="style-grid">
+                <button class="style-btn" data-style="blagi">Blagi</button>
+                <button class="style-btn active" data-style="srednji">Srednji</button>
+                <button class="style-btn" data-style="brutalni">Brutalni</button>
+            </div>
+
+            <div class="btn-row">
+                <button class="action-btn btn-kritika" id="btn-kritika">Kritikuj!</button>
+                <button class="action-btn btn-compliment" id="btn-compliment">Pohvali!</button>
+            </div>
+
+            <div class="cards-row">
+                <div class="card card-kritika">
+                    <div class="card-header">Kritika</div>
+                    <div class="card-body empty" id="kritika-body">Kliknite "Kritikuj!" za AI kritiku...</div>
+                    <div class="card-temp" id="kritika-temp"></div>
+                </div>
+                <div class="card card-compliment">
+                    <div class="card-header">Kompliment</div>
+                    <div class="card-body empty" id="compliment-body">Kliknite "Pohvali!" za AI kompliment...</div>
+                    <div class="card-temp" id="compliment-temp"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===================== BATTLE MODE ===================== -->
+        <div class="mode-panel" id="panel-debata">
+            <div class="battle-selectors">
+                <div class="battle-side">
+                    <div class="section-label">Grad 1</div>
+                    <div class="city-grid" id="debata-cities1"></div>
+                </div>
+                <div class="vs-text">VS</div>
+                <div class="battle-side">
+                    <div class="section-label">Grad 2</div>
+                    <div class="city-grid" id="debata-cities2"></div>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="action-btn btn-debata" id="btn-debata">Započni debatu!</button>
+            </div>
+
+            <div class="cards-row">
+                <div class="card card-debata1">
+                    <div class="card-header" id="debata-header1">Grad 1 kritikuje...</div>
+                    <div class="card-body empty" id="debata-body1">Odaberite dva grada i pokrenite bitku...</div>
+                </div>
+                <div class="card card-debata2">
+                    <div class="card-header" id="debata-header2">Grad 2 kritikuje...</div>
+                    <div class="card-body empty" id="debata-body2">Odaberite dva grada i pokrenite bitku...</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="loading-indicator" id="loading">
+            <div class="spinner"></div>
+            <span class="loading-text" id="loading-text">AI smišlja...</span>
+            <span class="loading-timer" id="loading-timer">0s</span>
+        </div>
+
+        <div class="status" id="status"></div>
+        <div class="kbd-hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> za pokretanje akcije</div>
+    </div>
+
+    <script>
+        const gradovi = [
+            "Sarajevo", "Tuzla", "Banja Luka", "Brčko", "Mostar",
+            "Trebinje", "Bihać", "Zenica", "Stolac"
+        ];
+
+        let currentMode = 'solo';
+        let soloCity = 'Sarajevo';
+        let soloStyle = 'srednji';
+        let debataCity1 = 'Sarajevo';
+        let debataCity2 = 'Mostar';
+
+        let loadingInterval = null;
+        function showLoading(text) {
+            const el = document.getElementById('loading');
+            document.getElementById('loading-text').textContent = text;
+            const timerEl = document.getElementById('loading-timer');
+            let seconds = 0;
+            timerEl.textContent = '0s';
+            el.classList.add('active');
+            loadingInterval = setInterval(() => { seconds++; timerEl.textContent = seconds + 's'; }, 1000);
+        }
+        function hideLoading() {
+            document.getElementById('loading').classList.remove('active');
+            if (loadingInterval) { clearInterval(loadingInterval); loadingInterval = null; }
+        }
+
+        // --- DOM refs ---
+        const status = document.getElementById('status');
+
+        // --- Helpers ---
+        function setStatus(msg, isError) {
+            status.textContent = msg;
+            status.className = 'status' + (isError ? ' error' : '');
+        }
+
+        function buildCityButtons(container, cities, selected, onClick) {
+            container.innerHTML = '';
+            cities.forEach(grad => {
+                const btn = document.createElement('button');
+                btn.className = 'city-btn' + (grad === selected ? ' active' : '');
+                btn.textContent = grad;
+                btn.addEventListener('click', () => {
+                    container.querySelectorAll('.city-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    onClick(grad);
+                });
+                container.appendChild(btn);
+            });
+        }
+
+        // --- Solo cities ---
+        buildCityButtons(
+            document.getElementById('solo-cities'), gradovi, soloCity,
+            g => { soloCity = g; }
+        );
+
+        // --- Style buttons ---
+        document.querySelectorAll('.style-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.style-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                soloStyle = btn.dataset.style;
+            });
+        });
+
+        // --- Battle cities ---
+        buildCityButtons(
+            document.getElementById('debata-cities1'), gradovi, debataCity1,
+            g => { debataCity1 = g; }
+        );
+        buildCityButtons(
+            document.getElementById('debata-cities2'), gradovi, debataCity2,
+            g => { debataCity2 = g; }
+        );
+
+        // --- Tab switching ---
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentMode = btn.dataset.mode;
+                document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + currentMode).classList.add('active');
+            });
+        });
+
+        // --- Kritika ---
+        const btnKritika = document.getElementById('btn-kritika');
+        const kritikaBody = document.getElementById('kritika-body');
+        const kritikaTemp = document.getElementById('kritika-temp');
+
+        btnKritika.addEventListener('click', async () => {
+            btnKritika.disabled = true;
+            btnKritika.textContent = 'Kritikujem...';
+            kritikaBody.className = 'card-body empty';
+            kritikaBody.textContent = 'AI smišlja šale...';
+            kritikaTemp.textContent = '';
+            setStatus('');
+
+            showLoading('AI kritikuje grad...');
+            try {
+                const res = await fetch('/api/kritikuj', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ grad: soloCity, stil: soloStyle })
+                });
+                if (!res.ok) throw new Error('Greška: ' + res.status);
+                const data = await res.json();
+
+                kritikaBody.className = 'card-body';
+                kritikaBody.textContent = data.tekst;
+                kritikaTemp.textContent = 'Temperatura: 1.0 | Model: ' + data.model;
+                setStatus('Model: ' + data.model);
+            } catch (err) {
+                kritikaBody.className = 'card-body';
+                kritikaBody.textContent = 'Greška: ' + err.message;
+                setStatus(err.message, true);
+            } finally {
+                hideLoading();
+                btnKritika.disabled = false;
+                btnKritika.textContent = 'Kritikuj!';
+            }
+        });
+
+        // --- Compliment ---
+        const btnCompliment = document.getElementById('btn-compliment');
+        const complimentBody = document.getElementById('compliment-body');
+        const complimentTemp = document.getElementById('compliment-temp');
+
+        btnCompliment.addEventListener('click', async () => {
+            btnCompliment.disabled = true;
+            btnCompliment.textContent = 'Hvalim...';
+            complimentBody.className = 'card-body empty';
+            complimentBody.textContent = 'AI piše poeziju...';
+            complimentTemp.textContent = '';
+            setStatus('');
+
+            showLoading('AI smišlja kompliment...');
+            try {
+                const res = await fetch('/api/pohvali', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ grad: soloCity })
+                });
+                if (!res.ok) throw new Error('Greška: ' + res.status);
+                const data = await res.json();
+
+                complimentBody.className = 'card-body';
+                complimentBody.textContent = data.tekst;
+                complimentTemp.textContent = 'Temperatura: 0.9 | Model: ' + data.model;
+                setStatus('Model: ' + data.model);
+            } catch (err) {
+                complimentBody.className = 'card-body';
+                complimentBody.textContent = 'Greška: ' + err.message;
+                setStatus(err.message, true);
+            } finally {
+                hideLoading();
+                btnCompliment.disabled = false;
+                btnCompliment.textContent = 'Pohvali!';
+            }
+        });
+
+        // --- Battle ---
+        const btnDebata = document.getElementById('btn-debata');
+        const debataBody1 = document.getElementById('debata-body1');
+        const debataBody2 = document.getElementById('debata-body2');
+        const debataHeader1 = document.getElementById('debata-header1');
+        const debataHeader2 = document.getElementById('debata-header2');
+
+        btnDebata.addEventListener('click', async () => {
+            if (debataCity1 === debataCity2) {
+                setStatus('Odaberite dva različita grada za bitku!', true);
+                return;
+            }
+
+            btnDebata.disabled = true;
+            btnDebata.textContent = 'Debata traje...';
+            debataBody1.className = 'card-body empty';
+            debataBody1.textContent = 'AI priprema kritiku...';
+            debataBody2.className = 'card-body empty';
+            debataBody2.textContent = 'AI priprema kritiku...';
+            debataHeader1.textContent = debataCity1 + ' kritikuje ' + debataCity2;
+            debataHeader2.textContent = debataCity2 + ' kritikuje ' + debataCity1;
+            setStatus('');
+
+            showLoading('AI priprema bitku...');
+            try {
+                const res = await fetch('/api/debata', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ grad1: debataCity1, grad2: debataCity2 })
+                });
+                if (!res.ok) throw new Error('Greška: ' + res.status);
+                const data = await res.json();
+
+                debataBody1.className = 'card-body';
+                debataBody1.textContent = data.kritika1;
+                debataBody2.className = 'card-body';
+                debataBody2.textContent = data.kritika2;
+                setStatus('Temperatura: 1.0 | Model: ' + data.model + ' | Paralelni pozivi (asyncio.gather)');
+            } catch (err) {
+                debataBody1.className = 'card-body';
+                debataBody1.textContent = 'Greška: ' + err.message;
+                debataBody2.className = 'card-body';
+                debataBody2.textContent = '';
+                setStatus(err.message, true);
+            } finally {
+                hideLoading();
+                btnDebata.disabled = false;
+                btnDebata.textContent = 'Započni debatu!';
+            }
+        });
+
+        // --- Ctrl+Enter shortcut ---
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.key === 'Enter') {
+                if (currentMode === 'solo') {
+                    if (!btnKritika.disabled) btnKritika.click();
+                } else {
+                    if (!btnDebata.disabled) btnDebata.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

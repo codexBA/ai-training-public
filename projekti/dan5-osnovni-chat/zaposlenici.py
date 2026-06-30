@@ -5,6 +5,7 @@ ZAPOSLENICI = {
     "Darko": "Fakultet Informacionih Nauka",
     "Branislava": "Agencija za Statistiku",
     "Anes": "VSTV",
+    "Vesna": "Sud",
     "Mirsad": "Ured za Harmnizaciju",
     "Belma": "Služba za Zaposljavanje"    
 }

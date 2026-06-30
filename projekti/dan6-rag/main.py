@@ -83,12 +83,33 @@ async def pitaj_rag(pitanje: str, temperature: float = 0.7) -> tuple[str, list[d
     # vracamo odgovor LLM-a i pronadjene odlomke
     return llm_odgovor, pronadjeni
 
-# kreiramo endpoint za pretragu
-@app.get("/api/pretraga")
-async def pretraga(pitanje: str = Query(..., description="Pitanje koje zelite da postavite"), ):
-    pronadjeni = pronadji_relevantne(pitanje, DIJELOVI, TOP_K)
-    return {"pronadjeni_dijelovi": pronadjeni, "pitanje": pitanje}
+# ovo se salje kao zahtjev prema chat endpointu
+class ChatRequest(BaseModel):
+    poruka: str = Field(min_length=1)
+    temperatura: float = Field(default=0.3, ge=0.0, le=1.5)
 
+# ovo se vraca kao odgovor iz chat endpointa
+class ChatResponse(BaseModel):
+    odgovor: str
+    pronadeni_dijelovi: list[dict]
+
+@app.get("/")
+def index():
+    return FileResponse("static/index.html")
+
+# kreiramo endpoint za pretragu i to samo keyword pretraga tekstualnog dokumenta
+@app.get("/api/pretraga")
+async def pretraga(q: str = Query(..., description="Pitanje koje zelite da postavite"), ):
+    pronadjeni = pronadji_relevantne(q, DIJELOVI, TOP_K)
+    return {"pronadeni_dijelovi": pronadjeni, "upit": q}
+
+#kreiramo endpoint za chat - on koristi funkciju pitaj_rag da bi odgovorila na pitanje
+@app.post("/api/chat")
+async def chat(zahtjev: ChatRequest):
+    odgovor, pronadeni = await pitaj_rag(zahtjev.poruka, zahtjev.temperatura)
+    return ChatResponse(odgovor=odgovor, pronadeni_dijelovi=pronadeni)
+        
+    
 
     
     

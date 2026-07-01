@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="bs">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Chroma — Nezaposlenost BiH</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            max-width: 640px;
+            margin: 40px auto;
+            padding: 0 16px;
+        }
+
+        h1 {
+            font-size: 1.4rem;
+        }
+
+        p.meta {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .box {
+            background: #1e293b;
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #fff;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px 18px;
+            background: #3b82f6;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: wait;
+        }
+
+        #pronadeno {
+            color: #a7f3d0;
+            border: 1px dashed #10b981;
+            display: none;
+        }
+
+        #pronadeno .chunk {
+            margin: 8px 0;
+            padding: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+        }
+
+        #pronadeno .dist {
+            color: #6ee7b7;
+            font-weight: 600;
+        }
+
+        #odgovor {
+            margin-top: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>RAG Chroma — Nezaposlenost BiH</h1>
+    <p class="meta">ChromaDB semanticka pretraga + LLM · dokument: <code>bih_nezaposlenost.md</code></p>
+
+    <div class="box">
+        <strong>R</strong> — Chroma pronadje odlomke po znacenju<br>
+        <strong>A</strong> — odlomci idu u prompt prije pitanja<br>
+        <strong>G</strong> — LLM odgovara samo iz konteksta
+    </div>
+
+    <input type="text" id="q" placeholder="Kolika je nezaposlenost u BiH?" value="Kolika je nezaposlenost u BiH?">
+    <button id="send">Posalji</button>
+
+    <div class="box" id="pronadeno"></div>
+    <div class="box" id="odgovor">Odgovor ce se pojaviti ovdje...</div>
+
+    <script>
+        const q = document.getElementById('q');
+        const pronadeno = document.getElementById('pronadeno');
+        const out = document.getElementById('odgovor');
+        const sendBtn = document.getElementById('send');
+
+        function prikaziPronadjene(lista) {
+            if (!lista || !lista.length) {
+                pronadeno.style.display = 'block';
+                pronadeno.innerHTML = '<em>Nema pronadenih odlomaka.</em>';
+                return;
+            }
+            pronadeno.style.display = 'block';
+            pronadeno.innerHTML = '<strong>Pronadjeno (' + lista.length + '):</strong>' +
+                lista.map(d =>
+                    '<div class="chunk"><span class="dist">udaljenost=' + d.udaljenost + '</span> ' +
+                    d.tekst.substring(0, 200) + (d.tekst.length > 200 ? '…' : '') + '</div>'
+                ).join('');
+        }
+
+        sendBtn.onclick = async () => {
+            const upit = q.value.trim();
+            if (!upit) return;
+            out.textContent = 'Cekam LLM...';
+            sendBtn.disabled = true;
+            pronadeno.style.display = 'none';
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ poruka: upit, temperatura: 0.3 })
+                });
+                const d = await res.json();
+                if (!res.ok) { out.textContent = d.detail || 'Greska'; return; }
+                prikaziPronadjene(d.pronadeni_dijelovi);
+                out.textContent = d.odgovor;
+            } finally {
+                sendBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+
+</html>

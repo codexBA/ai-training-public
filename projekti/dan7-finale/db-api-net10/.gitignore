@@ -1,0 +1,57 @@
+## .NET / ASP.NET Core .gitignore
+## Isključuje build artefakte, binarne fajlove i runtime podatke
+
+# ── Build output ──────────────────────────────────────────
+[Bb]in/
+[Oo]bj/
+
+# ── NuGet packages ────────────────────────────────────────
+*.nupkg
+*.snupkg
+**/packages/
+!**/packages/build/
+.nuget/
+nuget.config.user
+
+# ── Visual Studio / Rider artefakti ───────────────────────
+.vs/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+# ── Publish output ────────────────────────────────────────
+[Pp]ublish/
+[Rr]elease/
+[Dd]ebug/
+
+# ── .NET runtime ──────────────────────────────────────────
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.ilk
+*.map
+*.exp
+*.lib
+*.log
+
+# ── Testovi – rezultati i pokrivenost ─────────────────────
+TestResults/
+coverage/
+*.trx
+*.coverage
+*.coveragexml
+
+# ── Secrets i environment ─────────────────────────────────
+appsettings.Development.json
+*.env
+*.env.local
+secrets.json
+
+# ── OS artefakti ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini

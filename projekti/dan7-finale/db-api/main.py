@@ -49,6 +49,30 @@ def get_departments():
     conn.close()
     return departments
 
+@app.get("/api/employees", response_model=List[Employee])
+def get_all_employees():
+    """Vraća sve zaposlenike u sistemu"""
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    query = """
+    SELECT e.EmployeeID, e.FirstName, e.LastName, d.DepartmentName, e.Position 
+    FROM Stats.Employees e
+    INNER JOIN Stats.Departments d ON e.DepartmentID = d.DepartmentID
+    """
+    cursor.execute(query)
+    
+    employees = []
+    for row in cursor.fetchall():
+        employees.append({
+            "EmployeeID": row[0],
+            "FirstName": row[1],
+            "LastName": row[2],
+            "DepartmentName": row[3],
+            "Position": row[4]
+        })
+    conn.close()
+    return employees
+
 @app.get("/api/employees/search", response_model=List[Employee])
 def search_employees(name: str):
     """Pretražuje zaposlenike po imenu ili prezimenu i vraća gdje rade"""

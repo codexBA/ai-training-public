@@ -63,6 +63,17 @@ TOOLS = [
     {
         "type": "function",
         "function": {
+            "name": "get_all_employees",
+            "description": "Vraća listu svih zaposlenika i njihove pozicije",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "search_employees",
             "description": "Pretražuje zaposlenika po imenu ili prezimenu kako bi se našlo gdje rade i koja im je pozicija",
             "parameters": {
@@ -118,6 +129,8 @@ async def execute_tool(tool_name: str, args: dict) -> str:
         async with httpx.AsyncClient() as client:
             if tool_name == "get_departments":
                 response = await client.get(f"{DB_API_URL}/api/departments")
+            elif tool_name == "get_all_employees":
+                response = await client.get(f"{DB_API_URL}/api/employees")
             elif tool_name == "search_employees":
                 response = await client.get(f"{DB_API_URL}/api/employees/search", params={"name": args.get("name", "")})
             elif tool_name == "get_economic_data":

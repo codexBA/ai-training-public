@@ -93,7 +93,7 @@ async def pitaj_llm(poruka: str, temperature: float = 0.7) -> str:
         max_tokens=512 # maksimalan broj tokena koji ce model generisati
     )
 
-    msg = odgovor.choices[0].message 
+    msg = odgovor.choices[0].message    
 
     # ako model ne zatrazi pozivanje funkcije, vrati odgovor
     if not msg.tool_calls:
